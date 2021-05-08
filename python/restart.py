@@ -42,14 +42,14 @@ def internetAction(times, rule, status):
             GPIO.output(8, GPIO.HIGH)
             writeLog("Internet turning off", 6)
             status = router.turnOffInternet()
-            writeLog("Internet turning off", 6)
+            writeLog("Internet turned off", 6)
             GPIO.output(8, GPIO.LOW)
     else:
         if not status:
             GPIO.output(8, GPIO.HIGH)
             writeLog("Internet turning on", 7)
             status = router.turnOnInternet()
-            writeLog("Internet turning on", 7)
+            writeLog("Internet turned on", 7)
             GPIO.output(8, GPIO.LOW)
     return status
 

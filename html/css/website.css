@@ -60,3 +60,19 @@ select {
     color: white;
     background-color: black;
 }
+
+table {
+    border: 0px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+td,
+th {
+    height: 10px;
+    padding-right: 15px;
+}
+
+th {
+    text-decoration-thickness: 10px;
+}

@@ -20,8 +20,18 @@ function dbConnect()
   $connection = mysqli_connect($SERVERNAME, $DATA_USERNAME, $KEY, $DATA_USERNAME);
   return $connection;
 }
+/** 
+ * Sends a request to the database for a search
+ * 
+ * @param string $result the category you want to search
+ * @param string $table what table to search
+ * @param mixed $searchCat what category to send a search in: needed only for 0 and 1
+ * @param mixed $searchCriteria what the criteria to search is: same as above
+ * @param int $Type what type of search 0 is unsupported 1 is when $searchCat and $searchCriteria are equal and 2 is select all
+ * @return array|false its false if there is nothing selected otherwise a list that contains all results 
+*/
 function dbRequest($result, $table, $searchCat, $searchCriteria, $Type)
-{ //Sends a request to the database for a search
+{ 
   $connection = dbConnect();
   if ($Type == 1) {
     $response = mysqli_query($connection, "SELECT $result FROM $table WHERE $searchCat < $searchCriteria");
@@ -34,7 +44,11 @@ function dbRequest($result, $table, $searchCat, $searchCriteria, $Type)
   if (mysqli_num_rows($response) > 0) {
     $data = [];
     while ($row = mysqli_fetch_assoc($response)) {
-      array_push($data, $row[$result]);
+      if ($result == "*") {
+        array_push($data, $row);
+      } else {
+        array_push($data, $row[$result]);
+      }
     }
     return $data;
   } else {
