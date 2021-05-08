@@ -27,18 +27,17 @@
             if ($internet == True) {
                 $internet = False;
                 if ($electricity == True) {
-                    echo "Electricity on from ";
+                    echo "<a style='color: green'>Electricity on from ";
                     $electricity = False;
                 } else {
-                    echo "Electricity off from ";
+                    echo "<a style='color: red'>Electricity off from ";
                     $electricity = True;
                 }
                 echo "$date[0] $date[1], $date[2] at $date[3]:$date[4]";
                 echo " to ";
             } else {
                 $internet = True;
-                echo "$date[0] $date[1], $date[2] at $date[3]:$date[4]";
-                echo "<br>";
+                echo "$date[0] $date[1], $date[2] at $date[3]:$date[4]</a><br>";
             }
         }
     // Resets the outage reporter when requested by deleting all of data.json and using the last entry and putting that in twice into the json
