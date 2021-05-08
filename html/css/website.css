@@ -1,0 +1,62 @@
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Calibri';
+}
+
+.main {
+    margin-left: 200px;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+h2 {
+    color: red;
+}
+
+.vertical-menu {
+    background-color: green;
+    padding-top: 50px;
+    width: 200px;
+    height: 100%;
+    font-size: 20px;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    position: fixed;
+}
+
+.vertical-menu a {
+    padding: 6px 6px 6px 30px;
+    background-color: green;
+    color: white;
+    display: block;
+    padding: 12 px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: darkgreen;
+    font-size: 22px;
+}
+
+.vertical-menu a.active {
+    background-color: black;
+}
+
+button {
+    color: white;
+    background-color: black;
+}
+
+input[type=submit] {
+    color: white;
+    background-color: black;
+}
+
+select {
+    color: white;
+    background-color: black;
+}

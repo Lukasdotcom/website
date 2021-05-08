@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c> # Will check if maintenance mode is enabled and will redirect to maintenance.php if that is true
+   # activate mod_rewrite
+   RewriteEngine On
+ 
+   # check if a file exists called "maintenance-mode-on" in the document root
+   RewriteCond %{DOCUMENT_ROOT}/maintenance-mode -f
+ 
+   # safety check to prevent redirect loops 
+   RewriteCond %{REQUEST_URI} !/maintenance.php$
+   
+   # redirect internally all requests to maintenance.php 
+   RewriteRule $ /maintenance.php [L]
+</IfModule>
+#Will redirect from all json files
+RedirectMatch 403 \.(json)$
+#All invalid sites are directed to the main page index.php
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
