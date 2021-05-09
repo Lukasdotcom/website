@@ -21,10 +21,15 @@
         if (password_verify($_POST["password"], $RESULT[0])) {
             // If the username and password are valid a cookie entry is put into the database and the cookie is put on the user
             $USERNAME = $_POST["username"];
+            // logs the fact that a login happened and if a signup happened
+            if ($_POST["signup"]) {
+                writeLog(2, "$USERNAME created by $address");
+            }
+            writeLog(0, "$USERNAME was logged in by $address");
             $Time = time() + 3600;
             $Cookie = $USERNAME;
             $Cookie .= $Time;
-            $Cookie = sanitize(substr(password_hash($_POST["password"], PASSWORD_BCRYPT),15));
+            $Cookie = sanitize(substr(password_hash($_POST["password"], PASSWORD_BCRYPT), 15));
             $Test = [$Cookie, $USERNAME, $Time];
             dbAdd($Test, "cookies");
             setcookie("user", $Cookie, time() + 600, "/");
@@ -52,7 +57,6 @@
             }
         }
     } else {
-        
         echo "<h1>Edit User(s) Here</h1>";
         if ($_POST["create"]) {
             $USERNAME2 = $_POST["username"];
@@ -61,6 +65,7 @@
                 $PASSWORD2 = $_POST["password"];
                 $PASSWORD = password_hash($_POST["password"], PASSWORD_BCRYPT);
                 dbAdd([$USERNAME2, $PASSWORD], "users");
+                writeLog(2, "$USERNAME2 created by $address or $USERNAME");
                 echo "You have created a new user with username $USERNAME2 and password <span title='$PASSWORD2'>(hold cursor over this text to see)</span><br><br>";
             } else {
                 echo "Username; $USERNAME2 is already being used<br><br>";
@@ -73,6 +78,7 @@
             if (!root($_POST["user"])) {
                 $user = $_POST['user'];
                 echo "User $user has been deleted<br>";
+                writeLog(1, "$user deleted by $address or $USERNAME");
                 dbRemove("privileges", "username", $user, 0);
                 dbRemove("users", "username", $user, 0);
                 dbRemove("cookies", "username", $user, 0);
@@ -88,19 +94,39 @@
             if ($_POST["password"]) {
                 dbEdit("users", ["password", password_hash($_POST["password"], PASSWORD_BCRYPT)], ["username", $oldUsername], 0);
                 $newPass = $_POST["password"];
+                writeLog(3, "$oldUsername's password changed by $USERNAME or $address");
                 echo "new password of <span title='$newPass'>(hold cursor over this text to see)</span><br>";
             }
+            $oldPriv = dbRequest("privilege", "privileges", "username", $oldUsername, 0);
+            if (!$oldPriv) {
+                $oldPriv = [];
+            }
             dbRemove("privileges", "username", $oldUsername, 0);
-            foreach ($PRIVILEGE as $type=>$ignore) {
+            foreach ($PRIVILEGE as $type => $ignore) {
                 if ($_POST[$type]) {
-                    dbAdd([$oldUsername, $type], "privileges");
-                    echo "User has privilege: $type<br>";
+                    if (array_search($type, $oldPriv) === False) {
+                        if ($PRIVILEGE[$type]) {
+                            writeLog(10, "$oldUsername gained privilege $type by $USERNAME or $address");
+                            echo "$oldUsername gained privilege $type<br>";
+                            dbAdd([$oldUsername, $type], "privileges");
+                        }
+                    } else {
+                        dbAdd([$oldUsername, $type], "privileges");
+                    }
+                } elseif (array_search($type, $oldPriv) !== false) {
+                    if ($PRIVILEGE[$type]) {
+                        writeLog(10, "$oldUsername lost privilege $type by $USERNAME or $address");
+                        echo "$oldUsername lost privilege $type<br>";
+                    } else {
+                        dbAdd([$oldUsername, $type], "privileges");
+                    }
                 }
             }
             if ($_POST["username"] and !dbRequest("username", "users", "username", $_POST["username"], 0)) {
                 dbEdit("users", [["username", $_POST["username"]]], ["username", $oldUsername], 0);
                 dbEdit("privileges", [["username", $_POST["username"]]], ["username", $oldUsername], 0);
                 $newName = $_POST['username'];
+                writeLog(3, "$oldUsername's username changed to $newName changed by $USERNAME or $address");
                 echo "new username of $newName";
             }
             echo "<br>";
@@ -112,7 +138,6 @@
                             <select name="user">';
                 $LIST = dbRequest("username", "users", NULL, NULL, 2);
                 foreach ($LIST as $USER) {
-                    var_dump($PRIVILEGE);
                     if (!root($USER) or $PRIVILEGE["root"]) {
                         echo "<option value='$USER'><a>$USER</a></option>";
                     }
@@ -142,7 +167,7 @@
             }
             echo "<h3>Privileges for $user </h3>";
             echo "<input type='hidden' name='OGUsername' value='$user'>";
-            foreach ($PRIVILEGE as $type=>$ignore) {
+            foreach ($PRIVILEGE as $type => $ignore) {
                 if ($PRIVILEGE[$type]) {
                     if (array_search($type, $existing) !== false) {
                         echo "<input type='checkbox' name='$type' checked='yes' value='True'>$type<br>";

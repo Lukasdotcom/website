@@ -27,11 +27,11 @@ function dbConnect()
  * @param string $table what table to search
  * @param mixed $searchCat what category to send a search in: needed only for 0 and 1
  * @param mixed $searchCriteria what the criteria to search is: same as above
- * @param int $Type what type of search 0 is unsupported 1 is when $searchCat and $searchCriteria are equal and 2 is select all
+ * @param int $Type what type of search 1 is unsupported 0 is when $searchCat and $searchCriteria are equal and 2 is select all
  * @return array|false its false if there is nothing selected otherwise a list that contains all results 
-*/
+ */
 function dbRequest($result, $table, $searchCat, $searchCriteria, $Type)
-{ 
+{
   $connection = dbConnect();
   if ($Type == 1) {
     $response = mysqli_query($connection, "SELECT $result FROM $table WHERE $searchCat < $searchCriteria");
@@ -79,8 +79,14 @@ function dbEdit($table, $replace, $search, $type)
   }
   mysqli_close($connection);
 }
+/**
+ * Adds terms to the database
+ * 
+ * @param array $Term list of all terms to be added
+ * @param string $table the table which you want to add to
+ */
 function dbAdd($Term, $table)
-{ // Adds to the database a new term
+{
   $connection = dbConnect();
   $values = "";
   foreach ($Term as $data) {
@@ -93,7 +99,8 @@ function dbAdd($Term, $table)
   $result = mysqli_query($connection, "INSERT INTO $table VALUES ($values)");
   mysqli_close($connection);
 }
-function root($user) {
+function root($user)
+{
   $connection = dbConnect();
   if (mysqli_num_rows(mysqli_query($connection, "SELECT * FROM privileges WHERE username='$user' AND privilege='root'")) > 0) {
     return True;
@@ -102,18 +109,27 @@ function root($user) {
   }
   mysqli_close($connection);
 }
+/**
+ * Writes a log message to the log
+ * @param string $message the message to log
+ * @param int $type the type of log to see all options look in the database
+ */
+function writeLog($type, $message)
+{
+  dbAdd([$type, $message, mktime()], "log");
+}
 // Creates a way to see uncleaned user input if neccessary
 $OGPOST = $_POST;
 $OGGET = $_GET;
 $OGCOOKIE = $_COOKIE;
 // cleans all data
-foreach ($_POST as $pointer=>$value) {
+foreach ($_POST as $pointer => $value) {
   $_POST[$pointer] = sanitize($value);
 }
-foreach ($_GET as $pointer=>$value) {
+foreach ($_GET as $pointer => $value) {
   $_GET[$pointer] = sanitize($value);
 }
-foreach ($_COOKIE as $pointer=>$value) {
+foreach ($_COOKIE as $pointer => $value) {
   $_COOKIE[$pointer] = sanitize($value);
 }
 // Contains the favicon and the css stylesheet
@@ -154,3 +170,4 @@ if ($COOKIEID) {
     }
   }
 }
+$address = $_SERVER["REMOTE_ADDR"]; // Variable that stores the IP address of user accessing the website

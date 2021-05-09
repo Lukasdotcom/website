@@ -34,7 +34,7 @@
             $type = dbRequest("*", "logType", "type", $log["type"], 0)[0];
             $color = $type["color"];
             $category = $type["name"];
-            echo "<tr style='color: $color'><td>$category</td><td>$message at </td><td>$time</td><td>$clockTime at $date</td></tr>";
+            echo "<tr style='color: $color'><td>$category</td><td>$message </td><td>$time</td><td>$clockTime at $date</td></tr>";
         }
         echo "</table>";
         echo '<form method="get" action="/log.php">
