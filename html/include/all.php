@@ -55,13 +55,33 @@ function dbRequest($result, $table, $searchCat, $searchCriteria, $Type)
     return False;
   }
 }
+/**
+ * deletes values from the database
+ * 
+ * @param string $table is the table to delete from
+ * @param string|array $searchCat the categpry to search in
+ * @param string|array $searchCriteria the criteria to search by
+ * @param int $Type is for backwards compatabilty put a 0 in here
+ */
 function dbRemove($table, $searchCat, $searchCriteria, $Type)
-{ // Deletes from the database a value
+{
   $connection = dbConnect();
   if ($Type == 1) {
     mysqli_query($connection, "DELETE FROM $table WHERE $searchCat < $searchCriteria");
   } else {
-    mysqli_query($connection, "DELETE FROM $table WHERE $searchCat='$searchCriteria'");
+    if (gettype($searchCat) == "array") {
+      $command = "DELETE FROM $table WHERE ";
+      $length = count($searchCat);
+      for ($i=0; $i<$length; $i++) {
+        $category = $searchCat[$i];
+        $criteria = $searchCriteria[$i];
+        $command .= "$category='$criteria' and ";
+      }
+      $command = substr($command, 0, -5);
+      mysqli_query($connection, $command);
+    } else {
+      mysqli_query($connection, "DELETE FROM $table WHERE $searchCat='$searchCriteria'");
+    }
   }
   mysqli_close($connection);
 }
@@ -141,7 +161,7 @@ echo '<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-ic
 // Removes all expired cookies from the database
 $Time = mkTime();
 dbRemove("cookies", "expire", $Time, 1);
-$PRIVILEGELIST = ["root", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials"];
+$PRIVILEGELIST = ["root", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity"];
 // Checks the cookie value and sees if the database contains that value
 $COOKIEID = $_COOKIE["user"];
 if ($COOKIEID) {

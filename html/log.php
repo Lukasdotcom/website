@@ -22,6 +22,18 @@
         echo "<h2>Forbidden redirecting...</h2>";
     } else {
         echo "<h1>Server Log</h1>";
+        if ($PRIVILEGE["deleteLog"]) {
+            if ($_POST["clear"]) {
+                $possibleDelete = dbRequest("message", "log", "time", $_POST["time"], 0);
+                var_dump($possibleDelete, $OGPOST["message"]);
+                if (array_search($OGPOST["message"], $possibleDelete) !== NULL and array_search($OGPOST["message"], $possibleDelete) !== false) {
+                    dbRemove("log", ["message", "time"], [$OGPOST["message"], $_POST["time"]], 0);
+                }
+            } elseif ($_POST["reset"]) {
+                dbRemove("log", 1, 1, 0);
+                echo "<p>Log has been cleared<p>";
+            }
+        }
         // Will echo the server log if logged in
         $logData = array_reverse(dbRequest("*", "log", "", "", 2));
         echo "<table>";
@@ -34,11 +46,18 @@
             $type = dbRequest("*", "logType", "type", $log["type"], 0)[0];
             $color = $type["color"];
             $category = $type["name"];
-            echo "<tr style='color: $color'><td>$category</td><td>$message </td><td>$time</td><td>$clockTime at $date</td></tr>";
+            echo "<tr style='color: $color'><td>$category</td><td>$message </td><td>$time</td><td>$clockTime at $date</td>";
+            if ($PRIVILEGE["deleteLog"]) {
+                echo "<td style='color: white'><form action='/log.php' method='post'> <input type='hidden' name='message' value='$message'> <input type='hidden' name='time' value='$time'> <button type='submit' name='clear' value='true'>Clear</button></form></td>";
+            }
+            echo "</tr>";
         }
         echo "</table>";
-        echo '<form method="get" action="/log.php">
+        echo '<form method="post" action="/log.php">
                     <input type="submit" value="reload"><br>';
+        if (array_search("deleteLog", $PRIVILEGE)) {
+            echo '<button name="reset" value="True" type="submit<br>">reset log</button>';
+        }
     }
 
     ?>
