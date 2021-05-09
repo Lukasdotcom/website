@@ -46,19 +46,26 @@ h2 {
     background-color: black;
 }
 
-button {
-    color: white;
+input {
     background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 4px;
 }
 
-input[type=submit] {
-    color: white;
-    background-color: black;
-}
-
+button,
+input[type='submit'],
 select {
-    color: white;
+    color: rgb(0, 255, 0);
     background-color: black;
+    border: 2px solid green;
+    border-radius: 6px;
+}
+
+button:hover,
+input[type='submit']:hover {
+    background-color: green;
+    color: black;
 }
 
 table {
