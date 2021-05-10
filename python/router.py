@@ -1,6 +1,9 @@
+# WARNING THIS FILE NEEDS TO BE EDITED BEFORE PRODUCTION USE
 import RPi.GPIO as GPIO
 import requests
+import os
 from urllib.request import urlopen
+os.system("chmod 777 -R /home/pi/Documents/website/html")
 
 
 def loginInternet():  # Makes sure that the server is logged in
