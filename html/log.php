@@ -25,7 +25,6 @@
         if ($PRIVILEGE["deleteLog"]) {
             if ($_POST["clear"]) {
                 $possibleDelete = dbRequest("message", "log", "time", $_POST["time"], 0);
-                var_dump($possibleDelete, $OGPOST["message"]);
                 if (array_search($OGPOST["message"], $possibleDelete) !== NULL and array_search($OGPOST["message"], $possibleDelete) !== false) {
                     dbRemove("log", ["message", "time"], [$OGPOST["message"], $_POST["time"]], 0);
                 }
