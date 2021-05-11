@@ -15,7 +15,7 @@ function sanitize($value)
 function dbConnect()
 { // Is used to connect to the database
   $SERVERLOCATION = "localhost";
-  $jsonInfo = file_get_contents("/config.json");
+  $jsonInfo = file_get_contents("/var/www/html/config.json");
   $jsonData = json_decode($jsonInfo, true);
   $DATA_USERNAME = $jsonData["database"]["username"];
   $DATABASENAME = $jsonData["database"]["name"];

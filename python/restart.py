@@ -12,6 +12,10 @@ if not developmentMachine:
     os.system("chmod 770 -R /var/www/html")
     os.system("chown -R mysql:mysql /var/lib/mysql")
     os.system("chmod 770 -R /var/lib/mysql")
+    try:
+        os.system("chmod 750 -R /home/pi/python")
+    except:
+        1
 try:
     os.remove("/var/www/html/crash")
 except:
