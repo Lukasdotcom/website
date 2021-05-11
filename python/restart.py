@@ -113,8 +113,11 @@ try:
     writeFile(location + "data.json", info)
     # Makes sure that a backup does not happen on boot
     lastBackup = callTime()[1]
+    try:
+        os.remove("/var/www/html/maintenance-mode")
+    except:
+        1
     # Will update the time every minute to make sure electricity outages are reported to the minute precise and will request a check to see if the wifi status needs to be changed
-    os.remove("/var/www/html/maintenance-mode")
     while True:
         info = readFile(location + "data.json")
         info[-1] = callTime()
