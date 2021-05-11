@@ -9,7 +9,7 @@
    RewriteCond %{REQUEST_URI} !/maintenance.php$
    
    # redirect internally all requests to maintenance.php 
-   RewriteRule $ /maintenance.php [R=302 L]
+   RewriteRule $ /maintenance.php [L]
 </IfModule>
 #Will redirect from all json files
 RedirectMatch 403 \.(json)$
