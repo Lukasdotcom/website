@@ -43,7 +43,7 @@
     // Resets the outage reporter when requested by deleting all of data.json and using the last entry and putting that in twice into the json
     if ($PRIVILEGE["deleteElectricity"]) {
         if ($_POST["reset"] == True) {
-            writeLog(4, "Electricity log cleread by $USERNAME or $address");
+            writeLog(4, "Electricity log cleared by $USERNAME or $address");
             echo "Resetting Outage Reporter";
             $jsonInfo = file_get_contents("data.json");
             $jsonFile = fopen("data.json", "w");
