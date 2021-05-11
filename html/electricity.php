@@ -23,6 +23,7 @@
     $jsonData = json_decode($jsonInfo, true);
     $internet = True;
     $electricity = True;
+    $jsonData = array_reverse($jsonData);
     foreach ($jsonData as $date) {
         if ($internet == True) {
             $internet = False;
