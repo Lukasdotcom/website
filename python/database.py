@@ -1,7 +1,12 @@
 import mysql.connector as mysql
 import os
-db = mysql.connect(host="localhost", passwd="q1azcp2!las",
-                   user="website", database="website")
+import json
+def readFile(location):  # Loads the location of a certain file and returns that file if it is json
+    with open(location) as f:
+        return json.load(f)
+dbInfo = readFile("/var/www/html/config.json")
+db = mysql.connect(host="localhost", passwd=dbInfo["database"]["password"],
+                   user=dbInfo["database"]["username"], database=dbInfo["database"]["name"])
 cursor = db.cursor()
 
 
