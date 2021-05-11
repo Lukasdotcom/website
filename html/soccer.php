@@ -24,7 +24,9 @@
             $newData = true;
         }
         if ($newData) {
-            $onlineFile = file_get_contents("https://www.googleapis.com/youtube/v3/search?part=id&channelId=UC3yfjZGDJutrB0kSYpd9u-A&maxResults=50&order=date&key=AIzaSyB7tFlnH-GW24yDYYeWsNegN4ct_0wHqAI");
+            $youtubeKey = file_get_contents("config.json");
+            $youtubeKey = json_decode($youtubeKey, true)["api"];
+            $onlineFile = file_get_contents("https://www.googleapis.com/youtube/v3/search?part=id&channelId=UC3yfjZGDJutrB0kSYpd9u-A&maxResults=50&order=date&key=$youtubeKey");
             $youtubeInfo = json_decode($onlineFile, true);
             $youtubeInfo["date"] = time();
             $youtubeJson = json_encode($youtubeInfo);
