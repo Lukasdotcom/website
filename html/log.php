@@ -40,7 +40,7 @@
         foreach ($logData as $log) {
             $time = $log["time"];
             $date = date("m-d-Y", $time);
-            $clockTime = date("H:i", $time);
+            $clockTime = date("H:i:s", $time);
             $message = $log["message"];
             $type = dbRequest("*", "logType", "type", $log["type"], 0)[0];
             $color = $type["color"];
