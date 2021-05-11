@@ -119,8 +119,12 @@ try:
         1
     # Will update the time every minute to make sure electricity outages are reported to the minute precise and will request a check to see if the wifi status needs to be changed
     while True:
-        info = readFile(location + "data.json")
-        info[-1] = callTime()
+        try:
+            info = readFile(location + "data.json")
+            info[-1] = callTime()
+        except:
+            writeLog("Electricity log error", 9)
+            info = [callTime(), callTime()]
         writeFile(location + "data.json", info)
         if lastBackup != callTime()[1]:
             try:
@@ -145,7 +149,11 @@ try:
                 minimum = internetOnDeafult
             writeLog(
                 f"Changing internet schedule from; {oldMinimum[0]}:{oldMinimum[1]} to {oldMinimum[2]}:{oldMinimum[3]}, to {minimum[0]}:{minimum[1]} to {minimum[2]}:{minimum[3]}", 8)
-        internetOn = internetAction(callTime(), minimum[0:4], internetOn)
+        try:
+            internetOn = internetAction(callTime(), minimum[0:4], internetOn)
+        except:
+            writeLog("Internet check failed", 9)
+            internetOn = router.turnOnInternet()
         os.system("chown -R www-data:www-data /var/www/html")
         os.system("chmod 750 -R /var/www/html")
         # Will check every 2 seconds if the button is pressed and when it is show it on the led and then wait another second to verify that it is an actual press
