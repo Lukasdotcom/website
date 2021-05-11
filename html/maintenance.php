@@ -11,12 +11,13 @@
     ?>
 </head>
 <style>
-body {
-    font-size: 50px;
-    color: red;
-    font-weight: 850;
-}
+    body {
+        font-size: 50px;
+        color: red;
+        font-weight: 850;
+    }
 </style>
+
 <body>
-The website is currently under maintenance please wait!
+    The website is currently under maintenance or has crashed please wait!
 </body>
