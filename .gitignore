@@ -1,0 +1,7 @@
+# cat .gitignore
+*.json
+__pycache__/
+.vscode/
+python/__pycache__/
+*.pyc
+maintenance-mode
