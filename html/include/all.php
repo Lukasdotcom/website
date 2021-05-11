@@ -14,10 +14,13 @@ function sanitize($value)
 }
 function dbConnect()
 { // Is used to connect to the database
-  $SERVERNAME = "localhost";
-  $DATA_USERNAME = "website";
-  $KEY = "q1azcp2!las";
-  $connection = mysqli_connect($SERVERNAME, $DATA_USERNAME, $KEY, $DATA_USERNAME);
+  $SERVERLOCATION = "localhost";
+  $jsonInfo = file_get_contents("/var/www/html/config.json");
+  $jsonData = json_decode($jsonInfo, true);
+  $DATA_USERNAME = $jsonData["database"]["username"];
+  $DATABASENAME = $jsonData["database"]["name"];
+  $PASSWORD = $jsonData["database"]["password"];
+  $connection = mysqli_connect($SERVERLOCATION, $DATA_USERNAME, $PASSWORD, $DATABASENAME);
   return $connection;
 }
 /** 

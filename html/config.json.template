@@ -1,0 +1,2 @@
+#REMOVE LINE 1 WHEN DONE - please fill out all details for the json file as a config and rename to config.json 
+{ "api": "", "database": { "username": "", "name": "", "password": "" } }
