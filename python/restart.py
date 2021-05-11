@@ -5,11 +5,13 @@ import json
 import time
 import datetime
 import os
+developmentMachine = os.path.exists("/home/pi/developer-machine")
 # Makes sure that the permissions are not wrong
-os.system("chown -R www-data:www-data /var/www/html")
-os.system("chmod 750 -R /var/www/html")
-os.system("chown -R mysql:mysql /var/lib/mysql")
-os.system("chmod 750 -R /var/lib/mysql")
+if not developmentMachine:
+    os.system("chown -R www-data:www-data /var/www/html")
+    os.system("chmod 770 -R /var/www/html")
+    os.system("chown -R mysql:mysql /var/lib/mysql")
+    os.system("chmod 770 -R /var/lib/mysql")
 try:
     os.remove("/var/www/html/crash")
 except:
@@ -48,14 +50,20 @@ try:
             if status:
                 GPIO.output(8, GPIO.HIGH)
                 writeLog("Internet turning off", 6)
-                status = router.turnOffInternet()
+                if not developmentMachine:
+                    internetOn = router.turnOffInternet()
+                else:
+                    internetOn = False
                 writeLog("Internet turned off", 6)
                 GPIO.output(8, GPIO.LOW)
         else:
             if not status:
                 GPIO.output(8, GPIO.HIGH)
                 writeLog("Internet turning on", 7)
-                status = router.turnOnInternet()
+                if not developmentMachine:
+                    internetOn = router.turnOnInternet()
+                else:
+                    internetOn = True
                 writeLog("Internet turned on", 7)
                 GPIO.output(8, GPIO.LOW)
         return status
@@ -100,7 +108,10 @@ try:
         # Remember to comment out
         #break
     # Will turn on the internet to make sure that it is on
-    internetOn = router.turnOnInternet()
+    if not developmentMachine:
+        internetOn = router.turnOnInternet()
+    else:
+        internetOn = True
     # Will try to open the json location and will create a new file if the old one is gone and will store the date in it.
     try:
         info = readFile(location + "data.json")
@@ -153,9 +164,10 @@ try:
             internetOn = internetAction(callTime(), minimum[0:4], internetOn)
         except:
             writeLog("Internet check failed", 9)
-            internetOn = router.turnOnInternet()
-        os.system("chown -R www-data:www-data /var/www/html")
-        os.system("chmod 750 -R /var/www/html")
+            if not developmentMachine:
+                internetOn = router.turnOnInternet()
+            else:
+                internetOn = True
         # Will check every 2 seconds if the button is pressed and when it is show it on the led and then wait another second to verify that it is an actual press
         while True:
             time.sleep(2)
@@ -173,8 +185,9 @@ try:
 except:
     f = open("/var/www/html/maintenance-mode", "w")
     f.close()
+    if not developmentMachine:
+        os.system("chmod 750 -R /var/www/html")
     os.system("chown -R www-data:www-data /var/www/html")
-    os.system("chmod 750 -R /var/www/html")
     while True:
         GPIO.output(8, GPIO.HIGH)
         time.sleep(1)
