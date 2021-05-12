@@ -4,9 +4,10 @@
 
 <head>
     <title>
-        Schaefer Family
+        Schaefer Family - Soccer Videos
     </title>
     <?php
+    $DESCRIPTION = "Videos of playing soccer.";
     include 'include/all.php';
     ?>
 </head>

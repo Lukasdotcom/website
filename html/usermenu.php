@@ -6,6 +6,7 @@
         Schaefer Family - User Page
     </title>
     <?php
+    $DESCRIPTION = "Menu for editing users and deleting them.";
     include 'include/all.php';
     // Checks for a signup and creates that user if neccessary
     if ($_POST["signup"]) {

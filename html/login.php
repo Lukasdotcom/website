@@ -4,9 +4,10 @@
 
 <head>
     <title>
-        Schaefer Family
+        Schaefer Family - Login
     </title>
     <?php
+    $DESCRIPTION - "Login page for Schaefer family.";
     include 'include/all.php';
     ?>
 </head>

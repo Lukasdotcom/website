@@ -75,7 +75,7 @@ function dbRemove($table, $searchCat, $searchCriteria, $Type)
     if (gettype($searchCat) == "array") {
       $command = "DELETE FROM $table WHERE ";
       $length = count($searchCat);
-      for ($i=0; $i<$length; $i++) {
+      for ($i = 0; $i < $length; $i++) {
         $category = $searchCat[$i];
         $criteria = $searchCriteria[$i];
         $command .= "$category='$criteria' and ";
@@ -155,8 +155,9 @@ foreach ($_GET as $pointer => $value) {
 foreach ($_COOKIE as $pointer => $value) {
   $_COOKIE[$pointer] = sanitize($value);
 }
-// Contains the favicon and the css stylesheet
-echo '<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+// Contains the favicon, the css stylesheet, meta tags, and clarity
+echo '<meta http-equiv="content-language" content="en-us">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
@@ -168,6 +169,11 @@ echo '<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-ic
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "6nguibuvtp");
 </script>';
+try {
+  echo "<meta name='Description' content='$DESCRIPTION'>";
+} catch (Exception $e) {
+  echo "<meta name='Description' content='No Description Available'>";
+}
 // Removes all expired cookies from the database
 $Time = mkTime();
 dbRemove("cookies", "expire", $Time, 1);

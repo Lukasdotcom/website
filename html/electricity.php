@@ -4,9 +4,10 @@
 
 <head>
     <title>
-        Schaefer Family
+        Schaefer Family - Electricity Log
     </title>
     <?php
+    $DESCRIPTION = "Log that contains when electricity is on and off.";
     include 'include/all.php';
     ?>
 </head>

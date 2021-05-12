@@ -7,6 +7,7 @@
         Schaefer Family
     </title>
     <?php
+    $DESCRIPTION = "DESCRIPTION NAME HERE";
     include 'include/all.php';
     ?>
 </head>

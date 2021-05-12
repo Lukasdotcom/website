@@ -4,9 +4,10 @@
 
 <head>
     <title>
-        Schaefer Family
+        Schaefer Family - Floppy
     </title>
     <?php
+    $DESCRIPTION - "The great bun bun's videos. Floppy has many great videos.";
     include 'include/all.php';
     ?>
 </head>

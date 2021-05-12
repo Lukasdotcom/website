@@ -6,6 +6,7 @@
         Schaefer Family - Log Page
     </title>
     <?php
+    $DESCRIPTION = "Server log.";
     include 'include/all.php';
     ?>
 </head>

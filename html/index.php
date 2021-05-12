@@ -5,9 +5,10 @@
 <head>
     <meta name="msvalidate.01" content="52F3C351645EB7619858FA8FCB20C441" />
     <title>
-        Schaefer Family - Main Page
+        Schaefer Family
     </title>
     <?php
+    $DESCRIPTION - "Main page of schaefer family website.";
     include 'include/all.php';
     ?>
 </head>
@@ -19,7 +20,7 @@
     <div class='main'>
         <h1>Welcome to the Schaefer Family website!</h1>
         <a href="/floppy.php">
-            <img src="/favicon/android-chrome-512x512.png">
+            <img src="/favicon/android-chrome-512x512.png" alt="Picture of the great bun bun Floppy.">
         </a>
     </div>
 </body>
