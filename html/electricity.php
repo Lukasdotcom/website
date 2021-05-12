@@ -21,25 +21,22 @@
     // Gets the data.json file and goes through every line to output the data.
     $jsonInfo = file_get_contents("data.json");
     $jsonData = json_decode($jsonInfo, true);
-    $internet = True;
-    $electricity = True;
     $jsonData = array_reverse($jsonData);
-    foreach ($jsonData as $date) {
-        if ($internet == True) {
-            $internet = False;
-            if ($electricity == True) {
-                echo "<a style='color: green'>Electricity on from ";
-                $electricity = False;
-            } else {
-                echo "<a style='color: red'>Electricity off from ";
-                $electricity = True;
-            }
-            echo "$date[0] $date[1], $date[2] at $date[3]:$date[4]";
-            echo " to ";
+    $length = sizeof($jsonData) - 1;
+    $electricity = True;
+    for ($i=$length; $i>=0;$i-=2) {
+        if ($electricity == True) {
+            echo "<a style='color: green'>Electricity on from ";
+            $electricity = False;
         } else {
-            $internet = True;
-            echo "$date[0] $date[1], $date[2] at $date[3]:$date[4]</a><br>";
+            echo "<a style='color: red'>Electricity off from ";
+            $electricity = True;
         }
+        $date = $jsonData[$i];
+        $date2 = $jsonData[$i-1];
+        echo "$date[0] $date[1], $date[2] at $date[3]:$date[4]";
+        echo " to ";
+        echo "$date2[0] $date2[1], $date2[2] at $date2[3]:$date2[4]</a><br>";
     }
     // Resets the outage reporter when requested by deleting all of data.json and using the last entry and putting that in twice into the json
     if ($PRIVILEGE["deleteElectricity"]) {
