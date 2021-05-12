@@ -55,9 +55,9 @@ try:
                 GPIO.output(8, GPIO.HIGH)
                 writeLog("Internet turning off", 6)
                 if not developmentMachine:
-                    internetOn = router.turnOffInternet()
+                    status = router.turnOffInternet()
                 else:
-                    internetOn = False
+                    status = False
                 writeLog("Internet turned off", 6)
                 GPIO.output(8, GPIO.LOW)
         else:
@@ -65,9 +65,9 @@ try:
                 GPIO.output(8, GPIO.HIGH)
                 writeLog("Internet turning on", 7)
                 if not developmentMachine:
-                    internetOn = router.turnOnInternet()
+                    status = router.turnOnInternet()
                 else:
-                    internetOn = True
+                    status = True
                 writeLog("Internet turned on", 7)
                 GPIO.output(8, GPIO.LOW)
         return status

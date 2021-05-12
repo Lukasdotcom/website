@@ -12,7 +12,7 @@ def loginInternet():  # Makes sure that the server is logged in
         "password": "@<*08<**89",
         "Continue": "Continue"
     }
-    loginCode = lol(urlLogin).read().decode("utf-8")
+    loginCode = urlopen(urlLogin).read().decode("utf-8")
     start = loginCode.find('<input type="hidden" name="nonce" value=')
     end = loginCode.find('/>', start)
     loginCode = loginCode[start+41:end-2]
