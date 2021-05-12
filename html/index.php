@@ -3,6 +3,7 @@
 <html>
 
 <head>
+    <meta name="msvalidate.01" content="52F3C351645EB7619858FA8FCB20C441" />
     <title>
         Schaefer Family - Main Page
     </title>
