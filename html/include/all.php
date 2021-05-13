@@ -168,6 +168,8 @@ echo '<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-ic
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "6nguibuvtp");
 </script>';
+// Adds google analytics
+echo "<!-- Global site tag (gtag.js) - Google Analytics --> <script async src='https://www.googletagmanager.com/gtag/js?id=G-LDTH4Z14QQ'></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-LDTH4Z14QQ'); </script>";
 // Removes all expired cookies from the database
 $Time = mkTime();
 dbRemove("cookies", "expire", $Time, 1);
