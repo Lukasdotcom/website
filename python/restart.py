@@ -87,15 +87,19 @@ try:
             "%Y"), time.strftime("%H"), time.strftime("%M"), time.strftime("%S"), time.strftime("%-m")]
         return time2
 
-    def buttonPress():  # Will run this script everytime the button is pressed
+    def buttonPress(status):  # Will run this script everytime the button is pressed
         minimum = database.search(
             "internet", "id=(SELECT MIN(id) FROM internet)")
         minimum = int(minimum[5]) - 1
         writeLog("Internet Schedule changed due to button", 5)
         if minimum == 0:
             minimum = -1
-        database.appendValue(
-            "internet", ["0", "0", "23", "59", str(time.time()+3600), str(minimum)])
+        if status:
+            database.appendValue(
+                "internet", ["0", "0", "23", "59", str(time.time()+3600), str(minimum)])
+        else:
+            database.appendValue(
+                "internet", ["2", "1", "2", "1", str(time.time()+3600), str(minimum)])
 
     # Will make sure that the internal clock is right for 2 minutes
     times = time.time()
@@ -148,24 +152,30 @@ try:
             except:
                 writeLog("Database backup failed", 9)
             lastBackup = callTime()[1]
-        minimum = database.search(
-            "internet", "id=(SELECT MIN(id) FROM internet)")
-        if not minimum:
-            database.appendValue("internet", internetOnDeafult)
-            minimum = internetOnDeafult
-            writeLog("No internet schedule found creating a new one", 8)
-        while(minimum[4] < time.time()):
-            oldMinimum = minimum
-            database.delete("internet", f"id={minimum[5]}")
+        try:
             minimum = database.search(
                 "internet", "id=(SELECT MIN(id) FROM internet)")
             if not minimum:
                 database.appendValue("internet", internetOnDeafult)
                 minimum = internetOnDeafult
-            writeLog(
-                f"Changing internet schedule from; {oldMinimum[0]}:{oldMinimum[1]} to {oldMinimum[2]}:{oldMinimum[3]}, to {minimum[0]}:{minimum[1]} to {minimum[2]}:{minimum[3]}", 8)
+                writeLog("No internet schedule found creating a new one", 8)
+            while(minimum[4] < time.time()):
+                oldMinimum = minimum
+                database.delete("internet", f"id={minimum[5]}")
+                minimum = database.search(
+                    "internet", "id=(SELECT MIN(id) FROM internet)")
+                if not minimum:
+                    database.appendValue("internet", internetOnDeafult)
+                    minimum = internetOnDeafult
+                writeLog(
+                    f"Changing internet schedule from; {oldMinimum[0]}:{oldMinimum[1]} to {oldMinimum[2]}:{oldMinimum[3]}, to {minimum[0]}:{minimum[1]} to {minimum[2]}:{minimum[3]}", 8)
+            skip = False
+        except:
+            writeLog("Schedule could not be updated, skipped internet check", 9)
+            skip = True
         try:
-            internetOn = internetAction(callTime(), minimum[0:4], internetOn)
+            if skip:
+                internetOn = internetAction(callTime(), minimum[0:4], internetOn)
         except:
             writeLog("Internet check failed", 9)
             if not developmentMachine:
@@ -182,7 +192,10 @@ try:
                 time.sleep(.1)
                 if GPIO.input(10):
                     GPIO.output(8, GPIO.HIGH)
-                    buttonPress()
+                    try:
+                        buttonPress(internetOn)
+                    except:
+                        writeLog("Button press failed", 9)
                     break
             if time.time() % 60 <= 2:
                 break
