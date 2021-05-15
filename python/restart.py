@@ -156,11 +156,18 @@ try:
                 database.backUp("/var/lib/mysql", "/backup/reserve", False)
             except:
                 writeLog("Database backup failed", 9)
+            while True:
+                try:
+                    test = database.search(
+                    "internet", "id=(SELECT MIN(id) FROM internet)")
+                    break
+                except:
+                    time.sleep(1)
+                    continue
             lastBackup = callTime()[1]
         try:
             minimum = database.search(
                 "internet", "id=(SELECT MIN(id) FROM internet)")
-            print(minimum)
             if not minimum:
                 database.appendValue("internet", internetOnDeafult)
                 minimum = internetOnDeafult
@@ -177,7 +184,6 @@ try:
                     f"Changing internet schedule from; {oldMinimum[0]}:{oldMinimum[1]} to {oldMinimum[2]}:{oldMinimum[3]}, to {minimum[0]}:{minimum[1]} to {minimum[2]}:{minimum[3]}", 8)
             skip = False
         except Exception as e:
-            print(e)
             writeLog("Schedule could not be updated, skipped internet check", 9)
             skip = True
         try:

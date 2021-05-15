@@ -47,7 +47,7 @@ def appendValue(table, value, coulumns=""):  # Will add a value to a table
 def backUp(dbLocation, location, restore):
     f = open("/var/www/html/maintenance-mode", "w")
     f.close()
-    os.system("sudo service mariadb stop")
+    os.system("sudo service mysql stop")
     command = "cp -pr "
     if restore:
         command += location
@@ -59,20 +59,15 @@ def backUp(dbLocation, location, restore):
         command += location
     command += " -r"
     print("Check")
-    os.remove("/var/www/html/maintenance-mode")
     os.system(command)
-    os.system("sudo service mariadb start")
+    os.system("sudo service mysql start")
+    os.remove("/var/www/html/maintenance-mode")
 
 
 def search(table, where, search="*"): # searches for value in table
     cursor.execute("SELECT " + search +
                    " FROM " + table + " WHERE " + where + ";")
     value = cursor.fetchall()[0]
-    if search != "*":
-        try:
-            return value[0]
-        except:
-            1
     return value
 
 
