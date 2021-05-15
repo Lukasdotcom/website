@@ -19,7 +19,14 @@
     // Will check if a username and password was sent to the server and checks if that pair exists in the database
     if ($_POST["username"] != NULL and $_POST["password"] != NULL and $USERNAME == NULL) {
         $RESULT = dbRequest("password", "users", "username", $_POST["username"], 0);
-        if (password_verify($_POST["password"], $RESULT[0])) {
+        $RESULT = $RESULT[0];
+        if (password_needs_rehash($RESULT, PASSWORD_BCRYPT)) {
+            echo "WHATL";
+            $RESULT2 = $RESULT;
+            $RESULT = password_hash($RESULT, PASSWORD_BCRYPT);
+            dbEdit("users", [["password", $RESULT]], ["password", $RESULT2], 0);
+        }
+        if (password_verify($_POST["password"], $RESULT)) {
             // If the username and password are valid a cookie entry is put into the database and the cookie is put on the user
             $USERNAME = $_POST["username"];
             // logs the fact that a login happened and if a signup happened

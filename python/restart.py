@@ -101,7 +101,10 @@ try:
             writeLog("Internet Schedule changed to on due to button", 5)
             database.appendValue(
                 "internet", ["2", "1", "2", "1", str(time.time()+3600), str(minimum)])
-
+    #Will repair all databases and update them
+    repaired = database.repair()
+    for x in repaired:
+        writeLog(f"Database {x} was corrupted/missing and was restored")
     # Will make sure that the internal clock is right for 2 minutes
     times = time.time()
     change = 0
