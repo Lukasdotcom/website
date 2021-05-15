@@ -64,17 +64,16 @@ def backUp(dbLocation, location, restore):
     os.system("sudo service mariadb start")
 
 
-def search(table, where, value="*"): # searches for value in table
-    cursor.execute("SELECT " + value +
+def search(table, where, search="*"): # searches for value in table
+    cursor.execute("SELECT " + search +
                    " FROM " + table + " WHERE " + where + ";")
-    value2 = cursor.fetchall()
-    value = []
-    for x in value2:
-        value.append(x[0])
-    try:
-        return value[0]
-    except:
-        return value
+    value = cursor.fetchall()[0]
+    if search != "*":
+        try:
+            return value[0]
+        except:
+            1
+    return value
 
 
 def delete(table, where): # deletes values in table
@@ -110,6 +109,10 @@ def repair(): # Repairs all tables
         for x in value2:
             value.append(x[0])
         backupValue = value.copy()
+        if name == "users":
+            backupValue.remove("USER")
+            backupValue.remove("CURRENT_CONNECTIONS")
+            backupValue.remove("TOTAL_CONNECTIONS")
         for x in value:
             try:
                 compareValues.remove(x)

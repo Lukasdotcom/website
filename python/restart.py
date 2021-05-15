@@ -104,7 +104,7 @@ try:
     #Will repair all databases and update them
     repaired = database.repair()
     for x in repaired:
-        writeLog(f"Database {x} was corrupted/missing and was restored")
+        writeLog(f"Database {x} was corrupted/missing and was restored", 9)
     # Will make sure that the internal clock is right for 2 minutes
     times = time.time()
     change = 0
@@ -160,6 +160,7 @@ try:
         try:
             minimum = database.search(
                 "internet", "id=(SELECT MIN(id) FROM internet)")
+            print(minimum)
             if not minimum:
                 database.appendValue("internet", internetOnDeafult)
                 minimum = internetOnDeafult
@@ -175,7 +176,8 @@ try:
                 writeLog(
                     f"Changing internet schedule from; {oldMinimum[0]}:{oldMinimum[1]} to {oldMinimum[2]}:{oldMinimum[3]}, to {minimum[0]}:{minimum[1]} to {minimum[2]}:{minimum[3]}", 8)
             skip = False
-        except:
+        except Exception as e:
+            print(e)
             writeLog("Schedule could not be updated, skipped internet check", 9)
             skip = True
         try:
