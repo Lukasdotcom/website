@@ -32,6 +32,13 @@
             } elseif ($_POST["reset"]) {
                 dbRemove("log", 1, 1, 0);
                 echo "<p>Log has been cleared<p>";
+            } elseif ($_POST["fixLog"]) {
+                dbRemove("logType", "type", 2000, 1);
+                $jsonInfo = file_get_contents("logTypes.json");
+                $jsonData = json_decode($jsonInfo, true);
+                foreach ($jsonData as $name) {
+                    dbAdd([$name["type"], $name["name"], $name["color"]], "logType");
+                }
             }
         }
         // Will echo the server log if logged in
@@ -56,11 +63,13 @@
         echo '<form method="post" action="/log.php">
                     <input type="submit" value="reload"><br>';
         if (array_search("deleteLog", $PRIVILEGE)) {
-            echo '<button name="reset" value="True" type="submit<br>">reset log</button>';
+            echo '<button name="reset" value="True" type="submit">reset log</button>';
         }
     }
-
     ?>
+    <br>
+    <button name="fixLog" value="True" type="submit">Fix log types<br></button> <--Press this if you have missing values in the first column of the table
+    </form>
     </div>
 </body>
 

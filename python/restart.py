@@ -91,16 +91,20 @@ try:
         minimum = database.search(
             "internet", "id=(SELECT MIN(id) FROM internet)")
         minimum = int(minimum[5]) - 1
-        writeLog("Internet Schedule changed due to button", 5)
         if minimum == 0:
             minimum = -1
         if status:
+            writeLog("Internet Schedule changed to off due to button", 5)
             database.appendValue(
                 "internet", ["0", "0", "23", "59", str(time.time()+3600), str(minimum)])
         else:
+            writeLog("Internet Schedule changed to on due to button", 5)
             database.appendValue(
                 "internet", ["2", "1", "2", "1", str(time.time()+3600), str(minimum)])
-
+    #Will repair all databases and update them
+    repaired = database.repair()
+    for x in repaired:
+        writeLog(f"Database {x} was corrupted/missing and was restored", 9)
     # Will make sure that the internal clock is right for 2 minutes
     times = time.time()
     change = 0
@@ -113,8 +117,8 @@ try:
         time.sleep(0.5)
         change = time.time() - times
         times = time.time()
-        # Remember to comment out
-        #break
+        if developmentMachine: # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
+            break
     # Will turn on the internet to make sure that it is on
     if not developmentMachine:
         internetOn = router.turnOnInternet()
@@ -136,6 +140,7 @@ try:
         os.remove("/var/www/html/maintenance-mode")
     except:
         1
+    writeLog("Server has finished booting procedure", 0)
     # Will update the time every minute to make sure electricity outages are reported to the minute precise and will request a check to see if the wifi status needs to be changed
     while True:
         try:
@@ -155,11 +160,12 @@ try:
         try:
             minimum = database.search(
                 "internet", "id=(SELECT MIN(id) FROM internet)")
+            print(minimum)
             if not minimum:
                 database.appendValue("internet", internetOnDeafult)
                 minimum = internetOnDeafult
                 writeLog("No internet schedule found creating a new one", 8)
-            while(minimum[4] < time.time()):
+            while(int(minimum[4]) < time.time()):
                 oldMinimum = minimum
                 database.delete("internet", f"id={minimum[5]}")
                 minimum = database.search(
@@ -170,12 +176,14 @@ try:
                 writeLog(
                     f"Changing internet schedule from; {oldMinimum[0]}:{oldMinimum[1]} to {oldMinimum[2]}:{oldMinimum[3]}, to {minimum[0]}:{minimum[1]} to {minimum[2]}:{minimum[3]}", 8)
             skip = False
-        except:
+        except Exception as e:
+            print(e)
             writeLog("Schedule could not be updated, skipped internet check", 9)
             skip = True
         try:
-            if skip:
-                internetOn = internetAction(callTime(), minimum[0:4], internetOn)
+            if not skip:
+                internetOn = internetAction(
+                    callTime(), minimum[0:4], internetOn)
         except:
             writeLog("Internet check failed", 9)
             if not developmentMachine:
