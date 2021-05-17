@@ -152,18 +152,19 @@ try:
         writeFile(location + "data.json", info)
         if lastBackup != callTime()[1]:
             try:
+                f = open("/var/www/html/maintenance-mode", "w")
+                f.close()
                 database.backUp("/var/lib/mysql", "/backup/main", False)
                 database.backUp("/var/lib/mysql", "/backup/reserve", False)
             except:
                 writeLog("Database backup failed", 9)
-            while True:
+            while True: // Reloads the database
                 try:
-                    test = database.search(
-                    "internet", "id=(SELECT MIN(id) FROM internet)")
+                    db, cursor = database.reload()
                     break
                 except:
-                    time.sleep(1)
                     continue
+            os.remove("/var/www/html/maintenance-mode")
             lastBackup = callTime()[1]
         try:
             minimum = database.search(
