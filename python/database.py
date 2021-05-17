@@ -2,24 +2,29 @@ import mysql.connector as mysql
 import os
 import json
 
+def connect():
+    dbInfo = readFile("/var/www/html/config.json")
+    db = mysql.connect(host="localhost", passwd=dbInfo["database"]["password"],
+                    user=dbInfo["database"]["username"], database=dbInfo["database"]["name"])
+    cursor = db.cursor()
+    return db, cursor
+
+
 def readFile(location):  # Loads the location of a certain file and returns that file if it is json
     with open(location) as f:
         return json.load(f)
 
 
-dbInfo = readFile("/var/www/html/config.json")
-db = mysql.connect(host="localhost", passwd=dbInfo["database"]["password"],
-                   user=dbInfo["database"]["username"], database=dbInfo["database"]["name"])
-cursor = db.cursor()
-
-
 def deleteTable(name):  # WIll delete a table in the database
+    db, cursor = connect()
     command = "DROP TABLE " + name + ";"
     cursor.execute(command)
     db.commit()
+    db.close()
 
 
 def createTable(name, coulumns):  # Will create a table in the database
+    db, cursor = connect()
     command = "CREATE TABLE " + name + " ("
     for x in coulumns:
         command += x[0]
@@ -31,9 +36,11 @@ def createTable(name, coulumns):  # Will create a table in the database
     command += ");"
     cursor.execute(command)
     db.commit()
+    db.close()
 
 
 def appendValue(table, value, coulumns=""):  # Will add a value to a table
+    db, cursor = connect()
     command = "INSERT INTO " + table + " " + coulumns + " VALUES ("
     for x in value:
         command += "'" + x + "', "
@@ -41,6 +48,7 @@ def appendValue(table, value, coulumns=""):  # Will add a value to a table
     command += ");"
     cursor.execute(command)
     db.commit()
+    db.close()
 
 
 # Will backup(restore does nothing right now) a database
@@ -56,25 +64,29 @@ def backUp(dbLocation, location, restore):
         command += " "
         command += location
     command += " -r"
-    print("Check")
     os.system(command)
     os.system("sudo service mysql start")
 
 
 def search(table, where, search="*"): # searches for value in table
+    db, cursor = connect()
     cursor.execute("SELECT " + search +
                    " FROM " + table + " WHERE " + where + ";")
     value = cursor.fetchall()[0]
+    db.close()
     return value
 
 
 def delete(table, where): # deletes values in table
+    db, cursor = connect()
     cursor.execute("DELETE FROM " + table + " WHERE " + where + ";")
     db.commit()
+    db.close()
 
 
 def repair(): # Repairs all tables
     # Gets Infomation schema database
+    db, cursor = connect()
     dbInfo = readFile("/var/www/html/config.json")
     db2 = mysql.connect(host="localhost", passwd=dbInfo["database"]["password"],
                         user=dbInfo["database"]["username"], database="INFORMATION_SCHEMA")
@@ -126,11 +138,6 @@ def repair(): # Repairs all tables
             elif name == "users":
                 appendValue(name, [dbInfo["database"]["username"], dbInfo["database"]["password"]])
             changedTables.append(name)
+    db.close()
     return changedTables
 
-def reload(): // reloads connection to database
-    dbInfo = readFile("/var/www/html/config.json")
-    db = mysql.connect(host="localhost", passwd=dbInfo["database"]["password"],
-                       user=dbInfo["database"]["username"], database=dbInfo["database"]["name"])
-    cursor = db.cursor()
-    return db, cursor

@@ -23,7 +23,7 @@ except:
 f = open("/var/www/html/maintenance-mode", "w")
 f.close()
 while True:  # Imports this library in a slow way because it is a pain and likes to not work
-    try:
+    try:        
         import database
         break
     except:
@@ -158,12 +158,6 @@ try:
                 database.backUp("/var/lib/mysql", "/backup/reserve", False)
             except:
                 writeLog("Database backup failed", 9)
-            while True: // Reloads the database
-                try:
-                    db, cursor = database.reload()
-                    break
-                except:
-                    continue
             os.remove("/var/www/html/maintenance-mode")
             lastBackup = callTime()[1]
         try:
