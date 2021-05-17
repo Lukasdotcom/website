@@ -45,8 +45,6 @@ def appendValue(table, value, coulumns=""):  # Will add a value to a table
 
 # Will backup(restore does nothing right now) a database
 def backUp(dbLocation, location, restore):
-    f = open("/var/www/html/maintenance-mode", "w")
-    f.close()
     os.system("sudo service mysql stop")
     command = "cp -pr "
     if restore:
@@ -61,7 +59,6 @@ def backUp(dbLocation, location, restore):
     print("Check")
     os.system(command)
     os.system("sudo service mysql start")
-    os.remove("/var/www/html/maintenance-mode")
 
 
 def search(table, where, search="*"): # searches for value in table
@@ -131,3 +128,9 @@ def repair(): # Repairs all tables
             changedTables.append(name)
     return changedTables
 
+def reload(): // reloads connection to database
+    dbInfo = readFile("/var/www/html/config.json")
+    db = mysql.connect(host="localhost", passwd=dbInfo["database"]["password"],
+                       user=dbInfo["database"]["username"], database=dbInfo["database"]["name"])
+    cursor = db.cursor()
+    return db, cursor
