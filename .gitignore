@@ -6,3 +6,4 @@ python/__pycache__/
 *.pyc
 maintenance-mode
 !logTypes.json
+python/config.json

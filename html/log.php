@@ -68,9 +68,9 @@
     }
     ?>
     <br>
-    <button name="fixLog" value="True" type="submit">Fix log types<br></button> <--Press this if you have missing values in the first column of the table
-    </form>
-    </div>
+    <button name="fixLog" value="True" type="submit">Fix log types<br></button>
+    <--Press this if you have missing values in the first column of the table </form>
+        </div>
 </body>
 
 </html>

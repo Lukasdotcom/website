@@ -1,5 +1,4 @@
-# WARNING THIS FILE NEEDS TO BE EDITED BEFORE PRODUCTION USE
-import RPi.GPIO as GPIO
+#!/usr/bin/env python3
 import requests
 import os
 from urllib.request import urlopen
@@ -10,12 +9,12 @@ def loginInternet():  # Makes sure that the server is logged in
     login = {
         "nonce": "76d8f8d800112e9573bacb9c56f0ecf82c9f2ed23fa10a83",
         "password": "@<*08<**89",
-        "Continue": "Continue"
+        "Continue": "Continue",
     }
     loginCode = urlopen(urlLogin).read().decode("utf-8")
     start = loginCode.find('<input type="hidden" name="nonce" value=')
-    end = loginCode.find('/>', start)
-    loginCode = loginCode[start+41:end-2]
+    end = loginCode.find("/>", start)
+    loginCode = loginCode[start + 41 : end - 2]
     login["nonce"] = loginCode
     login2 = requests.post(urlLogin, data=login)
     return loginCode
@@ -56,7 +55,7 @@ def turnOnInternet():  # Turns on the internet
         "twps": "on",
         "tmaxclients": "80",
         "twpspin": "",
-        "Restore": "Restore Defaults"
+        "Restore": "Restore Defaults",
     }
     urlSet = "http://192.168.1.254/cgi-bin/wconfig-adv.ha"
     turnOn = requests.post(urlSet, data=postObjectOff)
@@ -97,12 +96,9 @@ def turnOffInternet():  # Turns of the internet
         "tsecurity": "defwpa",
         "twps": "on",
         "tmaxclients": "80",
-        "twpspin": ""
+        "twpspin": "",
     }
-    warn = {
-        "nonce": code,
-        "ReturnWarned": "Continue"
-    }
+    warn = {"nonce": code, "ReturnWarned": "Continue"}
     urlSet = "http://192.168.1.254/cgi-bin/wconfig-adv.ha"
     urlWarn = "http://192.168.1.254/cgi-bin/wifiwarn-adv.ha"
     turnOff1 = requests.post(urlSet, data=postObjectOn)
