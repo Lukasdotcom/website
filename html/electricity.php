@@ -25,7 +25,7 @@
     $jsonData = array_reverse($jsonData);
     $length = sizeof($jsonData) - 1;
     $electricity = True;
-    for ($i=$length; $i>=0;$i-=2) {
+    for ($i = $length; $i >= 0; $i -= 2) {
         if ($electricity == True) {
             echo "<a style='color: green'>Electricity on from ";
             $electricity = False;
@@ -34,7 +34,7 @@
             $electricity = True;
         }
         $date = $jsonData[$i];
-        $date2 = $jsonData[$i-1];
+        $date2 = $jsonData[$i - 1];
         echo "$date[0] $date[1], $date[2] at $date[3]:$date[4]";
         echo " to ";
         echo "$date2[0] $date2[1], $date2[2] at $date2[3]:$date2[4]</a><br>";

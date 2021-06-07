@@ -1,7 +1,8 @@
 <?php
 $MENUITEMS = [["Main Page", "/index.php"], ["Electricity Log", "/electricity.php"], ["Floppy", "/floppy.php"], ["Soccer", "/soccer.php"], ["privilege", "viewLog", "/log.php", "Server Log"], ["user", "/usermenu.php", "User Menu"], ["notUser", "/login.php", "Login/Signup"], ["user", "/login.php", "Logout"]];
 echo "<div class='vertical-menu'>";
-function menuItem($link, $name) {
+function menuItem($link, $name)
+{
     $location = $_SERVER["PHP_SELF"];
     if ($location == $link) {
         echo "<a href='$link' class='active'>$name</a>";
@@ -31,7 +32,6 @@ foreach ($MENUITEMS as $menu) {
         default:
             menuItem($menuLink, $menuName);
             break;
-    }   
-    
+    }
 }
 echo "</div>";

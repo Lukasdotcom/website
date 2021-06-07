@@ -255,6 +255,7 @@ try:
             elif os.path.isfile(__file__[: __file__.rindex("/") + 1] + "button.json"): # Alternative to simulate a button press by putting button into this folder
                 try:
                     buttonPress(internetOn)
+                    os.remove(__file__[: __file__.rindex("/") + 1] + "button.json")
                 except:
                     writeLog("Button press failed", 9)
             if time.time() % 60 <= 2:

@@ -15,7 +15,7 @@ function sanitize($value)
 function dbConnect()
 { // Is used to connect to the database
   $SERVERLOCATION = "localhost";
-  $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"]. "/config.json");
+  $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
   $jsonData = json_decode($jsonInfo, true);
   $DATA_USERNAME = $jsonData["database"]["username"];
   $DATABASENAME = $jsonData["database"]["name"];
@@ -171,7 +171,7 @@ if (false) {
       })(window, document, "clarity", "script", "6nguibuvtp");
     </script>';
 }
-    
+
 try {
   echo "<meta name='Description' content='$DESCRIPTION'>";
 } catch (Exception $e) {
@@ -180,7 +180,6 @@ try {
 if (false) {
   // Adds google analytics
   echo "<!-- Global site tag (gtag.js) - Google Analytics --> <script async src='https://www.googletagmanager.com/gtag/js?id=G-LDTH4Z14QQ'></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-LDTH4Z14QQ'); </script>";
-
 }
 // Removes all expired cookies from the database
 $Time = mkTime();
