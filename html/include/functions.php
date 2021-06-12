@@ -23,6 +23,14 @@ function dbConnect()
   $connection = mysqli_connect($SERVERLOCATION, $DATA_USERNAME, $PASSWORD, $DATABASENAME);
   return $connection;
 }
+/**
+ * Can send any command to the database that is put into this function
+ */
+function dbCommand($command) {
+  $connection = dbConnect();
+  mysqli_query($connection, $command);
+  mysqli_close($connection);
+}
 /** 
  * Sends a request to the database for a search
  * 
@@ -183,7 +191,7 @@ foreach ($_COOKIE as $pointer => $value) {
 // Removes all expired cookies from the database
 $Time = mkTime();
 dbRemove("cookies", "expire", $Time, 1);
-$PRIVILEGELIST = ["root", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity"];
+$PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity"];
 // Checks the cookie value and sees if the database contains that value
 $COOKIEID = $_COOKIE["user"];
 if ($COOKIEID) {
