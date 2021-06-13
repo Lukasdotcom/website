@@ -43,7 +43,7 @@
         } else {
             $expireText = "$expire";
         }
-        echo "<tr>
+        echo "<tr id='$priority.row'>
                 <form>
                     <td>$priority</td>
                     <td>
@@ -65,6 +65,7 @@
     }
     echo "</table>";
     ?>
+    <button onClick='button()'>Change Internet Status for Next Hour</button>
     <p id='saveStatus' style='color: green'> </p>
     </div>
 </body>
