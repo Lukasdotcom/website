@@ -252,12 +252,12 @@ try:
                         except:
                             writeLog("Button press failed", 9)
                         break
-            elif os.path.isfile(location + "button.json"): # Alternative to simulate a button press by putting button into this folder
-                try:
-                    buttonPress(internetOn)
-                    os.remove(location + "button.json")
-                except:
-                    writeLog("Button press failed", 9)
+                elif os.path.isfile(location + "button.json"): # Alternative to simulate a button press by putting button into this folder
+                    try:
+                        buttonPress(internetOn)
+                        os.remove(location + "button.json")
+                    except:
+                        writeLog("Button press failed", 9)
             if time.time() % 60 <= 2:
                 break
 except Exception as e:

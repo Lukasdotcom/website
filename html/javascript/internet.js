@@ -5,7 +5,7 @@ function remove(id) {
     ajax.onload = function() {
         document.getElementById("saveStatus").innerHTML = "Saved";
         document.getElementById(id + ".row").remove()
-        setTimeout(() => { document.getElementById("saveStatus").innerHTML = ""; }, 2000);        
+        setTimeout(() => { document.getElementById("saveStatus").innerHTML = ""; }, 2000);
         }
     if (Math.sign(id) == -1) {
         idNegative = 'True';
@@ -38,7 +38,7 @@ function button() {
     
     ajax.onload = function() {
         document.getElementById("saveStatus").innerHTML = "Saved";
-        setTimeout(() => { document.getElementById("saveStatus").innerHTML = ""; }, 2000);        
+        setTimeout(() => { window.location.reload(); }, 500);             
         }
       
     ajax.open("GET", "api.php?internet=button");
