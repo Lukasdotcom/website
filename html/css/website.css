@@ -8,6 +8,15 @@ body {
     margin-left: 200px;
 }
 
+.red button {
+    color: red;
+    border: 1px solid red;
+}
+
+.red button:hover {
+    background-color: rgba(255, 0, 0, 0.877);
+}
+
 h1 {
     font-size: 50px;
 }
@@ -53,17 +62,14 @@ input {
     border-radius: 4px;
 }
 
-button,
-input[type='submit'],
-select {
+button, input[type='submit'], select {
     color: rgb(0, 255, 0);
     background-color: black;
     border: 2px solid green;
     border-radius: 6px;
 }
 
-button:hover,
-input[type='submit']:hover {
+button:hover, input[type='submit']:hover {
     background-color: green;
     color: black;
 }
@@ -74,12 +80,14 @@ table {
     text-align: left;
 }
 
-td,
-th {
+td, th {
     height: 10px;
     padding-right: 15px;
 }
 
 th {
     text-decoration-thickness: 10px;
+}
+input[type="number"] {
+    width: 45px;
 }
