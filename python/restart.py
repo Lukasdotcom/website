@@ -252,7 +252,7 @@ try:
                         except:
                             writeLog("Button press failed", 9)
                         break
-                elif os.path.isfile(location + "button.json"): # Alternative to simulate a button press by putting button into this folder
+            if os.path.isfile(location + "button.json"): # Alternative to simulate a button press by putting button into this folder
                     try:
                         buttonPress(internetOn)
                         os.remove(location + "button.json")
