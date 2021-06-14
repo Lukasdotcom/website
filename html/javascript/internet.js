@@ -32,19 +32,20 @@ function save(id) {
     ajax.send(); 
 }
 function addRow() {
+    topPriority ++;
     var table = document.getElementById ("internetTable");
     var row = table.insertRow();
+    row.id = topPriority + ".row";
     var priority = row.insertCell();
     var startTime = row.insertCell();
     var endTime = row.insertCell();
     var expiration = row.insertCell();
     var buttons = row.insertCell();
-    topPriority ++;
     priority.innerHTML = topPriority;
     startTime.innerHTML = `<input type='number' id='${topPriority}.startHour' value='0'>:<input type='number' id='${topPriority}.startMinute' value='0'>`;
     endTime.innerHTML = `<input type='number' id='${topPriority}.endHour' value='0'>:<input type='number' id='${topPriority}.endMinute' value='0'>`;
     expiration.innerHTML = `<input style='width: 120px' type='number' id='${topPriority}.expire' value='0'>`;
-    buttons.innerHTML = `<button type='button' onClick='save("${priority}")'>✓</button><div class='red'><button type='button' onClick='remove("${priority}")'>✗</button>`;
+    buttons.innerHTML = `<button type='button' onClick='save("${topPriority}")'>✓</button><div class='red'><button type='button' onClick='remove("${topPriority}")'>✗</button>`;
 }
 
 function button() {
