@@ -15,12 +15,17 @@
 <body>
     <?php
     include 'include/menu.php';
-    echo "<div class='main'>
-        <h1>Internet Schedule</h1>
-        <script type='text/javascript' src='javascript/internet.js'></script>  
-        <table><tr><th>Priority</th><th>Start Time</th><th>End Time</th><th>Expiration Time</th><th></th></tr>";
     $jsonInfo = file_get_contents("http://127.0.0.1/api.php?internet=data");
     $schedule = json_decode($jsonInfo, true);
+    $topPriority = end($schedule)["id"];
+    if (!$topPriority) {
+        $topPriority = 1;
+    }
+    echo "<div class='main'>
+        <h1>Internet Schedule</h1>
+        <script type='text/javascript' src='javascript/internet.js'></script>
+        <script> var topPriority = $topPriority; </script>
+        <table id='internetTable'><tr><th>Priority</th><th>Start Time</th><th>End Time</th><th>Expiration Time</th><th></th></tr>";
     foreach ($schedule as $one) {
         $priority = $one['id'];
         $startHour = $one['hour'];
@@ -64,8 +69,10 @@
             </tr>";
     }
     echo "</table>";
+    if($PRIVILEGE["internet"]) {
+        echo "<button onClick='addRow()'>Add another row to internet schedule</button>";
+    }
     ?>
-    <button onClick='button()'>Change Internet Status for Next Hour</button>
     <p id='saveStatus' style='color: green'> </p>
     </div>
 </body>
