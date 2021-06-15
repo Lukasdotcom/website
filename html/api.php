@@ -7,8 +7,7 @@ if($_GET["internet"] == "data") {
     $data = dbRequest2("SELECT * FROM internet ORDER BY id Asc");
     echo json_encode($data);
 } elseif ($PRIVILEGE["internet"] and $_GET["internet"] === "button"){
-    $file = fopen("button.json", "w+");
-    fclose($file);
+    echo "Unsupported";
 } elseif ($PRIVILEGE["internet"] and $_GET["internet"] === "edit") {
     $id = intval($_GET["id"]);
     if ($_GET["idNegative"] === "True") {

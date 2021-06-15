@@ -47,7 +47,6 @@ while (
 ):  # Imports this library in a slow way because it is a pain and likes to not work
     try:
         import database
-
         break
     except:
         continue
@@ -122,7 +121,8 @@ try:
         return time2
 
     def buttonPress(status):  # Will run this script everytime the button is pressed
-        minimum = database.search("internet", "id=(SELECT MIN(id) FROM internet)")
+        minimum = database.search(
+            "internet", "id=(SELECT MIN(id) FROM internet)")
         minimum = int(minimum[5]) - 1
         if minimum == 0:
             minimum = -1
@@ -135,9 +135,10 @@ try:
         else:
             writeLog("Internet Schedule changed to on due to button", 5)
             database.appendValue(
-                "internet", ["2", "1", "2", "1", str(time.time() + 3600), str(minimum)]
+                "internet", ["2", "1", "2", "1", str(
+                    time.time() + 3600), str(minimum)]
             )
-    #Will add to log if the GPIO library exists
+    # Will add to log if the GPIO library exists
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
     # Will repair all databases and update them
@@ -205,7 +206,8 @@ try:
             os.remove(location + "maintenance-mode")
             lastBackup = callTime()[1]
         try:
-            minimum = database.search("internet", "id=(SELECT MIN(id) FROM internet)")
+            minimum = database.search(
+                "internet", "id=(SELECT MIN(id) FROM internet)")
             if not minimum:
                 database.appendValue("internet", internetOnDeafult)
                 minimum = internetOnDeafult
@@ -229,7 +231,8 @@ try:
             skip = True
         try:
             if not skip:
-                internetOn = internetAction(callTime(), minimum[0:4], internetOn)
+                internetOn = internetAction(
+                    callTime(), minimum[0:4], internetOn)
         except:
             writeLog("Internet check failed", 9)
             if not developmentMachine:
@@ -252,12 +255,13 @@ try:
                         except:
                             writeLog("Button press failed", 9)
                         break
-            if os.path.isfile(location + "button.json"): # Alternative to simulate a button press by putting button into this folder
-                    try:
-                        buttonPress(internetOn)
-                        os.remove(location + "button.json")
-                    except:
-                        writeLog("Button press failed", 9)
+            # Alternative to simulate a button press by putting button into this folder
+            elif os.path.isfile(location + "button.json"):
+                try:
+                    buttonPress(internetOn)
+                    os.remove(location + "button.json")
+                except:
+                    writeLog("Button press failed", 9)
             if time.time() % 60 <= 2:
                 break
 except Exception as e:
