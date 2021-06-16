@@ -1,7 +1,7 @@
 <?php
 function sanitize($value)
 {
-  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890";
+  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-";
   $validChars = str_split($validChars);
   $valueSplit = str_split($value);
   $value = "";
@@ -174,6 +174,18 @@ function writeLog($type, $message)
 {
   dbAdd([$type, $message, mktime()], "log");
 }
+$address = $_SERVER["REMOTE_ADDR"]; // Variable that stores the IP address of user accessing the website
+// Will check if the ip address has passed its throttle point
+$jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
+$jsonData = json_decode($jsonInfo, true);
+$expireRequests = time() - 60;
+dbCommand("DELETE FROM requests WHERE time<'$expireRequests'");
+$requests = dbRequest2("SELECT * FROM requests WHERE ip='$address'");
+dbAdd([$address, time()], "requests");
+if (sizeof($requests) > $jsonData["throttle"]) {
+  echo "Too many requests";
+  exit();
+}
 // Creates a way to see uncleaned user input if neccessary
 $OGPOST = $_POST;
 $OGGET = $_GET;
@@ -220,4 +232,3 @@ if ($COOKIEID) {
     }
   }
 }
-$address = $_SERVER["REMOTE_ADDR"]; // Variable that stores the IP address of user accessing the website
