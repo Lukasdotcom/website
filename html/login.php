@@ -9,6 +9,10 @@
     <?php
     $DESCRIPTION - "Login page for Schaefer family.";
     include 'include/all.php';
+    if ($USERNAME != NULL) {
+        setcookie("user", "", time() - 300);
+        $USERNAME = Null;
+    }
     ?>
 </head>
 
@@ -20,8 +24,6 @@
     <h1>Login or Signup Here</h1>
     <?php
     if ($USERNAME != NULL) {
-        setcookie("user", "", time() - 300);
-        $USERNAME = Null;
         echo "You have logged out<br><br>";
     }
     // If logged out a login form will come

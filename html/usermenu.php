@@ -18,10 +18,13 @@
     }
     // Will check if a username and password was sent to the server and checks if that pair exists in the database
     if ($_POST["username"] != NULL and $_POST["password"] != NULL and $USERNAME == NULL) {
+        for ($i=0; $i<10; $i++) {
+            dbAdd([$address, time()], "requests");
+        }
+        dbAdd([$address, time()], "requests");
         $RESULT = dbRequest("password", "users", "username", $_POST["username"], 0);
         $RESULT = $RESULT[0];
         if (password_needs_rehash($RESULT, PASSWORD_BCRYPT)) {
-            echo "WHATL";
             $RESULT2 = $RESULT;
             $RESULT = password_hash($RESULT, PASSWORD_BCRYPT);
             dbEdit("users", [["password", $RESULT]], ["password", $RESULT2], 0);

@@ -125,6 +125,7 @@ def repair():  # Repairs all tables
         "logType": [["type", 1], ["name", 0], ["color", 0]],
         "privileges": [["username", 0], ["privilege", 0]],
         "users": [["username", 0], ["password", 0]],
+        "requests": [["ip", 0], ["time", 0]]
     }
     changedTables = []
     for x in databaseDict:
