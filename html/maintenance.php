@@ -7,7 +7,6 @@
     </title>
     <?php
     $DESCRIPTION = "This is a temporary page for maintenance. Will redirect to main page if not under maintenance.";
-    include 'include/all.php';
     header("Refresh:3; url=/index.php");
     ?>
 </head>
