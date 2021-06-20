@@ -10,9 +10,6 @@ if($_GET["internet"] == "data") {
     echo "Unsupported";
 } elseif ($PRIVILEGE["internet"] and $_GET["internet"] === "edit") {
     $id = intval($_GET["id"]);
-    if ($_GET["idNegative"] === "True") {
-        $id = $id * -1;
-    }
     $startHour = intval($_GET["startHour"]);
     $startMinute = intval($_GET["startMinute"]);
     $endHour = intval($_GET["endHour"]);
@@ -25,8 +22,5 @@ if($_GET["internet"] == "data") {
     }
 } elseif ($PRIVILEGE["internet"] and $_GET["internet"] === "delete") {
     $id = intval($_GET["id"]);
-    if ($_GET["idNegative"] === "True") {
-        $id = $id * -1;
-    }
     dbCommand("DELETE FROM internet WHERE id='$id'");
 }
