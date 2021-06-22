@@ -24,7 +24,7 @@ if($_GET["internet"] == "data") {
         }
     } else {
         http_response_code(401);
-        var_dump("Forbidden");
+        echo "Forbidden";
     }
 } elseif ($_GET["internet"] === "delete") {
     if ($PRIVILEGE["internet"]) {
@@ -32,9 +32,9 @@ if($_GET["internet"] == "data") {
         dbCommand("DELETE FROM internet WHERE id='$id'");
     } else {
         http_response_code(401);
-        var_dump("Forbidden");
+        echo "Forbidden";
     }
 } else {
     http_response_code(400);
-    var_dump("Invalid command");
+    echo "Invalid command";
 }
