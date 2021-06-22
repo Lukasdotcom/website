@@ -183,7 +183,11 @@ dbCommand("DELETE FROM requests WHERE time<'$expireRequests'");
 $requests = dbRequest2("SELECT * FROM requests WHERE ip='$address'");
 dbAdd([$address, time()], "requests");
 if (sizeof($requests) > $jsonData["throttle"]) {
-  echo "Too many requests";
+  echo "Too many requests. Page will reload automaticaly when you are unbanned.";
+  http_response_code(429);
+  $banLength = time() - $requests[sizeof($requests) - 50]["time"];
+  header("Refresh:$banLength; url=/index.php");
+  header("Retry-After: $banLength");
   exit();
 }
 // Creates a way to see uncleaned user input if neccessary

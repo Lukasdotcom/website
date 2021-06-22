@@ -7,7 +7,8 @@
     </title>
     <?php
     $DESCRIPTION = "This is a temporary page for maintenance. Will redirect to main page if not under maintenance.";
-    header("Refresh:3; url=/index.php");
+    header('Retry-After: 3600');
+    http_response_code(503);
     ?>
 </head>
 <style>
