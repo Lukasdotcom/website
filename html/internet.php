@@ -24,6 +24,7 @@
     echo "<div class='main'>
         <h1>Internet Schedule</h1>
         <script type='text/javascript' src='javascript/internet.js'></script>
+        <script type='text/javascript' src='javascript/functions.js'></script>
         <script> var topPriority = $topPriority; </script>
         <table id='internetTable'><tr><th>Priority</th><th>Start Time</th><th>End Time</th><th>Expiration Time</th><th></th></tr>";
     foreach ($schedule as $one) {
