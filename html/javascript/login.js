@@ -3,8 +3,10 @@ function login(username, password, signup) {  // Used to login/Signup and will r
     ajax.onload = function() {
         if (ajax.status == 200) {
             location.replace("/usermenu.php");
+        } else if  (ajax.status == 429) {
+            window.location.reload();
         } else {
-            alert(ajax.responseText);
+            document.getElementById("status").innerHTML = ajax.responseText;
         }
         }
     if (signup == true){

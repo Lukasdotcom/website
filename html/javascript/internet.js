@@ -3,27 +3,37 @@ function remove(id) {
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
-        document.getElementById("saveStatus").innerHTML = "Saved";
-        document.getElementById(id + ".row").remove()
-        setTimeout(() => { document.getElementById("saveStatus").innerHTML = ""; }, 2000);
+        if (ajax.status == 200) {
+            document.getElementById("saveStatus").innerHTML = "Saved";
+            setTimeout(() => { document.getElementById("saveStatus").innerHTML = ""; }, 2000);
+        } else if  (ajax.status == 429) {
+            window.location.reload();
+        } else {
+            document.getElementById("saveStatus").innerHTML = ajax.responseText;
+        }
         }
     ajax.open("POST", "api.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`internet=delete&id='${id}'&key='${getCookie('user')}'`); 
-    ajax.send();
+    ajax.send(`internet=delete&id='${id}'&key='${getCookie('user')}'`);
+    document.getElementById(id + ".row").remove()
 }
 function save(id) {
     document.getElementById("saveStatus").innerHTML = "Saving";
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
-        document.getElementById("saveStatus").innerHTML = "Saved";
-        setTimeout(() => { document.getElementById("saveStatus").innerHTML = ""; }, 2000);        
+        if (ajax.status == 200) {
+            document.getElementById("saveStatus").innerHTML = "Saved";
+            setTimeout(() => { document.getElementById("saveStatus").innerHTML = ""; }, 2000);
+        } else if  (ajax.status == 429) {
+            window.location.reload();
+        } else {
+            document.getElementById("saveStatus").innerHTML = ajax.responseText;
+        }      
         }
     ajax.open("POST", "api.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`internet=edit&id='${id}'&startHour='${document.getElementById(id + '.startHour').value}'&startMinute='${document.getElementById(id + '.startMinute').value}'&endHour='${document.getElementById(id + '.endHour').value}'&endMinute='${document.getElementById(id + '.endMinute').value}'&expire='${document.getElementById(id + '.expire').value}'&key='${getCookie('user')}'`); 
-    ajax.send(); 
 }
 function addRow() {
     topPriority ++;
