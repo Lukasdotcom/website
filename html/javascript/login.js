@@ -12,7 +12,6 @@ function login(username, password, signup) {  // Used to login/Signup and will r
     } else {
         type = 'login';
     }
-    console.log(1);
     ajax.open("POST", "api.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`login='${type}'&password='${password}'&username='${username}'`);
