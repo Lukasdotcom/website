@@ -50,23 +50,21 @@
             $expireText = "$expire";
         }
         echo "<tr id='$priority.row'>
-                <form>
-                    <td>$priority</td>
-                    <td>
-                        $startTimeText
-                    </td><td>
-                        $endTimeText
-                    </td><td>
-                        $expireText
-                    </td><td>";
-                if($PRIVILEGE["internet"]) {
-                    echo "<button type='button' onClick='save(`$priority`)'>✓</button>
-                        <div class='red'>
-                            <button type='button' onClick='remove(`$priority`)'>✗</button>";
-                }  
-                    echo "</div>
-                    </td>
-                </form>
+                <td>$priority</td>
+                <td>
+                    $startTimeText
+                </td><td>
+                    $endTimeText
+                </td><td>
+                    $expireText
+                </td><td>";
+            if($PRIVILEGE["internet"]) {
+                echo "<button type='button' onClick='save(`$priority`)'>✓</button>
+                    <div class='red'>
+                        <button type='button' onClick='remove(`$priority`)'>✗</button>";
+            }  
+                echo "</div>
+                </td>
             </tr>";
     }
     echo "</table>";
