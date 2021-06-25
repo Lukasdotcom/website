@@ -65,7 +65,7 @@ if($_GET["internet"] == "data") {
     dbAdd([$address, time()], "requests");
     $RESULT = dbRequest("password", "users", "username", $_POST["username"], 0);
     $RESULT = $RESULT[0];
-    if (password_needs_rehash($RESULT, PASSWORD_BCRYPT)) {
+    if ($RESULT and password_needs_rehash($RESULT, PASSWORD_BCRYPT)) {
         $RESULT2 = $RESULT;
         $RESULT = password_hash($RESULT, PASSWORD_BCRYPT);
         dbEdit("users", [["password", $RESULT]], ["password", $RESULT2], 0);
