@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import router  # Custom library that has router controls
-
+import urllib.request
 try:  # Will check if device supports GPIO otherwise will print/log statements
     import RPi.GPIO as GPIO
 
@@ -152,9 +152,21 @@ try:
     times = time.time()
     change = 0
     startTime = times
+    while True: # will wait until connected to internet
+        try:
+            urllib.request.urlopen("https://google.com")
+            break
+        except Exception:
+            try:
+                urllib.request.urlopen("https://bing.com")
+                break
+            except Exception:
+                if (developmentMachine):  # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
+                    break
+                continue
     while change < 1:
         totalTime = time.time() - startTime
-        if totalTime > 120:
+        if totalTime > 60:
             writeLog("Time may be wrong; time check failed", 9)
             break
         time.sleep(0.5)
