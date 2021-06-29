@@ -10,9 +10,12 @@ except:
 import json
 
 import time
-
+import traceback
 import os
 import datetime
+
+def error(e):
+    return "".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))
 
 
 def writeFile(location, info):  # Will write info in json format to a file
@@ -265,6 +268,8 @@ try:
             if time.time() % 60 <= 2:
                 break
 except Exception as e:
+    with open(location + "error.txt", "w") as f:
+        f.write(error(e))
     f = open(location + "maintenance-mode", "w")
     f.close()
     if not developmentMachine:

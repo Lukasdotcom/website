@@ -7,3 +7,4 @@ python/__pycache__/
 maintenance-mode
 !logTypes.json
 python/config.json
+error.txt
