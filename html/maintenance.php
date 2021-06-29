@@ -18,5 +18,5 @@
 
 <body>
     <h1 style='font-size: 50px; color: red; font-weight: 850;'>The website is currently under maintenance or has crashed please wait!</h1>
-    <p style="color: white;">Note for system administrator. The error message is in error.log of the website root directory.</p>
+    <p style="color: white;">Note for system administrator. If the server crashed the error message is in error.log of the website root directory.</p>
 </body>
