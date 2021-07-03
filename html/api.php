@@ -96,6 +96,15 @@ if($_GET["internet"] == "data") {
     } else {
         missingPrivilege($USERNAME);
     }
+} elseif ($_POST["log"] == "remove") {
+    if ($PRIVILEGE["deleteLog"]) {
+        $possibleDelete = dbRequest("message", "log", "time", $_POST["time"], 0);
+        if (array_search($OGPOST["message"], $possibleDelete) !== NULL and array_search($OGPOST["message"], $possibleDelete) !== false) {
+            dbRemove("log", ["message", "time"], [$OGPOST["message"], $_POST["time"]], 0);
+        }
+    } else {
+        missingPrivilege($USERNAME);
+    }
 } else {
     http_response_code(400);
     echo "Invalid command";
