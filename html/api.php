@@ -90,6 +90,12 @@ if($_GET["internet"] == "data") {
         http_response_code(401);
         echo "Wrong password or username try again.";
     }
+} elseif ($_GET["log"] == "data"){
+    if ($PRIVILEGE["viewLog"]) {
+        echo json_encode(array_reverse(dbRequest("*", "log", "", "", 2)));
+    } else {
+        missingPrivilege($USERNAME);
+    }
 } else {
     http_response_code(400);
     echo "Invalid command";
