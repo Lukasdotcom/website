@@ -90,6 +90,21 @@ if($_GET["internet"] == "data") {
         http_response_code(401);
         echo "Wrong password or username try again.";
     }
+} elseif ($_GET["log"] == "data"){
+    if ($PRIVILEGE["viewLog"]) {
+        echo json_encode(array_reverse(dbRequest("*", "log", "", "", 2)));
+    } else {
+        missingPrivilege($USERNAME);
+    }
+} elseif ($_POST["log"] == "remove") {
+    if ($PRIVILEGE["deleteLog"]) {
+        $possibleDelete = dbRequest("message", "log", "time", $_POST["time"], 0);
+        if (array_search($OGPOST["message"], $possibleDelete) !== NULL and array_search($OGPOST["message"], $possibleDelete) !== false) {
+            dbRemove("log", ["message", "time"], [$OGPOST["message"], $_POST["time"]], 0);
+        }
+    } else {
+        missingPrivilege($USERNAME);
+    }
 } else {
     http_response_code(400);
     echo "Invalid command";

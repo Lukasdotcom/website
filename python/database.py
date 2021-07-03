@@ -161,7 +161,7 @@ def repair():  # Repairs all tables
             except:
                 break
             backupValue.remove(x)
-        if backupValue or compareValues:
+        if backupValue or compareValues or name == "logType":
             try:
                 deleteTable(name)
             except:
