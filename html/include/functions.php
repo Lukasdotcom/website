@@ -1,7 +1,7 @@
 <?php
 function sanitize($value)
 {
-  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-";
+  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-# ";
   $validChars = str_split($validChars);
   $valueSplit = str_split($value);
   $value = "";

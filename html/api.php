@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 if($_GET["key"]) { // Will check if a get key is given and then will use the key as the cookie variable
     $_COOKIE["user"] = $_GET["key"];
 } else {
