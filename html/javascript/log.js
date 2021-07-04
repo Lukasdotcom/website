@@ -44,3 +44,18 @@ function remove(message, time, id) {
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`log=remove&message=${message}&time=${time}&key='${getCookie('user')}'`); 
 }
+function collapseCategories() {
+    if (getCookie("collapseCategories")) {
+        document.getElementById(`collapseCategories`).innerHTML = "Uncollapse Categories";
+        for(var i=0;i<typeLength;i++) {
+            document.getElementById(`${types[i]["name"]}.text`).style.display = "none";
+        }
+        document.cookie = "collapseCategories=true";
+    } else {
+        document.getElementById(`collapseCategories`).innerHTML = "Collapse Categories";
+        for(var i=0;i<typeLength;i++) {
+            document.getElementById(`${types[i]["name"]}.text`).style.display = "";
+        }
+        document.cookie = "collapseCategories=";
+    }
+}

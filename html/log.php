@@ -31,7 +31,7 @@
                 <input id='searchText' value='$cookieSearch' placeholder='Search'></input>
                 <button type='button' onClick='search(document.getElementById(`searchText`).value)'>Search</button><br>";
         echo '<form method="post" action="/log.php">
-            <input type="submit" value="reload"><br>';
+            <input type="submit" value="reload"></form>';
         $typeList = dbRequest("*", "logType", "", "", 2);
         // Decodes the cookie that stores preferences
         $typeCookie = json_decode($OGCOOKIE["log"]);
@@ -40,6 +40,7 @@
         $typeLength = sizeof($typeList);
         echo "<script>var typeLength = $typeLength</script>";
         echo "<script>var types = JSON.parse('$jsonTypeList'); var typeLength = types.length;</script>";
+        echo "<button id='collapseCategories' type='button' onClick='collapseCategories()'>Collapse Categories</button><br>";
         // Creates all categories to search for
         foreach ($typeList as $logType) {
             $type = $logType["name"];
@@ -90,10 +91,12 @@
         if ($cookieSearch) {
             echo "<script>search($cookieSearch)</script>";
         }
+        if ($_COOKIE["collapseCategories"]) {
+            echo "<script>collapseCategories()</script>";
+        }
     }
     ?>
-    </form>
-        </div>
+    </div>
 </body>
 
 </html>
