@@ -31,10 +31,14 @@ if($_GET["internet"] == "data") {
         $expire = intval($_POST["expire"]);
         if (dbRequest2("SELECT * FROM internet WHERE id='$id'")) {
             dbEdit("internet", [["hour", $startHour], ["minute", $startMinute], ["hour2", $endHour], ["minute2", $endMinute], ["expire", $expire]], ["id", $id], 0);
-            writeLog(11, "User $USERNAME changed internet schedule entry number $id");
+            $startTime = $startHour . ":" . $startMinute;
+            $endTime = $endHour . ":" . $endMinute;
+            writeLog(11, "User $USERNAME changed internet schedule entry number $id to contents, from $startTime to $endTime with expiration of $expire.");
         } else {
             dbAdd([$startHour, $startMinute, $endHour, $endMinute, $expire, $id], "internet");
-            writeLog(11, "User $USERNAME added internet schedule entry number $id");
+            $startTime = $startHour . ":" . $startMinute;
+            $endTime = $endHour . ":" . $endMinute;
+            writeLog(11, "User $USERNAME added internet schedule entry number $id with contents from $startTime to $endTime with expiration of $expire.");
         }
     } else {
         missingPrivilege($USERNAME);
@@ -42,8 +46,12 @@ if($_GET["internet"] == "data") {
 } elseif ($_POST["internet"] === "delete") {
     if ($PRIVILEGE["internet"]) {
         $id = intval($_POST["id"]);
+        $input = dbRequest2("SELECT * FROM internet WHERE id='$id'");
         dbCommand("DELETE FROM internet WHERE id='$id'");
-        writeLog(11, "User $USERNAME deleted internet schedule entry number $id");
+        $startTime = $input[0]["hour"] . ":" . $input[0]["minute"];
+        $endTime = $input[0]["hour2"] . ":" . $input[0]["minute2"];
+        $expire = $input[0]["expire"];
+        writeLog(11, "User $USERNAME deleted internet schedule entry number $id with contents from $startTime to $endTime with expiration of $expire.");
     } else {
         missingPrivilege($USERNAME);
     }
