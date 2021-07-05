@@ -45,7 +45,7 @@ function remove(message, time, id) {
     ajax.send(`log=remove&message=${message}&time=${time}&key='${getCookie('user')}'`); 
 }
 function collapseCategories() {
-    if (getCookie("collapseCategories")) {
+    if (!getCookie("collapseCategories")) {
         document.getElementById(`collapseCategories`).innerHTML = "Uncollapse Categories";
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.display = "none";
