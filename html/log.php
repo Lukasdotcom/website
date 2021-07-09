@@ -40,7 +40,15 @@
         $typeLength = sizeof($typeList);
         echo "<script>var typeLength = $typeLength</script>";
         echo "<script>var types = JSON.parse('$jsonTypeList'); var typeLength = types.length;</script>";
-        echo "<button id='collapseCategories' type='button' onClick='collapseCategories()'>Collapse Categories</button><br>";
+        // Creates collapse categories and name of button
+        if ($_COOKIE["collapseCategories"]) {
+            $collapse = "display: none;";
+            $buttonName = "Uncollapse Categories";
+        } else {
+            $collapse = "";
+            $buttonName = "Collapse Categories";
+        }
+        echo "<button id='collapseCategories' type='button' onClick='collapseCategories()'>$buttonName</button><br>";
         // Creates all categories to search for
         foreach ($typeList as $logType) {
             $type = $logType["name"];
@@ -55,7 +63,7 @@
             } else {
                 $checked = "checked";
             }
-            echo "<div style='color: $color' id='$type.text'><input type='checkbox' id='$type' name='$type' $checked>$type; Color: <input type='color' value='$color' id='$type.color'><button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button></div>";
+            echo "<div style='color: $color; $collapse' id='$type.text'><input type='checkbox' id='$type' name='$type' $checked>$type; Color: <input type='color' value='$color' id='$type.color'><button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button></div>";
             $id++;
         }
         echo "<input id='deleted' type='hidden' name='$type'>";
@@ -88,12 +96,6 @@
         $id -= 1;
         echo "<script>var logLength = $id;</script>";
         echo "</table>";
-        if ($cookieSearch) {
-            echo "<script>search($cookieSearch)</script>";
-        }
-        if ($_COOKIE["collapseCategories"]) {
-            echo "<script>collapseCategories()</script>";
-        }
     }
     ?>
     </div>
