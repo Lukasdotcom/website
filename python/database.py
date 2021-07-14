@@ -174,13 +174,14 @@ def repair():  # Repairs all tables
                 logTypes = readFile(websiteRoot + "logTypes.json")
                 for x in logTypes:
                     appendValue(name, [x["type"], x["name"], x["color"]])
-            elif name == "privileges":
-                appendValue(name, [dbInfo["database"]["username"], "root"])
-            elif name == "users":
-                appendValue(
-                    name,
-                    [dbInfo["database"]["username"], dbInfo["database"]["password"]],
-                )
-            changedTables.append(name)
+            else:
+                if name == "privileges":
+                    appendValue(name, [dbInfo["database"]["username"], "root"])
+                elif name == "users":
+                    appendValue(
+                        name,
+                        [dbInfo["database"]["username"], dbInfo["database"]["password"]],
+                    )
+                changedTables.append(name)
     db2.close()
     return changedTables
