@@ -12,7 +12,6 @@
 </head>
 
 <body>
-    <script type='text/javascript' src='javascript/usermenu.js'></script>
     <?php
     include 'include/menu.php';
     echo "<div class='main'>";
@@ -20,11 +19,13 @@
         header("Refresh:3; url=/login.php");
         echo "<h2>You are not logged in redirecting...</h2>";
     } else {
+        echo "<script type='text/javascript' src='javascript/usermenu.js'></script>
+        <script type='text/javascript' src='javascript/functions.js'></script>";
         echo "<h1>Edit User(s) Here</h1>";
         $firstUser = $USERNAME;
         if ($PRIVILEGE["editUser"] or $PRIVILEGE["deleteUser"]) {
             echo '<label for="user">Choose a user:</label>
-                        <select id="user" name="user" onchange="console.log(document.getElementById(`user`).value)">';
+                        <select id="user" name="user">';
             $LIST = dbRequest("username", "users", NULL, NULL, 2);
             foreach ($LIST as $USER) {
                 if (!root($USER) or $PRIVILEGE["root"]) {
@@ -32,13 +33,10 @@
                 }
             }
             echo '</select><br>';
-            // Will make the selection to your user
-            echo "<script>editUserStart('$USERNAME')</script>";
         }
-        echo "<h3>Privileges for $USERNAME</h3>";
-        foreach ($PRIVILEGE as $type => $ignore) {
-            echo "<input type='checkbox' name='$type' id='$type' value='True' checked>$type<br>";
-        }
+        echo "<h3 id='header'>Privileges for $USERNAME</h3>";
+        echo "<div id='privilege'></div>";
+        echo "<button id='save' type='button'>Save</button>";
     }
     ?>
     </div>

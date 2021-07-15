@@ -231,6 +231,7 @@ if ($COOKIEID) {
       foreach ($PRIVILEGELIST as $type) {
         if (!$PRIVILEGE[$type]) {
           dbAdd([$USERNAME, $type], "privileges");
+          $PRIVILEGE[$type] = True;
         }
       }
     }

@@ -6,7 +6,8 @@ echo '<meta http-equiv="content-language" content="en-us">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
-    <link rel="stylesheet" type="text/css" href="/css/website.css" />';
+    <link rel="stylesheet" type="text/css" href="/css/website.css" />
+    <script type="text/javascript" src="javascript/jquery.js"></script>';
 if (false) {
   echo '<script type="text/javascript">
       (function(c,l,a,r,i,t,y){
