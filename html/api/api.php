@@ -7,7 +7,7 @@ if($_GET["key"]) { // Will check if a get key is given and then will use the key
     $_COOKIE["user"] = $_POST["key"];
 }
 require_once "../include/functions.php";
-function missingPrivilege($USERNAME) {
+function missingPrivilege($USERNAME) { // Used to see if the user is not logged in or if the user does not have the privilege to do that action
     if ($USERNAME) {
         http_response_code(403);
         echo "Forbidden";
