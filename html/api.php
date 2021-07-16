@@ -1,4 +1,5 @@
 <?php
+// Will be retired soon in exchange for the api folder to improve performance and readability
 header('Content-Type: application/json');
 if($_GET["key"]) { // Will check if a get key is given and then will use the key as the cookie variable
     $_COOKIE["user"] = $_GET["key"];
@@ -15,13 +16,13 @@ function missingPrivilege($USERNAME) {
         echo "Not logged in";
     }
 }
-if($_GET["internet"] == "data") {
+if($_GET["internet"] == "data") { // Will give internet data
     $data = dbRequest2("SELECT * FROM internet ORDER BY id Asc");
     echo json_encode($data);
 } elseif ($_GET["internet"] === "button"){
     echo "Unsupported. This message will eventually be removed";
     http_response_code(410);
-} elseif ($_POST["internet"] === "edit") {
+} elseif ($_POST["internet"] === "edit") { // Will edit the internet data in the database
     if ($PRIVILEGE["internet"]) {
         $id = intval($_POST["id"]);
         $startHour = intval($_POST["startHour"]);
@@ -43,7 +44,7 @@ if($_GET["internet"] == "data") {
     } else {
         missingPrivilege($USERNAME);
     }
-} elseif ($_POST["internet"] === "delete") {
+} elseif ($_POST["internet"] === "delete") { // Will delete data from internet schedule
     if ($PRIVILEGE["internet"]) {
         $id = intval($_POST["id"]);
         $input = dbRequest2("SELECT * FROM internet WHERE id='$id'");
@@ -68,10 +69,12 @@ if($_GET["internet"] == "data") {
             exit();
         }
     }
-    for ($i=0; $i<10; $i++) {
+    // Will add the specified amount of requests that a login or signup gives
+    $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
+    $throttleAmount = json_decode($jsonInfo, true)["loginThrottle"];
+    for ($i=0; $i<$throttleAmount; $i++) {
         dbAdd([$address, time()], "requests");
     }
-    dbAdd([$address, time()], "requests");
     $RESULT = dbRequest("password", "users", "username", $_POST["username"], 0);
     $RESULT = $RESULT[0];
     if ($RESULT and password_needs_rehash($RESULT, PASSWORD_BCRYPT)) {
@@ -99,13 +102,13 @@ if($_GET["internet"] == "data") {
         http_response_code(401);
         echo "Wrong password or username try again.";
     }
-} elseif ($_GET["log"] == "data"){
+} elseif ($_GET["log"] == "data"){ // Gets the log
     if ($PRIVILEGE["viewLog"]) {
         echo json_encode(array_reverse(dbRequest("*", "log", "", "", 2)));
     } else {
         missingPrivilege($USERNAME);
     }
-} elseif ($_POST["log"] == "remove") {
+} elseif ($_POST["log"] == "remove") { // To delete an entry in log
     if ($PRIVILEGE["deleteLog"]) {
         $possibleDelete = dbRequest("message", "log", "time", $_POST["time"], 0);
         if (array_search($OGPOST["message"], $possibleDelete) !== NULL and array_search($OGPOST["message"], $possibleDelete) !== false) {
