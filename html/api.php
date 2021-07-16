@@ -69,10 +69,12 @@ if($_GET["internet"] == "data") { // Will give internet data
             exit();
         }
     }
-    for ($i=0; $i<10; $i++) {
+    // Will add the specified amount of requests that a login or signup gives
+    $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
+    $throttleAmount = json_decode($jsonInfo, true)["loginThrottle"];
+    for ($i=0; $i<$throttleAmount; $i++) {
         dbAdd([$address, time()], "requests");
     }
-    dbAdd([$address, time()], "requests");
     $RESULT = dbRequest("password", "users", "username", $_POST["username"], 0);
     $RESULT = $RESULT[0];
     if ($RESULT and password_needs_rehash($RESULT, PASSWORD_BCRYPT)) {
