@@ -47,11 +47,16 @@ var multiplayer = {
             clearInterval(multiplayer.intervalFakeLive);
             let data = JSON.parse(this.response);
             $("#leaderboard").empty();
-            $("#leaderboard").append(`<tr><th>Username</th><th>Cookies</th><th>Cookies Per Second</th></tr>`)
+            $("#leaderboard").append(`<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th></tr>`)
             multiplayer.internalCookies = {};
             data.forEach(data => {
-                multiplayer.internalCookies[data["username"]] = parseInt(data["cookies"]);
-                $("#leaderboard").append(`<tr><td>${data["username"]}</td><td>${data["cookies"]}</td><td>${data["cookiesPerSecond"]/10}</td></tr>`);
+                let age = Math.floor(Date.now()/1000-parseInt(data["lastUpdate"]));
+                let style = "color:grey";
+                if (age < 3) {
+                    multiplayer.internalCookies[data["username"]] = parseInt(data["cookies"]);
+                     style = "";
+                }
+                $("#leaderboard").append(`<tr style='${style}'><td>${data["username"]}</td><td>${data["cookies"]}</td><td>${data["cookiesPerSecond"]/10}</td><td>${age}</td></tr>`);
             });
             multiplayer.lastFetch = Date.now();
             multiplayer.intervalFakeLive = setInterval(multiplayer.fakeLive, 30);
@@ -69,7 +74,7 @@ var multiplayer = {
                 if (child.children[0].textContent == Game.bakeryName) {
                     child.children[1].innerHTML = Math.round(Game.cookies);
                     child.children[2].innerHTML = Math.round(Game.cookiesPs*10)/10;
-                } else {
+                } else if (Object.keys(multiplayer.internalCookies).includes(child.children[0].textContent)) {
                     multiplayer.internalCookies[child.children[0].innerHTML] += ((Date.now() - multiplayer.lastFetch)/1000)*parseInt(child.children[2].innerHTML);
                     child.children[1].innerHTML = Math.round(multiplayer.internalCookies[child.children[0].innerHTML]);
                 }
