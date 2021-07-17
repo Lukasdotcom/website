@@ -1,5 +1,0 @@
-// A reminder to copy this file and to rename the hostname variable to the hostname of the website
-var hostname = "http://host";
-var script = document.createElement('script');
-script.src = `${hostname}/cookieClicker/cookie.js`;
-document.head.appendChild(script);

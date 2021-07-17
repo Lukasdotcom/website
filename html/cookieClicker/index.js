@@ -1,3 +1,6 @@
+// Will get the hostname
+hostname = document.getElementById("hostname").src;
+hostname = hostname.replace("/cookieClicker/index.js", "");
 // Will add jquery and another script
 var script = document.createElement('script');
 script.src = `${hostname}/javascript/functions.js`;
@@ -9,7 +12,7 @@ document.head.appendChild(script);
 var multiplayer = {
     startMenu: function() { // Will generate the startup menu
         this.clear()
-        $("#smallSupport").append(`<h1 class='title' style='font-size:150%'>Welcome ${Game.bakeryName}</h1><br>
+        $("#multiplayer").append(`<h1 class='title' style='font-size:150%'>Welcome ${Game.bakeryName}</h1><br>
         <label for="room">Room ID:</label>
         <input type="text" id="room" name="room"/>
         <a id='joinButton' class='option'>Join room</a>`);
@@ -20,12 +23,12 @@ var multiplayer = {
         })
     },
     clear: function() { // Will clear the menu area for this
-        $("#smallSupport").empty();
+        $("#multiplayer").empty();
     },
     room: null, // This stores the room id
     gameMenu: function() { // Will generate the game menu and run the actual loop
         this.clear();
-        $("#smallSupport").append(`<h1 class='title' style='font-size:150%'>Welcome to ${this.room}</h1><br>
+        $("#multiplayer").append(`<h1 class='title' style='font-size:150%'>Welcome to ${this.room}</h1><br>
         <p>If table stops updating leave and join the room.</p>
         <table id='leaderboard'></table>
         <a id='leave' class='option'>Leave room</a>`)
@@ -55,7 +58,17 @@ var multiplayer = {
 // This will make sure that Jquery is loaded before starting everything
 var waitForJQuery = setInterval(function () {
     if (typeof $ != 'undefined' && typeof getCookie != "undefined") {
-        multiplayer.startMenu()
+        let element = document.getElementById("sectionRight");
+        while (element.firstChild.id !== "store") {
+            console.log(document.getElementById("sectionRight").firstChild.id !== "storeTitle");
+            element.firstChild.remove();
+        }
+        let div = document.createElement('div');
+        div.id = "multiplayer";
+        div.style = "width:300px;text-align:center;background:rgba(0,0,0,0.5);position:relative;z-index:100;";
+        element.insertBefore(div, element.firstChild);
+        multiplayer.startMenu();
+        console.log("Import succesful");
         clearInterval(waitForJQuery);
     }
 }, 10);
