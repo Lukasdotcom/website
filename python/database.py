@@ -126,7 +126,7 @@ def repair():  # Repairs all tables
         "privileges": [["username", 0], ["privilege", 0]],
         "users": [["username", 0], ["password", 0]],
         "requests": [["ip", 0], ["time", 1]],
-        "cookieClicker": [["username", 0], ["room", 0], ["cookies", 1], ["cookiesPerSecond", 1], ["lastUpdate", 1]]
+        "cookieClicker": [["username", 0], ["room", 0], ["cookies", 0], ["cookiesPerSecond", 0], ["lastUpdate", 1]]
     }
     changedTables = []
     for x in databaseDict:

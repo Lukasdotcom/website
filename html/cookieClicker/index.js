@@ -32,35 +32,60 @@ var multiplayer = {
         <p>If table stops updating leave and join the room.</p>
         <table id='leaderboard'></table>
         <a id='leave' class='option'>Leave room</a>`)
-        this.interval = setInterval(this.fetchData, 1000);
+        this.intervalFetch = setInterval(this.fetchData, 1000);
         $("#leave").click(function() {
-            clearInterval(multiplayer.interval);
+            clearInterval(multiplayer.intervalFetch);
+            clearInterval(multiplayer.intervalFakeLive);
             multiplayer.startMenu();
         })
     },
-    interval: null,
+    intervalFakeLive: null,
+    intervalFetch: null,
     fetchData: function() { // Used to fetch data from server and update the server
         const ajax = new XMLHttpRequest();
         ajax.onload = function() {
+            clearInterval(multiplayer.intervalFakeLive);
             let data = JSON.parse(this.response);
             $("#leaderboard").empty();
             $("#leaderboard").append(`<tr><th>Username</th><th>Cookies</th><th>Cookies Per Second</th></tr>`)
+            multiplayer.internalCookies = {};
             data.forEach(data => {
+                multiplayer.internalCookies[data["username"]] = parseInt(data["cookies"]);
                 $("#leaderboard").append(`<tr><td>${data["username"]}</td><td>${data["cookies"]}</td><td>${data["cookiesPerSecond"]/10}</td></tr>`);
             });
+            multiplayer.lastFetch = Date.now();
+            multiplayer.intervalFakeLive = setInterval(multiplayer.fakeLive, 30);
             }
         ajax.open("POST", `${this.hostname}/api/cookieClicker.php`);
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         ajax.send(`username=${Game.bakeryName}&cookies=${Math.round(Game.cookies)}&cookiesPs=${Game.cookiesPs * 10}&room=${multiplayer.room}`);
     },
-    hostname: hostname
+    fakeLive: function() {// Will make it look like you are live
+        let children = $("#leaderboard").children();
+        let length = children.length;
+        for(let i = 0; i < length; i++) {
+            let child = children[i];
+            if (child.children[1].textContent !== "Cookies") {
+                if (child.children[0].textContent == Game.bakeryName) {
+                    child.children[1].innerHTML = Math.round(Game.cookies);
+                    child.children[2].innerHTML = Math.round(Game.cookiesPs*10)/10;
+                } else {
+                    multiplayer.internalCookies[child.children[0].innerHTML] += ((Date.now() - multiplayer.lastFetch)/1000)*parseInt(child.children[2].innerHTML);
+                    child.children[1].innerHTML = Math.round(multiplayer.internalCookies[child.children[0].innerHTML]);
+                }
+            }
+        }
+        multiplayer.lastFetch = Date.now()
+    },
+    internalCookies: null, // Used to store a more precise cookie amount
+    hostname: hostname,
+    lastFetch: null // Says the last time that the data was updated
 } 
 // This will make sure that Jquery is loaded before starting everything
 var waitForJQuery = setInterval(function () {
     if (typeof $ != 'undefined' && typeof getCookie != "undefined") {
         let element = document.getElementById("sectionRight");
         while (element.firstChild.id !== "store") {
-            console.log(document.getElementById("sectionRight").firstChild.id !== "storeTitle");
             element.firstChild.remove();
         }
         let div = document.createElement('div');
