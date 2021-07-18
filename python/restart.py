@@ -142,7 +142,7 @@ try:
                     time.time() + 3600), str(minimum)]
             )
     def dailyMaintenance(): # Will run daily and on boot
-        delete("cookieClicker", f"lastUpdate<{round(time.time()-604800)}")
+        database.delete("cookieClicker", f"lastUpdate<{round(time.time()-604800)}")
     # Will add to log if the GPIO library exists
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
