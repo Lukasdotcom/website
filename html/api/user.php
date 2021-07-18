@@ -1,5 +1,5 @@
 <?php
-include "api.php";
+require_once "api.php";
 /**
  * @param string the user you want to search for if this is empty the logged in user is used
  * @return string of the user or will quit if the user does not exist

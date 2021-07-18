@@ -8,14 +8,14 @@
     </title>
     <?php
     $DESCRIPTION = "DESCRIPTION NAME HERE";
-    include 'include/all.php';
+    require_once 'include/all.php';
     ?>
 </head>
 
 <body>
     <?php
     include 'include/menu.php';
-    echo "<div class='main'>";
+    require_once "<div class='main'>";
     ?>
     </div>
 </body>

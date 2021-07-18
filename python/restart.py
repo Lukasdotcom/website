@@ -141,6 +141,8 @@ try:
                 "internet", ["2", "1", "2", "1", str(
                     time.time() + 3600), str(minimum)]
             )
+    def dailyMaintenance(): # Will run daily and on boot
+        database.delete("cookieClicker", f"lastUpdate<{round(time.time()-604800)}")
     # Will add to log if the GPIO library exists
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
@@ -197,6 +199,8 @@ try:
         os.remove(location + "maintenance-mode")
     except:
         1
+    #Runs stuff that runs every boot
+    dailyMaintenance()
     writeLog("Server has finished booting procedure", 0)
     # Will update the time every minute to make sure electricity outages are reported to the minute precise and will request a check to see if the wifi status needs to be changed
     while True:
@@ -208,6 +212,8 @@ try:
             info = [callTime(), callTime()]
         writeFile(location + "data.json", info)
         if lastBackup != callTime()[1]:
+            #Will run the daily script
+            dailyMaintenance()
             try:
                 f = open(location + "maintenance-mode", "w")
                 f.close()
