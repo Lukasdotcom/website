@@ -7,13 +7,11 @@ if ($_POST["username"] !== null and $_POST["cookies"] !== null and $_POST["cooki
     $cookiesPs = $_POST["cookiesPs"];
     $room = $_POST["room"];
     $time = time();
-    $expireTime = time() - 5;
     if (dbRequest2("SELECT * FROM cookieClicker WHERE room='$room' AND username='$username'")) {
         dbCommand("UPDATE cookieClicker SET cookies = '$cookies', cookiesPerSecond = '$cookiesPs', lastUpdate='$time' WHERE room='$room' AND username='$username';");
     } else {
         dbCommand("INSERT INTO cookieClicker (username, room, cookies, cookiesPerSecond, lastUpdate) VALUES ('$username', '$room', $cookies, $cookiesPs, $time)");
     }
-    dbCommand("DELETE FROM cookieClicker WHERE username='$username' AND room='$room' AND lastUpdate!='$time'");
     echo json_encode(dbRequest2("SELECT * FROM cookieClicker WHERE room='$room'"));
 } else {
     http_response_code(400);
