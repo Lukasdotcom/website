@@ -18,7 +18,8 @@ if ($_POST["type"] === "view" and $_POST["username"] !== null and $_POST["cookie
     $username = $_POST["username"];
     $cookies = intval($_POST["cookies"]);
     $room = $_POST["room"];
-    $javascript = "Game.Earn($cookies); Game.Notify(`Donation`, `You were donated $cookies cookies by $username.`, [10, 4])";
+    $sender = $_POST["sender"];
+    $javascript = "Game.Earn($cookies); Game.Notify(`Donation`, `You were donated $cookies cookies by $sender.`, [10, 4])";
     dbCommand("INSERT INTO cookieClickerCommand (username, room, javascript) VALUES ('$username', '$room', '$javascript')");
 } else {
     http_response_code(400);

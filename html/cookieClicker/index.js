@@ -77,7 +77,7 @@ var multiplayer = {
             }
         ajax.open("POST", `${this.hostname}/api/cookieClicker.php`);
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`username=${Game.bakeryName}&cookies=${Math.round(Game.cookies)}&cookiesPs=${Game.cookiesPs * 10}&room=${multiplayer.room}&type=view`);
+        ajax.send(`username=${Game.bakeryName}&cookies=${Math.round(Game.cookies)}&cookiesPs=${Math.round(Game.cookiesPs * 10)}&room=${multiplayer.room}&type=view`);
     },
     fakeLive: function() {// Will make it look like you are live
         let children = $("#leaderboard").children();
@@ -105,7 +105,7 @@ var multiplayer = {
         let ajax = new XMLHttpRequest();
         ajax.open("POST", `${this.hostname}/api/cookieClicker.php`);
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`username=${user}&cookies=${amount}&room=${multiplayer.room}&type=donate`);
+        ajax.send(`sender=${Game.bakeryName}&username=${user}&cookies=${amount}&room=${multiplayer.room}&type=donate`);
     }
 } 
 // This will make sure that Jquery is loaded before starting everything
