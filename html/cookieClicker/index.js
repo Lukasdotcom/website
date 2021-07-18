@@ -42,28 +42,42 @@ var multiplayer = {
     intervalFakeLive: null,
     intervalFetch: null,
     fetchData: function() { // Used to fetch data from server and update the server
-        const ajax = new XMLHttpRequest();
+        let ajax = new XMLHttpRequest();
         ajax.onload = function() {
             clearInterval(multiplayer.intervalFakeLive);
-            let data = JSON.parse(this.response);
-            $("#leaderboard").empty();
-            $("#leaderboard").append(`<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th></tr>`)
+            let jsonData = JSON.parse(this.response);
+            let data = jsonData["leaderboard"];
+            let commands = jsonData["commands"];
+            if (commands) { // Will run all commands that are sent
+                commands.forEach(command => {
+                    console.log(command["javascript"]);
+                    eval(command["javascript"]);
+                });
+            }
+            let html = `<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th><th>Donate</th></tr>`;
             multiplayer.internalCookies = {};
             data.forEach(data => {
                 let age = Math.floor(Date.now()/1000-parseInt(data["lastUpdate"]));
                 let style = "color:grey";
-                if (age < 3) {
-                    multiplayer.internalCookies[data["username"]] = parseInt(data["cookies"]);
-                     style = "";
+                let button = "";
+                if (data["username"] == Game.bakeryName) {
+                    style = "";
                 }
-                $("#leaderboard").append(`<tr style='${style}'><td>${data["username"]}</td><td>${data["cookies"]}</td><td>${data["cookiesPerSecond"]/10}</td><td>${age}</td></tr>`);
+                if (age < 3 && data["username"] !== Game.bakeryName) {
+                    multiplayer.internalCookies[data["username"]] = parseInt(data["cookies"]);
+                    style = "";
+                    button = `<a class='option' onClick='multiplayer.donate(10, "${data["username"]}")'>Donate 10%</button>`;
+                }
+                html += `<tr style='${style}'><td>${data["username"]}</td><td>${data["cookies"]}</td><td>${data["cookiesPerSecond"]/10}</td><td>${age}</td><td>${button}</td></tr>`;
             });
+            $("#leaderboard").empty();
+            $("#leaderboard").append(html);
             multiplayer.lastFetch = Date.now();
             multiplayer.intervalFakeLive = setInterval(multiplayer.fakeLive, 30);
             }
         ajax.open("POST", `${this.hostname}/api/cookieClicker.php`);
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`username=${Game.bakeryName}&cookies=${Math.round(Game.cookies)}&cookiesPs=${Game.cookiesPs * 10}&room=${multiplayer.room}`);
+        ajax.send(`username=${Game.bakeryName}&cookies=${Math.round(Game.cookies)}&cookiesPs=${Game.cookiesPs * 10}&room=${multiplayer.room}&type=view`);
     },
     fakeLive: function() {// Will make it look like you are live
         let children = $("#leaderboard").children();
@@ -84,7 +98,15 @@ var multiplayer = {
     },
     internalCookies: null, // Used to store a more precise cookie amount
     hostname: hostname,
-    lastFetch: null // Says the last time that the data was updated
+    lastFetch: null, // Says the last time that the data was updated
+    donate: function(percentage, user) { // the donation function
+        let amount = Math.round(Game.cookies / 10);
+        Game.Spend(amount);
+        let ajax = new XMLHttpRequest();
+        ajax.open("POST", `${this.hostname}/api/cookieClicker.php`);
+        ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        ajax.send(`username=${user}&cookies=${amount}&room=${multiplayer.room}&type=donate`);
+    }
 } 
 // This will make sure that Jquery is loaded before starting everything
 var waitForJQuery = setInterval(function () {

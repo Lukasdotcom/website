@@ -1,18 +1,25 @@
 <?php
 require_once "api.php";
 header("Access-Control-Allow-Origin: *");
-if ($_POST["username"] !== null and $_POST["cookies"] !== null and $_POST["cookiesPs"] !== null and $_POST["room"] !== null) {
+if ($_POST["type"] === "view" and $_POST["username"] !== null and $_POST["cookies"] !== null and $_POST["cookiesPs"] !== null and $_POST["room"] !== null) {
     $username = $_POST["username"];
-    $cookies = $_POST["cookies"];
-    $cookiesPs = $_POST["cookiesPs"];
+    $cookies = intval($_POST["cookies"]);
+    $cookiesPs = intval($_POST["cookiesPs"]);
     $room = $_POST["room"];
     $time = time();
     if (dbRequest2("SELECT * FROM cookieClicker WHERE room='$room' AND username='$username'")) {
         dbCommand("UPDATE cookieClicker SET cookies = '$cookies', cookiesPerSecond = '$cookiesPs', lastUpdate='$time' WHERE room='$room' AND username='$username';");
     } else {
-        dbCommand("INSERT INTO cookieClicker (username, room, cookies, cookiesPerSecond, lastUpdate) VALUES ('$username', '$room', $cookies, $cookiesPs, $time)");
+        dbCommand("INSERT INTO cookieClicker (username, room, cookies, cookiesPerSecond, lastUpdate) VALUES ('$username', '$room', '$cookies', '$cookiesPs', $time)");
     }
-    echo json_encode(dbRequest2("SELECT * FROM cookieClicker WHERE room='$room'"));
+    echo json_encode(["leaderboard" => dbRequest2("SELECT * FROM cookieClicker WHERE room='$room'"), "commands" => dbRequest2("SELECT * FROM cookieClickerCommand WHERE room='$room' AND username='$username'")]);
+    dbCommand("DELETE FROM cookieClickerCommand WHERE room='$room' AND username='$username'");
+} elseif ($_POST["type"] === "donate" and $_POST["username"] !== null and $_POST["room"] !== null and $_POST["cookies"] !== null) {
+    $username = $_POST["username"];
+    $cookies = intval($_POST["cookies"]);
+    $room = $_POST["room"];
+    $javascript = "Game.Earn($cookies); Game.Notify(`Donation`, `You were donated $cookies cookies by $username.`, [10, 4])";
+    dbCommand("INSERT INTO cookieClickerCommand (username, room, javascript) VALUES ('$username', '$room', '$javascript')");
 } else {
     http_response_code(400);
     echo "Invalid command";
