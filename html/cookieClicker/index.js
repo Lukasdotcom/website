@@ -30,7 +30,7 @@ var multiplayer = {
         this.clear();
         $("#multiplayer").append(`<h1 class='title' style='font-size:150%'>Welcome to ${this.room}</h1><br>
         <p>If table stops updating leave and join the room.</p>
-        <table id='leaderboard'></table>
+        <table id='leaderboard' style='width:100%;'></table>
         <a id='leave' class='option'>Leave room</a>`)
         this.intervalFetch = setInterval(this.fetchData, 1000);
         $("#leave").click(function() {
@@ -50,11 +50,10 @@ var multiplayer = {
             let commands = jsonData["commands"];
             if (commands) { // Will run all commands that are sent
                 commands.forEach(command => {
-                    console.log(command["javascript"]);
                     eval(command["javascript"]);
                 });
             }
-            let html = `<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th><th>Donate</th></tr>`;
+            let html = `<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th></tr>`;
             multiplayer.internalCookies = {};
             data.forEach(data => {
                 let age = Math.floor(Date.now()/1000-parseInt(data["lastUpdate"]));
@@ -64,11 +63,12 @@ var multiplayer = {
                     style = "";
                 }
                 if (age < 3 && data["username"] !== Game.bakeryName) {
-                    multiplayer.internalCookies[data["username"]] = parseInt(data["cookies"]);
+                    multiplayer.internalCookies[data["username"]] = {"cookies": parseInt(data["cookies"]), "cookiesPs": parseInt(data["cookiesPerSecond"])};
                     style = "";
                     button = `<a class='option' onClick='multiplayer.donate(10, "${data["username"]}")'>Donate 10%</button>`;
                 }
-                html += `<tr style='${style}'><td>${data["username"]}</td><td>${data["cookies"]}</td><td>${data["cookiesPerSecond"]/10}</td><td>${age}</td><td>${button}</td></tr>`;
+                console.log(data);
+                html += `<tr style='${style}'><td>${data["username"]}</td><td>${Beautify(parseInt(data["cookies"]))}</td><td>${Beautify(data["cookiesPerSecond"]/10)}</td><td>${age}</td><td>${button}</td></tr>`;
             });
             $("#leaderboard").empty();
             $("#leaderboard").append(html);
@@ -86,11 +86,11 @@ var multiplayer = {
             let child = children[i];
             if (child.children[1].textContent !== "Cookies") {
                 if (child.children[0].textContent == Game.bakeryName) {
-                    child.children[1].innerHTML = Math.round(Game.cookies);
-                    child.children[2].innerHTML = Math.round(Game.cookiesPs*10)/10;
+                    child.children[1].innerHTML = Beautify(parseInt(Math.round(Game.cookies)));
+                    child.children[2].innerHTML = Beautify(Math.round(Game.cookiesPs*10)/10);
                 } else if (Object.keys(multiplayer.internalCookies).includes(child.children[0].textContent)) {
-                    multiplayer.internalCookies[child.children[0].innerHTML] += ((Date.now() - multiplayer.lastFetch)/1000)*parseInt(child.children[2].innerHTML);
-                    child.children[1].innerHTML = Math.round(multiplayer.internalCookies[child.children[0].innerHTML]);
+                    multiplayer.internalCookies[child.children[0].innerHTML]["cookies"] += ((Date.now() - multiplayer.lastFetch)/1000)*multiplayer.internalCookies[child.children[0].innerHTML]["cookiesPs"];
+                    child.children[1].innerHTML = Beautify(parseInt(Math.round(multiplayer.internalCookies[child.children[0].innerHTML]["cookies"])));
                 }
             }
         }
@@ -111,13 +111,10 @@ var multiplayer = {
 // This will make sure that Jquery is loaded before starting everything
 var waitForJQuery = setInterval(function () {
     if (typeof $ != 'undefined' && typeof getCookie != "undefined") {
-        let element = document.getElementById("sectionRight");
-        while (element.firstChild.id !== "store") {
-            element.firstChild.remove();
-        }
+        let element = document.getElementById("centerArea");
         let div = document.createElement('div');
         div.id = "multiplayer";
-        div.style = "width:300px;text-align:center;background:rgba(0,0,0,0.5);position:relative;z-index:100;";
+        div.style = "text-align:center;background:rgba(0,0,0,1);position:relative;z-index:100;padding-top:20px;";
         element.insertBefore(div, element.firstChild);
         multiplayer.startMenu();
         console.log("Import succesful");
