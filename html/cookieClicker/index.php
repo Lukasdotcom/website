@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family
+        Cookie Clicker Addon
     </title>
     <?php
     $DESCRIPTION = "Cookie clicker addon located here";

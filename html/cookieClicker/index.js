@@ -67,7 +67,6 @@ var multiplayer = {
                     style = "";
                     button = `<a class='option' onClick='multiplayer.donate(10, "${data["username"]}")'>Donate 10%</button>`;
                 }
-                console.log(data);
                 html += `<tr style='${style}'><td>${data["username"]}</td><td>${Beautify(parseInt(data["cookies"]))}</td><td>${Beautify(data["cookiesPerSecond"]/10)}</td><td>${age}</td><td>${button}</td></tr>`;
             });
             $("#leaderboard").empty();
