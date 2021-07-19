@@ -29,6 +29,12 @@
     document.head.appendChild(script);})();</div>
     <p>After that you just have to pick a room if you want to use a public room the closest to that is just not entering anything for the room</p>
     <img src='/img/cookieClicker.png' alt='Picture of the addon' width="100%">
+    <h3>Terms of Use or license</h3>
+    <p>
+    <?php 
+    echo file_get_contents("../../LICENSE");
+    ?>
+    </p>
 </div>
 </body>
 
