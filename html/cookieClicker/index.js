@@ -32,7 +32,8 @@ var multiplayer = {
         <p>If table stops updating leave and join the room.</p>
         <table id='leaderboard' style='width:100%;'></table>
         <a id='leave' class='option'>Leave room</a>`)
-        this.intervalFetch = setInterval(this.fetchData, 1000);
+        this.intervalFetch = setInterval(this.fetchData, 500);
+        this.intervalFakeLive = setInterval(this.fakeLive, 30);
         $("#leave").click(function() {
             clearInterval(multiplayer.intervalFetch);
             clearInterval(multiplayer.intervalFakeLive);
@@ -44,58 +45,45 @@ var multiplayer = {
     fetchData: function() { // Used to fetch data from server and update the server
         let ajax = new XMLHttpRequest();
         ajax.onload = function() {
-            clearInterval(multiplayer.intervalFakeLive);
             let jsonData = JSON.parse(this.response);
-            let data = jsonData["leaderboard"];
+            multiplayer.internalCookies = jsonData["leaderboard"];
             let commands = jsonData["commands"];
             if (commands) { // Will run all commands that are sent
                 commands.forEach(command => {
                     eval(command["javascript"]);
                 });
             }
-            let html = `<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th></tr>`;
-            multiplayer.internalCookies = {};
-            if (data) {
-                data.forEach(data => {
-                    let age = Math.floor(Date.now()/1000-parseInt(data["lastUpdate"]));
-                    let style = "color:grey";
-                    let button = "";
-                    if (data["username"] == Game.bakeryName) {
-                        style = "";
-                    }
-                    if (age < 3 && data["username"] !== Game.bakeryName) {
-                        multiplayer.internalCookies[data["username"]] = {"cookies": parseInt(data["cookies"]), "cookiesPs": parseInt(data["cookiesPerSecond"])};
-                        style = "";
-                        button = `<a class='option' onClick='multiplayer.donate(10, "${data["username"]}")'>Donate 10%</button>`;
-                    }
-                    html += `<tr style='${style}'><td>${data["username"]}</td><td>${Beautify(parseInt(data["cookies"]))}</td><td>${Beautify(data["cookiesPerSecond"]/10)}</td><td>${humanReadableTime(age)}</td><td>${button}</td></tr>`;
-                });
-            }
-            $("#leaderboard").empty();
-            $("#leaderboard").append(html);
-            multiplayer.lastFetch = Date.now();
-            multiplayer.intervalFakeLive = setInterval(multiplayer.fakeLive, 30);
             }
         ajax.open("POST", `${this.hostname}/api/cookieClicker.php`);
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`username=${Game.bakeryName}&cookies=${Math.round(Game.cookies)}&cookiesPs=${Math.round(Game.cookiesPs * 10)}&room=${multiplayer.room}&type=view`);
+        ajax.send(`username=${Game.bakeryName}&cookies=${Math.round(Game.cookies)}&cookiesPs=${Math.round(Game.cookiesPs)}&room=${multiplayer.room}&type=view&time=${Date.now()}`);
     },
     fakeLive: function() {// Will make it look like you are live
-        let children = $("#leaderboard").children();
-        let length = children.length;
-        for(let i = 0; i < length; i++) {
-            let child = children[i];
-            if (child.children[1].textContent !== "Cookies") {
-                if (child.children[0].textContent == Game.bakeryName) {
-                    child.children[1].innerHTML = Beautify(parseInt(Math.round(Game.cookies)));
-                    child.children[2].innerHTML = Beautify(Math.round(Game.cookiesPs*10)/10);
-                } else if (Object.keys(multiplayer.internalCookies).includes(child.children[0].textContent)) {
-                    multiplayer.internalCookies[child.children[0].innerHTML]["cookies"] += ((Date.now() - multiplayer.lastFetch)/1000)*multiplayer.internalCookies[child.children[0].innerHTML]["cookiesPs"];
-                    child.children[1].innerHTML = Beautify(parseInt(Math.round(multiplayer.internalCookies[child.children[0].innerHTML]["cookies"])));
+        let html = `<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th></tr>`;
+        if (multiplayer.internalCookies) {
+            multiplayer.internalCookies.forEach(data => {
+                let username = data["username"]; // Stores the username for that user
+                let age = (Date.now()-parseInt(data["lastUpdate"]))/1000; // Stores the age of the information
+                let cookies = Beautify(parseInt(parseFloat(data["cookies"]) + (parseFloat(data["cookiesPs"]) * age))) // Uses the age to make it look more like it is live
+                let cookiesPs = Beautify(parseInt(parseFloat(data["cookiesPs"]) * 10) / 10) // Stores the amount of cookies per second
+                let style = "";
+                let button = "";
+                if (age > 3) {
+                    style = "color:grey";
+                } else {
+                    if (username == Game.bakeryName) {
+                        cookies = Beautify(Game.cookies);
+                        cookiesPs = Beautify(Game.cookiesPs);
+                        age = 0;
+                    } else {
+                        button = `<a class='option' onClick='multiplayer.donate(10, "${username}")'>Donate 10%</button>`;
+                    }
                 }
-            }
+                html += `<tr style='${style}'><td>${username}</td><td>${cookies}</td><td>${cookiesPs}</td><td>${humanReadableTime(age)}</td><td>${button}</td></tr>`;
+            });
         }
-        multiplayer.lastFetch = Date.now()
+        $("#leaderboard").empty();
+        $("#leaderboard").append(html);
     },
     internalCookies: null, // Used to store a more precise cookie amount
     hostname: hostname,
