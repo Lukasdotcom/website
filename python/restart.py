@@ -148,8 +148,6 @@ try:
         repaired = database.repair()
         for x in repaired:
             writeLog(f"Database {x} was corrupted/missing and was restored", 9)
-        database.delete("cookieClicker",
-                        f"lastUpdate<{round(time.time()-604800)}")
     # Will add to log if the GPIO library exists
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
