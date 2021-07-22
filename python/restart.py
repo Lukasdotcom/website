@@ -14,6 +14,7 @@ import traceback
 import os
 import datetime
 
+
 def error(e):
     return "".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))
 
@@ -141,20 +142,22 @@ try:
                 "internet", ["2", "1", "2", "1", str(
                     time.time() + 3600), str(minimum)]
             )
-    def dailyMaintenance(): # Will run daily and on boot
-        database.delete("cookieClicker", f"lastUpdate<{round(time.time()-604800)}")
+
+    def dailyMaintenance():  # Will run daily and on boot
+        # Will repair all databases and update them
+        repaired = database.repair()
+        for x in repaired:
+            writeLog(f"Database {x} was corrupted/missing and was restored", 9)
+        database.delete("cookieClicker",
+                        f"lastUpdate<{round(time.time()-604800)}")
     # Will add to log if the GPIO library exists
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
-    # Will repair all databases and update them
-    repaired = database.repair()
-    for x in repaired:
-        writeLog(f"Database {x} was corrupted/missing and was restored", 9)
     # Will make sure that the internal clock is right for 2 minutes
     times = time.time()
     change = 0
     startTime = times
-    while True: # will wait until connected to internet
+    while True:  # will wait until connected to internet
         try:
             urllib.request.urlopen("https://google.com")
             break
@@ -163,9 +166,12 @@ try:
                 urllib.request.urlopen("https://bing.com")
                 break
             except Exception:
-                if (developmentMachine):  # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
+                # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
+                if (developmentMachine):
                     break
                 continue
+    # Runs stuff that runs every boot
+    dailyMaintenance()
     while change < 1:
         totalTime = time.time() - startTime
         if totalTime > 60:
@@ -199,9 +205,7 @@ try:
         os.remove(location + "maintenance-mode")
     except:
         1
-    #Runs stuff that runs every boot
-    dailyMaintenance()
-    writeLog("Server has finished booting procedure", 0)
+    writeLog("Server has finished booting procedure", 12)
     # Will update the time every minute to make sure electricity outages are reported to the minute precise and will request a check to see if the wifi status needs to be changed
     while True:
         try:
@@ -212,11 +216,9 @@ try:
             info = [callTime(), callTime()]
         writeFile(location + "data.json", info)
         if lastBackup != callTime()[1]:
-            #Will run the daily script
-            dailyMaintenance()
+            f = open(location + "maintenance-mode", "w")
+            f.close()
             try:
-                f = open(location + "maintenance-mode", "w")
-                f.close()
                 if developmentMachine:
                     writeLog("Doing fake backup", 9)
                 else:
@@ -224,6 +226,11 @@ try:
                     database.backUp("/var/lib/mysql", "/backup/reserve", False)
             except:
                 writeLog("Database backup failed", 9)
+            try:
+                # Will run the daily script
+                dailyMaintenance()
+            except:
+                writeLog("Daily maintenance failed.", 9)
             os.remove(location + "maintenance-mode")
             lastBackup = callTime()[1]
         try:
@@ -263,6 +270,11 @@ try:
         # Will check every 2 seconds if the button is pressed and when it is show it on the led and then wait another second to verify that it is an actual press
         while True:
             time.sleep(2)
+            if os.path.isfile(location + "restart.json"):
+                writeLog("Server is being restarted", 12)
+                os.remove(location + "restart.json")
+                os.system(f"python3 {__file__}")
+                exit()
             if not skipGPIO:
                 if GPIO.input(10):
                     GPIO.output(8, GPIO.HIGH)

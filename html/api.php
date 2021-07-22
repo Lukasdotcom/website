@@ -117,6 +117,15 @@ if($_GET["internet"] == "data") { // Will give internet data
     } else {
         missingPrivilege($USERNAME);
     }
+} elseif ($_POST["server"] == "restart") { // To delete an entry in log
+    var_dump($PRIVILEGE);
+    if ($PRIVILEGE["restartServer"]) {
+        echo "Restarting";
+        $restart = fopen("restart.json", "w");
+        fclose($restart);
+    } else {
+        missingPrivilege($USERNAME);
+    }
 } else {
     http_response_code(400);
     echo "Invalid command";

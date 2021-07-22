@@ -66,11 +66,13 @@
             echo "<div style='color: $color; $collapse' id='$type.text'><input type='checkbox' id='$type' name='$type' $checked>$type; Color: <input type='color' value='$color' id='$type.color'><button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button></div>";
             $id++;
         }
-        echo "<input id='deleted' type='hidden' name='$type'>";
         // Will echo the server log if logged in
         $logData = array_reverse(dbRequest("*", "log", "", "", 2));
         echo "<script type='text/javascript' src='javascript/log.js'></script>
             <script type='text/javascript' src='javascript/functions.js'></script>";
+        if ($PRIVILEGE["restartServer"]) {
+            echo "<button onClick='restart()' >Restart Server</button>";
+        }
         echo "<table id='log'>";
         echo "<tr><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";
         $id = 0;

@@ -59,3 +59,18 @@ function collapseCategories() {
         document.cookie = "collapseCategories=";
     }
 }
+function restart() {
+    const ajax = new XMLHttpRequest();
+    
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            alert("Restarting Server.")
+        } else {
+            alert("Error something went wrong.")
+        }
+        window.location.reload();      
+        }
+    ajax.open("POST", "api.php");
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajax.send(`server=restart&key='${getCookie('user')}'`); 
+}

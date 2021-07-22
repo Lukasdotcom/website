@@ -207,7 +207,7 @@ foreach ($_COOKIE as $pointer => $value) {
 // Removes all expired cookies from the database
 $Time = mkTime();
 dbRemove("cookies", "expire", $Time, 1);
-$PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity"];
+$PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity", "restartServer"];
 // Checks the cookie value and sees if the database contains that value
 $COOKIEID = $_COOKIE["user"];
 if ($COOKIEID) {
