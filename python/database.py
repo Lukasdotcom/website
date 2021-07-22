@@ -41,6 +41,8 @@ def createTable(name, coulumns):  # Will create a table in the database
         command += x[0]
         if x[1] == 0:
             command += " varchar(255), "
+        elif x[1] == 2:
+            command += " float, "
         else:
             command += " int, "
     command = command[: len(command) - 2]
@@ -126,7 +128,7 @@ def repair():  # Repairs all tables
         "privileges": [["username", 0], ["privilege", 0]],
         "users": [["username", 0], ["password", 0]],
         "requests": [["ip", 0], ["time", 1]],
-        "cookieClicker": [["username", 0], ["room", 0], ["cookies", 0], ["cookiesPerSecond", 0], ["lastUpdate", 1]],
+        "cookieClicker": [["username", 0], ["room", 0], ["cookies", 2], ["cookiesPerSecond", 2], ["lastUpdate", 1]],
         "cookieClickerCommand": [["username", 0], ["room", 0], ["javascript", 0]]
     }
     changedTables = []

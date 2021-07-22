@@ -55,20 +55,22 @@ var multiplayer = {
             }
             let html = `<tr><th>Username</th><th>Cookies</th><th>Per Second</th><th>Last Update</th></tr>`;
             multiplayer.internalCookies = {};
-            data.forEach(data => {
-                let age = Math.floor(Date.now()/1000-parseInt(data["lastUpdate"]));
-                let style = "color:grey";
-                let button = "";
-                if (data["username"] == Game.bakeryName) {
-                    style = "";
-                }
-                if (age < 3 && data["username"] !== Game.bakeryName) {
-                    multiplayer.internalCookies[data["username"]] = {"cookies": parseInt(data["cookies"]), "cookiesPs": parseInt(data["cookiesPerSecond"])};
-                    style = "";
-                    button = `<a class='option' onClick='multiplayer.donate(10, "${data["username"]}")'>Donate 10%</button>`;
-                }
-                html += `<tr style='${style}'><td>${data["username"]}</td><td>${Beautify(parseInt(data["cookies"]))}</td><td>${Beautify(data["cookiesPerSecond"]/10)}</td><td>${humanReadableTime(age)}</td><td>${button}</td></tr>`;
-            });
+            if (data) {
+                data.forEach(data => {
+                    let age = Math.floor(Date.now()/1000-parseInt(data["lastUpdate"]));
+                    let style = "color:grey";
+                    let button = "";
+                    if (data["username"] == Game.bakeryName) {
+                        style = "";
+                    }
+                    if (age < 3 && data["username"] !== Game.bakeryName) {
+                        multiplayer.internalCookies[data["username"]] = {"cookies": parseInt(data["cookies"]), "cookiesPs": parseInt(data["cookiesPerSecond"])};
+                        style = "";
+                        button = `<a class='option' onClick='multiplayer.donate(10, "${data["username"]}")'>Donate 10%</button>`;
+                    }
+                    html += `<tr style='${style}'><td>${data["username"]}</td><td>${Beautify(parseInt(data["cookies"]))}</td><td>${Beautify(data["cookiesPerSecond"]/10)}</td><td>${humanReadableTime(age)}</td><td>${button}</td></tr>`;
+                });
+            }
             $("#leaderboard").empty();
             $("#leaderboard").append(html);
             multiplayer.lastFetch = Date.now();
@@ -114,7 +116,7 @@ var waitForJQuery = setInterval(function () {
         // Will create the multiplayer element
         let div = document.createElement('div');
         div.id = "multiplayer";
-        div.style = "text-align:center;background:rgba(0,0,0,1);position:relative;z-index:100;padding-top:20px;";
+        div.style = "text-align:center;background:rgba(0,0,0,1);position:relative;z-index:100;padding-top:20px;padding-bottom:20px";
         element.insertBefore(div, element.firstChild);
         multiplayer.startMenu();
         console.log("Import succesful");
