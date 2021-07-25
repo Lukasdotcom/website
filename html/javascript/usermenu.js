@@ -1,6 +1,6 @@
 function search() {
     var progress = 0
-    const ajax = new XMLHttpRequest();
+    let ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
             window.userPriv = JSON.parse(ajax.responseText);
@@ -10,13 +10,12 @@ function search() {
                 search2(userPriv, requestUser)
             }
         } else {
-            alert('An error ocured reloading.');
-            window.location.reload();
+            $("#saveStatus").append(`Error while loading: ${this.responseText}. `);
         }
     }
     ajax.open("GET", `/api/user.php?type=view&key=${getCookie("user")}`);
     ajax.send();
-    const ajax2 = new XMLHttpRequest();
+    let ajax2 = new XMLHttpRequest();
     ajax2.onload = function() {
         if (ajax.status == 200) {
             window.requestUser = JSON.parse(this.responseText);
@@ -26,8 +25,7 @@ function search() {
                 search2(userPriv, requestUser)
             }
         } else {
-            alert('An error ocured reloading.');
-            window.location.reload();
+            $("#saveStatus").append(`Error while loading: ${this.responseText}. `);
         }
     }
     user = $("#user").val();
@@ -47,6 +45,7 @@ function search2(userPriv, requestUser) {
         }
         $("#privilege").append(`<input type='checkbox' name='${element}' id='${element}' ${checked} value='True'>${element}<br>`);
     }
+    setTimeout(() => { $("#saveStatus").text(""); }, 5000);
 }
 function save() {
     let checkboxes = $("#privilege").find("input[type=checkbox]");
@@ -56,14 +55,14 @@ function save() {
         let check = checkboxes[i];
         text += `&${check.name}=${check.checked}`;
     }
-    const ajax = new XMLHttpRequest();
+    let ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
-            search()
+            $("#saveStatus").append(`${this.responseText}. `);
         } else {
-            alert('An error ocured reloading.');
-            window.location.reload();
+            $("#saveStatus").append(`Error while loading: ${this.responseText}. `);
         }
+        search()
         }
     ajax.open("POST", "/api/user.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

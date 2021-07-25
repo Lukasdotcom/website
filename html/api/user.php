@@ -19,8 +19,8 @@ function checkUser($user) {
     }
 }
 if ($_GET["type"] === "view") { // Will return all privileges the user has in a list
-    if ($PRIVILEGE["editUser"] or $USERNAME === $_GET["user"] and $USERNAME) {
-        $user = checkUser($_GET["user"]);
+    $user = checkUser($_GET["user"]);
+    if ($PRIVILEGE["editUser"] or ($USERNAME === $user and $USERNAME)) {
         // Will request all privileges
         $request = dbRequest2("SELECT privilege FROM privileges WHERE username='$user'", $result="privilege");
         // Will make sure that it returns valid json
@@ -33,21 +33,24 @@ if ($_GET["type"] === "view") { // Will return all privileges the user has in a 
         missingPrivilege($USERNAME);
     }
 } elseif ($_POST["type"] === "edit") { // Used to edit the users privileges
-    if ($PRIVILEGE["editUser"] or $USERNAME === $_GET["user"] and $USERNAME) {
-        $user = checkUser($_POST["user"]);
+    $user = checkUser($_POST["user"]);
+    if ($PRIVILEGE["editUser"] or ($USERNAME === $user and $USERNAME)) {
         // Gets the previous privileges
         $oldPriv = dbRequest2("SELECT privilege FROM privileges WHERE username='$user'", "privilege");
+        if (gettype($oldPriv) !== "array") { // Will make sure oldPriv is an array
+            $oldPriv = [];
+        }
         // Goes through every privilege the user has and sees what the user wants on the new user they are editing
         foreach($PRIVILEGE as $PRIV => $bool) {
             if ($bool){
                 if ($_POST[$PRIV] and $_POST[$PRIV] !== "false" and $_POST[$PRIV] !== "False") {
-                    if (array_search($PRIV, $oldPriv) === False) { // Checks if a change is required
+                    if (array_search($PRIV, $oldPriv) === false) { // Checks if a change is required
                         dbCommand("INSERT INTO privileges VALUES ('$user', '$PRIV')");
                         echo "Added $PRIV, ";
                         writeLog(10, "$user gained privilege $PRIV by $USERNAME or $address");
                     }
                 } else {
-                    if (array_search($PRIV, $oldPriv) !== False) { // Checks if a change is required
+                    if (array_search($PRIV, $oldPriv) !== false) { // Checks if a change is required
                         dbCommand("DELETE FROM privileges WHERE username='$user' AND privilege='$PRIV'");
                         echo "Removed $PRIV, ";
                         writeLog(10, "$user lost privilege $PRIV by $USERNAME or $address");
@@ -55,7 +58,7 @@ if ($_GET["type"] === "view") { // Will return all privileges the user has in a 
                 }
             }
         }
-        echo "saved";
+        echo "Saved";
     } else {
         missingPrivilege($USERNAME);
     }

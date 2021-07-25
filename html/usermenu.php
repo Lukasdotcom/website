@@ -22,23 +22,25 @@
         echo "<script type='text/javascript' src='javascript/usermenu.js'></script>
         <script type='text/javascript' src='javascript/functions.js'></script>";
         echo "<h1>Edit User(s) Here</h1>";
-        $firstUser = $USERNAME;
-        if ($PRIVILEGE["editUser"] or $PRIVILEGE["deleteUser"]) {
-            echo '<label for="user">Choose a user:</label>
+        echo '<label for="user">Choose a user:</label>
                         <select id="user" name="user">';
+        if ($PRIVILEGE["editUser"] or $PRIVILEGE["deleteUser"]) {
             $LIST = dbRequest("username", "users", NULL, NULL, 2);
             foreach ($LIST as $USER) {
                 if (!root($USER) or $PRIVILEGE["root"]) {
                     echo "<option value='$USER'><a>$USER</a></option>";
                 }
             }
-            echo '</select><br>';
+        } else {
+            echo "<option value='$USERNAME'><a>$USERNAME</a></option>";
         }
+        echo '</select><br>';
         echo "<h3 id='header'>Privileges for $USERNAME</h3>";
         echo "<div id='privilege'></div>";
         echo "<button id='save' type='button'>Save</button>";
     }
     ?>
+    <p id='saveStatus' style='color: green'> </p>
     </div>
 </body>
 
