@@ -16,3 +16,14 @@ RedirectMatch 403 \.(json)$
 #All invalid sites are directed to the main page index.php
 ErrorDocument 403 /index.php
 ErrorDocument 404 /index.php
+
+# Used to reomve the index.php from url
+Options +FollowSymlinks -Indexes
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ %1 [L,R=301,NE]
+RewriteCond %{THE_REQUEST} /index\.php [NC]
+RewriteCond %{REQUEST_URI} ^(.*/)index\.php$ [NC]
+RewriteRule ^ %1 [L,R=301,NE]
