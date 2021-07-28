@@ -1,5 +1,4 @@
 <?php
-$skipThrottle = true;
 require_once "api.php";
 header("Access-Control-Allow-Origin: *");
 if ($_POST["type"] === "view" and $_POST["username"] !== null and $_POST["cookies"] !== null and $_POST["cookiesPs"] !== null and $_POST["room"] !== null and $_POST["time"] !== null) {

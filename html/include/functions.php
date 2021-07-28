@@ -1,7 +1,8 @@
 <?php
+require_once("ip.php");
 function sanitize($value)
 {
-  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-# ";
+  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-#: ";
   $validChars = str_split($validChars);
   $valueSplit = str_split($value);
   $value = "";
@@ -174,7 +175,6 @@ function writeLog($type, $message)
 {
   dbAdd([$type, $message, mktime()], "log");
 }
-$address = $_SERVER["REMOTE_ADDR"]; // Variable that stores the IP address of user accessing the website
 // Will check if the ip address has passed its throttle point
 if (!$skipThrottle) {
   $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
