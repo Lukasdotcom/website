@@ -57,6 +57,18 @@ if($_GET["internet"] == "data") { // Will give internet data
         missingPrivilege($USERNAME);
     }
 } elseif ($_POST["login"]) { // Used to login or signup and get the cookie
+    // Will check if the ip address has passed its throttle point
+    $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
+    $jsonData = json_decode($jsonInfo, true);
+    $expireRequests = time() - $jsonData["throttleTime"];
+    dbCommand("DELETE FROM requests WHERE time<'$expireRequests'");
+    $requests = dbRequest2("SELECT * FROM requests WHERE ip='$address'");
+    dbAdd([$address, time()], "requests");
+    if (sizeof($requests) > $jsonData["throttle"]) {
+        echo "Too many login attempts.";
+        http_response_code(429);
+        exit();
+    }
     if ($_POST["login"] === "signup") { // Will check if a signup was done
         $RESULT = dbRequest("username", "users", "username", $_POST["username"], 0);
         if ($RESULT == False) {
@@ -68,12 +80,6 @@ if($_GET["internet"] == "data") { // Will give internet data
             echo "User $USER already exists.";
             exit();
         }
-    }
-    // Will add the specified amount of requests that a login or signup gives
-    $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
-    $throttleAmount = json_decode($jsonInfo, true)["loginThrottle"];
-    for ($i=0; $i<$throttleAmount; $i++) {
-        dbAdd([$address, time()], "requests");
     }
     $RESULT = dbRequest("password", "users", "username", $_POST["username"], 0);
     $RESULT = $RESULT[0];

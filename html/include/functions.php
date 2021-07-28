@@ -175,23 +175,6 @@ function writeLog($type, $message)
 {
   dbAdd([$type, $message, mktime()], "log");
 }
-// Will check if the ip address has passed its throttle point
-if (!$skipThrottle) {
-  $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
-  $jsonData = json_decode($jsonInfo, true);
-  $expireRequests = time() - 60;
-  dbCommand("DELETE FROM requests WHERE time<'$expireRequests'");
-  $requests = dbRequest2("SELECT * FROM requests WHERE ip='$address'");
-  dbAdd([$address, time()], "requests");
-  if (sizeof($requests) > $jsonData["throttle"]) {
-    echo "Too many requests. Page will reload automaticaly when you are unbanned or in $banLength seconds.";
-    http_response_code(429);
-    $banLength = time() - $requests[sizeof($requests) - 50]["time"];
-    header("Refresh:$banLength; url=/index.php");
-    header("Retry-After: $banLength");
-    exit();
-  }
-}
 // Creates a way to see uncleaned user input if neccessary
 $OGPOST = $_POST;
 $OGGET = $_GET;
