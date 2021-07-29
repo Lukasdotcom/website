@@ -3,8 +3,8 @@ require_once "api.php";
 header("Access-Control-Allow-Origin: *");
 if ($_POST["type"] === "view" and $_POST["username"] !== null and $_POST["cookies"] !== null and $_POST["cookiesPs"] !== null and $_POST["room"] !== null and $_POST["time"] !== null) {
     $username = $_POST["username"];
-    $cookies = intval($_POST["cookies"]);
-    $cookiesPs = intval($_POST["cookiesPs"]);
+    $cookies = floatval($_POST["cookies"]);
+    $cookiesPs = floatval($_POST["cookiesPs"]);
     $room = $_POST["room"];
     $time = $_POST["time"];
     if (dbRequest2("SELECT * FROM cookieClicker WHERE room='$room' AND username='$username'")) {
@@ -16,7 +16,7 @@ if ($_POST["type"] === "view" and $_POST["username"] !== null and $_POST["cookie
     dbCommand("DELETE FROM cookieClickerCommand WHERE room='$room' AND username='$username'");
 } elseif ($_POST["type"] === "donate" and $_POST["username"] !== null and $_POST["room"] !== null and $_POST["cookies"] !== null) {
     $username = $_POST["username"];
-    $cookies = intval($_POST["cookies"]);
+    $cookies = floatval($_POST["cookies"]);
     $room = $_POST["room"];
     $sender = $_POST["sender"];
     $javascript = "Game.Earn($cookies); Game.Notify(`Donation`, `You were donated $cookies cookies by $sender.`, [10, 4])";
