@@ -62,7 +62,16 @@ if ($_GET["type"] === "view") { // Will return all privileges the user has in a 
     } else {
         missingPrivilege($USERNAME);
     }
-}else {
+} elseif ($_POST["type"] === "password") { // Used to change password
+    $user = $_POST["username"];
+    if ($USERNAME == $user or $PRIVILEGE["changeCredintials"]) {
+        $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
+        dbCommand("UPDATE users SET password = '$password' WHERE username='$user';");
+        echo "Saved new password for $user.";
+    } else {
+        missingPrivilege($USERNAME);
+    }
+} else {
     http_response_code(400);
     echo "Invalid command";
 }
