@@ -98,8 +98,8 @@ if($_GET["internet"] == "data") { // Will give internet data
         writeLog(0, "$USERNAME was logged in by $address");
         $Time = time() + 3600;
         $Cookie = $USERNAME;
-        $Cookie .= $Time;
-        $Cookie = sanitize(substr(password_hash($_POST["password"], PASSWORD_BCRYPT), 15));
+        $Cookie .= microtime();
+        $Cookie = sanitize(substr(sha1($Cookie), 5));
         $CookieForDB = [$Cookie, $USERNAME, $Time];
         dbAdd($CookieForDB, "cookies");
         setcookie("user", $Cookie, time() + 600, "/");
@@ -124,7 +124,6 @@ if($_GET["internet"] == "data") { // Will give internet data
         missingPrivilege($USERNAME);
     }
 } elseif ($_POST["server"] == "restart") { // To delete an entry in log
-    var_dump($PRIVILEGE);
     if ($PRIVILEGE["restartServer"]) {
         echo "Restarting";
         $restart = fopen("restart.json", "w");
