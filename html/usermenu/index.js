@@ -1,6 +1,7 @@
 function password() { // Used to change the password
     let ajax = new XMLHttpRequest();
     ajax.onload = function() {
+        setTimeout(() => { $("#saveStatus").text(""); }, 5000);
         if (ajax.status == 200) {
             $("#saveStatus").append(`${this.responseText}`);
         } else {
@@ -10,7 +11,6 @@ function password() { // Used to change the password
     ajax.open("POST", `/api/user.php`);
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`type=password&key=${getCookie("user")}&username=${user}&password=${$("#password").val()}`);
-    setTimeout(() => { $("#saveStatus").text(""); }, 5000);
 }
 function search() { // Gets the data for the search
     var progress = 0 // Used to see how many requests have gone through
@@ -65,6 +65,11 @@ function search2(userPriv, requestUser) { // When the search is done it will upd
         $("#passwordChange").show()
     } else {
         $("#passwordChange").hide()
+    }
+    if ($("#changeCredintials").length || user == username) { // Checks if the user can delete that user
+        $("#delete").show()
+    } else {
+        $("#delete").hide()
     }
     setTimeout(() => { $("#saveStatus").text(""); }, 5000);
 }
