@@ -30,7 +30,7 @@
         echo "<label for='searchText'>Search:</label>
                 <input id='searchText' placeholder='Search'></input>
                 <button type='button' onClick='search(document.getElementById(`searchText`).value)'>Search</button><br>";
-        echo '<form method="post" action="/log.php">
+        echo '<form method="post" action="/log/">
             <input type="submit" value="reload"></form>';
         $typeList = dbRequest("*", "logType", "", "", 2);
         $jsonTypeList = json_encode($typeList);

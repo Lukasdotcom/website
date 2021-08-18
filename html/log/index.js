@@ -77,8 +77,10 @@ function restart() {
 $(document).ready(function() {
     collapseCategories();
     collapseCategories();
-    $("#searchText").val(localStorage.logSearch)
-    if (localStorage.log) {
+    if (localStorage.log != undefined) {
+        $("#searchText").val(localStorage.logSearch)
+    }
+    if (localStorage.log != undefined) {
         colors = JSON.parse(localStorage.log);
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.color = colors[i][1];
