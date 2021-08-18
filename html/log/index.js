@@ -14,8 +14,8 @@ function search(term) {
         colors.push([document.getElementById(types[i]["name"]).checked, document.getElementById(`${types[i]["name"]}.color`).value]);
         document.getElementById(`${types[i]["name"]}.text`).style.color = document.getElementById(`${types[i]["name"]}.color`).value;
     }
-    document.cookie= `log=${JSON.stringify(colors)}`;
-    document.cookie = `logSearch=${term}`;
+    localStorage.log = JSON.stringify(colors);
+    localStorage.logSearch = term;
     for(var i=0;i<rows.length-1;i++) {
         if (document.getElementById(`${String(i)}.message`).innerHTML.includes(term) && document.getElementById(document.getElementById(`${String(i)}.category`).innerHTML).checked) {
             document.getElementById(i).style.display = "";
@@ -45,18 +45,18 @@ function remove(message, time, id) {
     ajax.send(`log=remove&message=${message}&time=${time}&key='${getCookie('user')}'`); 
 }
 function collapseCategories() {
-    if (!getCookie("collapseCategories")) {
+    if (! localStorage.collapseCategories) {
         document.getElementById(`collapseCategories`).innerHTML = "Uncollapse Categories";
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.display = "none";
         }
-        document.cookie = "collapseCategories=true";
+        localStorage.collapseCategories = true;
     } else {
         document.getElementById(`collapseCategories`).innerHTML = "Collapse Categories";
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.display = "";
         }
-        document.cookie = "collapseCategories=";
+        localStorage.collapseCategories = "";
     }
 }
 function restart() {
@@ -74,3 +74,16 @@ function restart() {
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`server=restart&key='${getCookie('user')}'`); 
 }
+$(document).ready(function() {
+    collapseCategories();
+    collapseCategories();
+    $("#searchText").val(localStorage.logSearch)
+    if (localStorage.log) {
+        colors = JSON.parse(localStorage.log);
+        for(var i=0;i<typeLength;i++) {
+            document.getElementById(`${types[i]["name"]}.text`).style.color = colors[i][1];
+            document.getElementById(`${types[i]["name"]}.color`).value = colors[i][1];
+        }
+    }
+    search(localStorage.logSearch);
+});

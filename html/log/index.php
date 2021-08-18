@@ -7,13 +7,13 @@
     </title>
     <?php
     $DESCRIPTION = "Server log.";
-    include 'include/all.php';
+    require_once '../include/all.php';
     ?>
 </head>
 
 <body>
     <?php
-    include 'include/menu.php';
+    require_once '../include/menu.php';
     echo "<div class='main'>";
     if ($USERNAME == NULL) {
         echo "<h2>You are not logged in redirecting...</h2>";
@@ -24,52 +24,32 @@
         header("Refresh:3; url=/index.php");
         echo "<h2>Forbidden redirecting...</h2>";
     } else {
+        echo "<script type='text/javascript' src='index.js'></script>
+            <script type='text/javascript' src='/javascript/functions.js'></script>";
         echo "<h1>Server Log</h1>";
-        // Includes the search
-        $cookieSearch = $OGCOOKIE["logSearch"];
         echo "<label for='searchText'>Search:</label>
-                <input id='searchText' value='$cookieSearch' placeholder='Search'></input>
+                <input id='searchText' placeholder='Search'></input>
                 <button type='button' onClick='search(document.getElementById(`searchText`).value)'>Search</button><br>";
         echo '<form method="post" action="/log.php">
             <input type="submit" value="reload"></form>';
         $typeList = dbRequest("*", "logType", "", "", 2);
-        // Decodes the cookie that stores preferences
-        $typeCookie = json_decode($OGCOOKIE["log"]);
         $jsonTypeList = json_encode($typeList);
         $id = 0;
         $typeLength = sizeof($typeList);
         echo "<script>var typeLength = $typeLength</script>";
         echo "<script>var types = JSON.parse('$jsonTypeList'); var typeLength = types.length;</script>";
-        // Creates collapse categories and name of button
-        if ($_COOKIE["collapseCategories"]) {
-            $collapse = "display: none;";
-            $buttonName = "Uncollapse Categories";
-        } else {
-            $collapse = "";
-            $buttonName = "Collapse Categories";
-        }
-        echo "<button id='collapseCategories' type='button' onClick='collapseCategories()'>$buttonName</button><br>";
+        echo "<button id='collapseCategories' type='button' onClick='collapseCategories()'>Uncollapse Categories</button><br>";
         // Creates all categories to search for
         foreach ($typeList as $logType) {
             $type = $logType["name"];
             // Decodes the prefereneces
-            if ($typeCookie[$id][1]) {
-                $color = sanitize($typeCookie[$id][1]);
-            } else {
-                $color = $logType["color"];
-            }
-            if ($typeCookie[$id][0] === false) {
-                $checked = "";
-            } else {
-                $checked = "checked";
-            }
-            echo "<div style='color: $color; $collapse' id='$type.text'><input type='checkbox' id='$type' name='$type' $checked>$type; Color: <input type='color' value='$color' id='$type.color'><button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button></div>";
+            $color = $logType["color"];
+            $checked = "checked";
+            echo "<div style='color: $color;' id='$type.text'><input type='checkbox' id='$type' name='$type' $checked>$type; Color: <input type='color' value='$color' id='$type.color'><button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button></div>";
             $id++;
         }
         // Will echo the server log if logged in
         $logData = array_reverse(dbRequest("*", "log", "", "", 2));
-        echo "<script type='text/javascript' src='javascript/log.js'></script>
-            <script type='text/javascript' src='javascript/functions.js'></script>";
         if ($PRIVILEGE["restartServer"]) {
             echo "<button onClick='restart()' >Restart Server</button>";
         }
@@ -83,11 +63,7 @@
             $message = $log["message"];
             $type = dbRequest("*", "logType", "type", $log["type"], 0)[0];
             $category = $type["name"];
-            if ($typeCookie[$log["type"]][1]) {
-                $color = sanitize($typeCookie[$log["type"]][1]);
-            } else {
-                $color = $type["color"];
-            }
+            $color = $type["color"];
             echo "<tr id='$id' style='color: $color'><td id='$id.category'>$category</td><td id='$id.message' >$message </td><td id='$id.time' >$time</td><td id='$id.clockTime' >$clockTime at $date</td>";
             if ($PRIVILEGE["deleteLog"]) {
                 echo "<td id='$id.button' style='color: white'><button type='button' onClick='remove(`$message`, `$time`, `$id`)'>Delete</button><br></td>";
