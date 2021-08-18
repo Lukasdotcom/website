@@ -25,6 +25,11 @@
         echo "<h1>Edit User(s) Here</h1>";
         echo '<label for="user">Choose a user:</label>
                         <select id="user" name="user">';
+        if (! $PRIVILEGE["editUser"]) {
+            echo "<script>var editUser = false</script>";
+        } else {
+            echo "<script>var editUser = true</script>";
+        }
         if ($PRIVILEGE["editUser"] or $PRIVILEGE["deleteUser"]) {
             $LIST = dbRequest("username", "users", NULL, NULL, 2);
             foreach ($LIST as $USER) {
@@ -36,6 +41,7 @@
             echo "<option value='$USERNAME'><a>$USERNAME</a></option>";
         }
         echo '</select><br>';
+        echo "<br><button id='delete' type='button'>Delete User</button>";
         echo "<h3 id='header'>Privileges for $USERNAME</h3>";
         echo "<div id='privilege'></div>";
         echo "<button id='save' type='button'>Save</button><br><br>";

@@ -71,6 +71,16 @@ if ($_GET["type"] === "view") { // Will return all privileges the user has in a 
     } else {
         missingPrivilege($USERNAME);
     }
+} elseif ($_POST["type"] === "delete") { // Used to delete a user
+    $user = $_POST["username"];
+    if ($USERNAME == $user or $PRIVILEGE["deleteUser"]) {
+        dbCommand("DELETE FROM users WHERE username = '$user';");
+        dbCommand("DELETE FROM cookies WHERE username = '$user';");
+        dbCommand("DELETE FROM privileges WHERE username = '$user';");
+        echo "Deleted user $user.";
+    } else {
+        missingPrivilege($USERNAME);
+    }
 } else {
     http_response_code(400);
     echo "Invalid command";
