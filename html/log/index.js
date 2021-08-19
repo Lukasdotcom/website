@@ -40,7 +40,7 @@ function remove(message, time, id) {
         }
     }
     console.log(id);
-    ajax.open("POST", "api.php");
+    ajax.open("POST", "/api.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`log=remove&message=${message}&time=${time}&key='${getCookie('user')}'`); 
 }
@@ -70,7 +70,7 @@ function restart() {
         }
         window.location.reload();      
         }
-    ajax.open("POST", "api.php");
+    ajax.open("POST", "/api.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`server=restart&key='${getCookie('user')}'`); 
 }
