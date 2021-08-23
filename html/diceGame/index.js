@@ -68,11 +68,10 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     $("#diceShop").html(text);
     text = '';
     if (resetCost[reset+1] !== undefined) {
-        text += `<p>Upgrade max dice from ${maxDice} to ${maxDice + 1}. `;
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
         } else if (resetCost[reset] <= points) {
-            text += `<button onClick = 'purchase(${reset}, 2)'>Buy for ${resetCost[reset]}</button></p>`;
+            text += `<button onClick = 'purchase(${reset}, 2)'>Reset for ${resetCost[reset]}</button></p>`;
         } else {
             text += `<button class='grayed'>You need ${resetCost[reset]} points to reset.</button></p>`;
         }
