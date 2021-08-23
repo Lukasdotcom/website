@@ -15,7 +15,7 @@
 <body>
     <?php
     include 'include/menu.php';
-    require_once "<div class='main'>";
+    echo "<div class='main'>";
     ?>
     </div>
 </body>

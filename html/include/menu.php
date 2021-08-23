@@ -1,5 +1,5 @@
 <?php
-$MENUITEMS = [["Main Page", "/index.php"], ["Internet", "/internet.php"], ["Electricity Log", "/electricity.php"], ["Floppy", "/floppy.php"], ["Soccer", "/soccer.php"], ["privilege", "viewLog", "/log/index.php", "Server Log"], ["Cookie Clicker Addon", "/cookieClicker/index.php"], ["user", "/usermenu/index.php", "User Menu"], ["notUser", "/login.php", "Login/Signup"], ["user", "/login.php", "Logout"]];
+$MENUITEMS = [["Main Page", "/index.php"], ["Internet", "/internet.php"], ["Dice Game", "/diceGame/index.php"], ["Electricity Log", "/electricity.php"], ["Floppy", "/floppy.php"], ["Soccer", "/soccer.php"], ["privilege", "viewLog", "/log/index.php", "Server Log"], ["Cookie Clicker Addon", "/cookieClicker/index.php"], ["user", "/usermenu/index.php", "User Menu"], ["notUser", "/login.php", "Login/Signup"], ["user", "/login.php", "Logout"]];
 echo "<div class='vertical-menu'>";
 function menuItem($link, $name)
 {

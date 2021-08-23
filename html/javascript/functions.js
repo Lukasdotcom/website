@@ -29,3 +29,12 @@ function getCookie(name) {
     // Return null if not found
     return null;
 }
+
+function randomInt(min, max) { // returns a random number between min (included) and max (included)
+    max += 1;
+    return Math.floor(Math.random() * (max - min) ) + min;
+} 
+
+function lastElement(array) { // returns the last element in an array
+    return array[array.length - 1];
+}

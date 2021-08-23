@@ -95,3 +95,13 @@ th {
 input[type="number"] {
     width: 45px;
 }
+
+.grayed:hover {
+	color: gray;
+	background-color: black;
+}
+
+.grayed {
+	color: gray;
+	border-color: grey;
+}
