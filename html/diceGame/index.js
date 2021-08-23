@@ -7,10 +7,17 @@ function purchase(die, type) { // Used to purchae a die
             points -= dice[die][0];
             diceAmount += lastElement(dice[die]);
         }
-    updateLayout();
+    } else if (type == 1) {
+        if (maxDiceCost[die][0] > points || purchased) {
+            alert("Something went wrong you can not purchase this.");
+        } else {
+            purchased = true;
+            points -= maxDiceCost[die][0];
+            maxDice += 1;
+        }
     }
+    updateLayout();
 }
-
 function diceCounter(diceNumber) { // Will return all the dice the player has according to a variable
     let ownedDice = JSON.parse(JSON.stringify(dice));
     Object.keys(dice).forEach(function(value) {
@@ -36,8 +43,27 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         }
         counter *= 2;
     });
+    if (maxDiceCost[maxDice+1] !== undefined) {
+        text += `<p>Upgrade max dice from ${maxDice} to ${maxDice + 1}. `;
+        if (purchased) {
+            text += `<button class='grayed'>You already bought something.</button></p>`;
+        } else if (maxDiceCost[maxDice+1][0] <= points) {
+            text += `<button onClick = 'purchase(${maxDice+1}, 1)'>Buy for ${maxDiceCost[maxDice+1][0]}</button></p>`;
+        } else {
+            text += `<button class='grayed'>You need ${maxDiceCost[maxDice+1][0]} points to upgrade.</button></p>`;
+        }
+    } else {
+        text += `<p>Max dice ${maxDice} is the max.</p>`;
+    }
     $("#diceShop").html(text);
     $('#points').text(points);
+}
+maxDiceCost = {
+    2 : [4],
+    3 : [12],
+    4 : [24],
+    5 : [36],
+    6 : [45]
 }
 dice = { // A list of information for the dices
     4 : [3],
@@ -63,6 +89,7 @@ Object.keys(dice).forEach(function(value) { // Adds the storage number for each 
 diceAmount = 1; // Used to store what dice the user owns
 points = 0; // the amount of points the user has
 purchased = false; // if the user has purchased something this turn
+maxDice = 1;
 $(document).ready(function() {
     updateLayout();
     $("#roll").click(function () {
@@ -71,8 +98,9 @@ $(document).ready(function() {
         let amount = diceCounter(diceAmount);
         let rollResult = {};
         let numbers = {};
+        let diceLeft = maxDice
         Object.keys(amount).reverse().forEach(function(value) {
-            if (amount[value]) {
+            if (amount[value] && diceLeft > 0) {
                 let roll = randomInt(1, parseInt(value));
                 rollResult[value] = roll;
                 points += roll;
@@ -81,6 +109,7 @@ $(document).ready(function() {
                 } else {
                     numbers[roll] = 1;
                 }
+                diceLeft -= 1;
             }
         });
         numbers = Object.values(numbers);
