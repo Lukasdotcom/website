@@ -1,19 +1,29 @@
-function purchase(die, type) { // Used to purchae a die
+function purchase(value, type) { // Used to purchase an upgrade
     if (type == 0) {
-        if (dice[die][0] > points || purchased) {
+        if (dice[value][0] > points || purchased) { // Used to buy a die
             alert("Something went wrong you can not purchase this.");
         } else {
             purchased = true;
-            points -= dice[die][0];
-            diceAmount += lastElement(dice[die]);
+            points -= dice[value][0];
+            diceAmount += lastElement(dice[value]);
         }
-    } else if (type == 1) {
-        if (maxDiceCost[die][0] > points || purchased) {
+    } else if (type == 1) { // Used to upgrade max dice
+        if (maxDiceCost[value][0] > points || purchased) {
             alert("Something went wrong you can not purchase this.");
         } else {
             purchased = true;
-            points -= maxDiceCost[die][0];
+            points -= maxDiceCost[value][0];
             maxDice += 1;
+        }
+    } else if (type == 2) { // Used to reset
+        if (resetCost[value] > points || purchased) {
+            alert("Something went wrong you can not purchase this.");
+        } else {
+            purchased = true;
+            points = 0;
+            maxDice = 1;
+            diceAmount = 1;
+            reset += 1;
         }
     }
     updateLayout();
@@ -56,6 +66,20 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         text += `<p>Max dice ${maxDice} is the max.</p>`;
     }
     $("#diceShop").html(text);
+    text = '';
+    if (resetCost[reset+1] !== undefined) {
+        text += `<p>Upgrade max dice from ${maxDice} to ${maxDice + 1}. `;
+        if (purchased) {
+            text += `<button class='grayed'>You already bought something.</button></p>`;
+        } else if (resetCost[reset] <= points) {
+            text += `<button onClick = 'purchase(${reset}, 2)'>Buy for ${resetCost[reset]}</button></p>`;
+        } else {
+            text += `<button class='grayed'>You need ${resetCost[reset]} points to reset.</button></p>`;
+        }
+    } else {
+        text += `<p>You can not reset anymore.</p>`;
+    }
+    $("#reset").html(text);
     $('#points').text(points);
 }
 maxDiceCost = {
@@ -81,6 +105,11 @@ multiplier = { // list of multipliers for the amount of dices that are the same;
     5 : [5, "Quintuple"],
     6 : [8, "Sextuple"]
 }
+resetCost = {} // Stores the cost of a reset
+for (let i=0; i<10; i++) {
+    resetCost[i] = 12 * (4 ** i);
+}
+reset = 0; // Stores the mount of resets currently used
 counter = 1;
 Object.keys(dice).forEach(function(value) { // Adds the storage number for each die
     dice[value].push(counter);
@@ -116,6 +145,7 @@ $(document).ready(function() {
         numbers.sort();
         numbers = lastElement(numbers);
         points *= multiplier[numbers][0];
+        points *= 2 ** reset;
         let text = ""
         if (numbers > 1) {
             text += `<h2 id='multiplier'>Multiplier x${multiplier[numbers][0]}! You got a ${multiplier[numbers][1]}!</h2>`;
@@ -125,6 +155,7 @@ $(document).ready(function() {
         });
         text += `<p>You have <c id='points'>${points}</c> points.</p>`
         $("#rollResult").html(text);
+        $("#diceRolls").text(parseInt($("#diceRolls").text())+1)
         $('#multiplier').effect("bounce", { times: 5, distance: 40 }, "slow")
         updateLayout();
     });
