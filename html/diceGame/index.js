@@ -6,6 +6,11 @@ function purchase(value, type) { // Used to purchase an upgrade
             purchased = true;
             points -= dice[value][0];
             diceAmount += lastElement(dice[value]);
+            let max = lastElement(lastElement(Object.values(dice)));
+            while (diceAmount > (max*2)-1) {
+                diceAmount -= max;
+                permaDiceAmount += 4;
+            }
         }
     } else if (type == 1) { // Used to upgrade max dice
         if (maxDiceCost[value][0] > points || purchased) {
@@ -22,8 +27,22 @@ function purchase(value, type) { // Used to purchase an upgrade
             purchased = true;
             points = 0;
             maxDice = 1;
-            diceAmount = 1;
+            diceAmount = permaDiceAmount;
             reset += 1;
+        }
+    } else if (type == 3) {
+        if (dice[value][1] > points || purchased) { // Used to buy a perma die
+            alert("Something went wrong you can not purchase this.");
+        } else {
+            purchased = true;
+            points -= dice[value][1];
+            permaDiceAmount += lastElement(dice[value]);
+            diceAmount += lastElement(dice[value]);
+            let max = lastElement(lastElement(Object.values(dice)));
+            while (diceAmount > (max*2)-1) {
+                diceAmount -= max;
+                permaDiceAmount += 4;
+            }
         }
     }
     updateLayout();
@@ -67,6 +86,19 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     }
     $("#diceShop").html(text);
     text = '';
+    ownedDice = diceCounter(permaDiceAmount);
+    Object.keys(dice).forEach(function(value) {
+        text += `<p>${value} sided permanent die. You have ${ownedDice[value]}. `;
+        if (purchased) {
+            text += `<button class='grayed'>You already bought something.</button></p>`;
+        } else if (dice[value][1] <= points) {
+            text += `<button onClick = 'purchase(${value}, 3)'>Buy for ${dice[value][1]}</button></p>`;
+        } else {
+            text += `<button class='grayed'>You need ${dice[value][1]} points to buy</button></p>`;
+        }
+        counter *= 2;
+    });
+    text += `<p>Reset level at ${reset}. `;
     if (resetCost[reset+1] !== undefined) {
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
@@ -76,7 +108,7 @@ function updateLayout() { // Will update the layout of the shop to make sure the
             text += `<button class='grayed'>You need ${resetCost[reset]} points to reset.</button></p>`;
         }
     } else {
-        text += `<p>You can not reset anymore.</p>`;
+        text += `You can not reset anymore.</p>`;
     }
     $("#reset").html(text);
     $('#points').text(points);
@@ -90,12 +122,12 @@ maxDiceCost = {
     6 : [45]
 }
 dice = { // A list of information for the dices
-    4 : [3],
-    6 : [4],
-    8: [10],
-    10: [16],
-    12: [22],
-    20: [28]
+    4 : [3, 15],
+    6 : [4, 20],
+    8: [10, 50],
+    10: [16, 80],
+    12: [22, 110],
+    20: [28, 140]
 }
 multiplier = { // list of multipliers for the amount of dices that are the same; doubles, triples, etc.
     1 : [1, "Single"],
@@ -117,6 +149,7 @@ Object.keys(dice).forEach(function(value) { // Adds the storage number for each 
 function completeReset() { // Completely restarts the game
     reset = 0; // Stores the mount of resets currently used
     diceAmount = 1; // Used to store what dice the user owns
+    permaDiceAmount = 1; // Used to store what dice the user gets at reset
     points = 0; // the amount of points the user has
     purchased = false; // if the user has purchased something this turn
     maxDice = 1; // Stores the max amount of dice
@@ -129,6 +162,7 @@ function save() { // Saves the game
     localStorage.diceAmount = diceAmount;
     localStorage.maxDice = maxDice;
     localStorage.diceRolls = $("#diceRolls").text();
+    localStorage.permaDiceAmount = permaDiceAmount;
 }
 $(document).ready(function() {  
     if (localStorage.reset == undefined) {
@@ -139,7 +173,8 @@ $(document).ready(function() {
         points = 0; // the amount of points the user has
         purchased = false; // if the user has purchased something this turn
         maxDice = parseInt(localStorage.maxDice); // Stores the max amount of dice
-        $("#diceRolls").text(parseInt(localStorage.diceRolls));
+        permaDiceAmount = parseInt(localStorage.permaDiceAmount); // Used to store what dice the user gets at reset
+        $("#diceRolls").text(parseInt(localStorage.diceRolls)); // Stores the amount of dice rolls
         updateLayout();
     }
     $("#roll").click(function () {

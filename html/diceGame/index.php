@@ -21,7 +21,8 @@
     ?>
     <h1>Dice Game</h1>
     <p>You have rolled the dice <c id="diceRolls">0</c> times.</p>
-    <h3 id='reset'>Permanent Upgrades</h3>
+    <h3>Permanent Upgrades</h3>
+    <div id='reset'></div>
     <h3 id='dice'>Dice Shop</h3>
     <div id='diceShop'></div>
     <button id='roll'>Roll dice</button>
