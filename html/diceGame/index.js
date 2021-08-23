@@ -81,6 +81,7 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     }
     $("#reset").html(text);
     $('#points').text(points);
+    save();
 }
 maxDiceCost = {
     2 : [4],
@@ -109,18 +110,39 @@ resetCost = {} // Stores the cost of a reset
 for (let i=0; i<10; i++) {
     resetCost[i] = 12 * (4 ** i);
 }
-reset = 0; // Stores the mount of resets currently used
 counter = 1;
 Object.keys(dice).forEach(function(value) { // Adds the storage number for each die
     dice[value].push(counter);
     counter *= 2;
 });
-diceAmount = 1; // Used to store what dice the user owns
-points = 0; // the amount of points the user has
-purchased = false; // if the user has purchased something this turn
-maxDice = 1;
-$(document).ready(function() {
+function completeReset() { // Completely restarts the game
+    reset = 0; // Stores the mount of resets currently used
+    diceAmount = 1; // Used to store what dice the user owns
+    points = 0; // the amount of points the user has
+    purchased = false; // if the user has purchased something this turn
+    maxDice = 1; // Stores the max amount of dice
+    $("#diceRolls").text(0); // Resets the dice rolls
+    save();
     updateLayout();
+}
+function save() { // Saves the game
+    localStorage.reset = reset;
+    localStorage.diceAmount = diceAmount;
+    localStorage.maxDice = maxDice;
+    localStorage.diceRolls = $("#diceRolls").text();
+}
+$(document).ready(function() {  
+    if (localStorage.reset == undefined) {
+        completeReset();
+    } else {
+        reset = parseInt(localStorage.reset); // Stores the mount of resets currently used
+        diceAmount = parseInt(localStorage.diceAmount); // Used to store what dice the user owns
+        points = 0; // the amount of points the user has
+        purchased = false; // if the user has purchased something this turn
+        maxDice = parseInt(localStorage.maxDice); // Stores the max amount of dice
+        $("#diceRolls").text(parseInt(localStorage.diceRolls));
+        updateLayout();
+    }
     $("#roll").click(function () {
         points = 0;
         purchased = false;
@@ -155,7 +177,7 @@ $(document).ready(function() {
         });
         text += `<p>You have <c id='points'>${points}</c> points.</p>`
         $("#rollResult").html(text);
-        $("#diceRolls").text(parseInt($("#diceRolls").text())+1)
+        $("#diceRolls").text(parseInt($("#diceRolls").text())+1);
         $('#multiplier').effect("bounce", { times: 5, distance: 40 }, "slow")
         updateLayout();
     });

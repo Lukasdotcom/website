@@ -26,6 +26,8 @@
     <div id='diceShop'></div>
     <button id='roll'>Roll dice</button>
     <div id='rollResult'></div>
+    <br>
+    <button onclick="completeReset()">Reset Game Completely</button>
     </div>
 </body>
 
