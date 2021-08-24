@@ -7,7 +7,7 @@ function purchase(value, type) { // Used to purchase an upgrade
             points -= dice[value][0];
             diceAmount += lastElement(dice[value]);
             let max = lastElement(lastElement(Object.values(dice)))*2;
-            while (diceAmount > (max*2)-1) {
+            while (diceAmount > (max)-1) {
                 diceAmount -= max;
                 permaDiceAmount += 4;
             }
@@ -38,8 +38,8 @@ function purchase(value, type) { // Used to purchase an upgrade
             points -= dice[value][1];
             permaDiceAmount += lastElement(dice[value]);
             diceAmount += lastElement(dice[value]);
-            let max = lastElement(lastElement(Object.values(dice)));
-            while (diceAmount > (max*2)-1) {
+            let max = lastElement(lastElement(Object.values(dice)))*2;
+            while (diceAmount > (max)-1) {
                 diceAmount -= max;
                 permaDiceAmount += 4;
             }
