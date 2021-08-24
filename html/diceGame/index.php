@@ -26,7 +26,9 @@
     <h3 id='dice'>Dice Shop</h3>
     <div id='diceShop'></div>
     <button id='roll'>Roll dice</button>
+    <h2 id='multiplier'></h2>
     <div id='rollResult'></div>
+    <p>You have <c id='points'>0</c> point(s).</p>
     <br>
     <button onclick="completeReset()">Reset Game Completely</button>
     </div>

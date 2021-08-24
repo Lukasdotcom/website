@@ -202,17 +202,35 @@ $(document).ready(function() {
         numbers = lastElement(numbers);
         points *= multiplier[numbers][0];
         points *= 2 ** reset;
-        let text = ""
-        if (numbers > 1) {
-            text += `<h2 id='multiplier'>Multiplier x${multiplier[numbers][0]}! You got a ${multiplier[numbers][1]}!</h2>`;
-        }
+        let text = "";
+        text += `<button id='stopRoll'>Stop roll</button>`;
+        $("#multiplier").text('')
         Object.keys(rollResult).forEach(function(value) {
-            text += `<p>${value} sided die rolled ${rollResult[value]}.</p>`
+            text += `<p>${value} sided die rolled <c id='${value}sidedResult'></c>.</p>`;
         });
-        text += `<p>You have <c id='points'>${points}</c> points.</p>`
         $("#rollResult").html(text);
-        $("#diceRolls").text(parseInt($("#diceRolls").text())+1);
-        $('#multiplier').effect("bounce", { times: 5, distance: 40 }, "slow")
-        updateLayout();
+        text += `<p>You have <c id='points'></c> points.</p>`
+        window.rollInterval = setInterval(function() {
+            Object.keys(rollResult).forEach(function(value) {
+                $(`#${value}sidedResult`).text(randomInt(1, parseInt(value)));
+            });
+        },40)
+        $("#stopRoll").click(function() {
+            $("#stopRoll").off("click")
+            clearInterval(rollInterval);
+            $("#points").text(points);
+            if (numbers > 1) {
+                $("#multiplier").text(`Multiplier x${multiplier[numbers][0]}! You got a ${multiplier[numbers][1]}!`);
+            }
+            $('#multiplier').effect("bounce", { times: 5, distance: 40 }, "slow")
+            Object.keys(rollResult).forEach(function(value) {
+                $(`#${value}sidedResult`).text(rollResult[value]);
+            });
+            $("#diceRolls").text(parseInt($("#diceRolls").text())+1);
+            $("#roll").show();
+            $("#stopRoll").hide();
+            updateLayout();
+        })
+        $("#roll").hide();
     });
 });
