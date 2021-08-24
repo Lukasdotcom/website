@@ -26,12 +26,12 @@ function purchase(value, type) { // Used to purchase an upgrade
         } else {
             purchased = true;
             points = 0;
-            maxDice = 1;
+            maxDice = permaMaxDice;
             diceAmount = permaDiceAmount;
             reset += 1;
         }
-    } else if (type == 3) {
-        if (dice[value][1] > points || purchased) { // Used to buy a perma die
+    } else if (type == 3) { // Used to buy a perma die
+        if (dice[value][1] > points || purchased) {
             alert("Something went wrong you can not purchase this.");
         } else {
             purchased = true;
@@ -42,6 +42,17 @@ function purchase(value, type) { // Used to purchase an upgrade
             while (diceAmount > (max)-1) {
                 diceAmount -= max;
                 permaDiceAmount += 4;
+            }
+        }
+    } else if (type == 4) { // Used to upgrade perma max dice
+        if (maxDiceCost[value][1] > points || purchased) {
+            alert("Something went wrong you can not purchase this.");
+        } else {
+            purchased = true;
+            points -= maxDiceCost[value][1];
+            permaMaxDice += 1;
+            if (permaMaxDice > maxDice) {
+                maxDice = permaMaxDice;
             }
         }
     }
@@ -98,6 +109,18 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         }
         counter *= 2;
     });
+    if (maxDiceCost[permaMaxDice+1] !== undefined) {
+        text += `<p>Upgrade perma max dice from ${permaMaxDice} to ${permaMaxDice + 1}. `;
+        if (purchased) {
+            text += `<button class='grayed'>You already bought something.</button></p>`;
+        } else if (maxDiceCost[permaMaxDice+1][1] <= points) {
+            text += `<button onClick = 'purchase(${permaMaxDice+1}, 4)'>Buy for ${maxDiceCost[permaMaxDice+1][1]}</button></p>`;
+        } else {
+            text += `<button class='grayed'>You need ${maxDiceCost[permaMaxDice+1][1]} points to upgrade.</button></p>`;
+        }
+    } else {
+        text += `<p>Perma max dice ${permaMaxDice} is the max.</p>`;
+    }
     text += `<p>Reset level at ${reset}. `;
     if (resetCost[reset+1] !== undefined) {
         if (purchased) {
@@ -115,11 +138,11 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     save();
 }
 maxDiceCost = {
-    2 : [4],
-    3 : [12],
-    4 : [24],
-    5 : [36],
-    6 : [45]
+    2 : [4, 20],
+    3 : [12, 60],
+    4 : [24, 120],
+    5 : [36, 180],
+    6 : [45, 225]
 }
 dice = { // A list of information for the dices
     4 : [3, 15],
@@ -153,6 +176,7 @@ function completeReset() { // Completely restarts the game
     points = 0; // the amount of points the user has
     purchased = false; // if the user has purchased something this turn
     maxDice = 1; // Stores the max amount of dice
+    permaMaxDice = 1; // Stores the max amount of dice at reset
     $("#diceRolls").text(0); // Resets the dice rolls
     save();
     updateLayout();
@@ -161,6 +185,7 @@ function save() { // Saves the game
     localStorage.reset = reset;
     localStorage.diceAmount = diceAmount;
     localStorage.maxDice = maxDice;
+    localStorage.permaMaxDice = permaMaxDice;
     localStorage.diceRolls = $("#diceRolls").text();
     localStorage.permaDiceAmount = permaDiceAmount;
 }
@@ -173,6 +198,7 @@ $(document).ready(function() {
         points = 0; // the amount of points the user has
         purchased = false; // if the user has purchased something this turn
         maxDice = parseInt(localStorage.maxDice); // Stores the max amount of dice
+        permaMaxDice = parseInt(localStorage.permaMaxDice); // Stores the max amount of dice at reset
         permaDiceAmount = parseInt(localStorage.permaDiceAmount); // Used to store what dice the user gets at reset
         $("#diceRolls").text(parseInt(localStorage.diceRolls)); // Stores the amount of dice rolls
         updateLayout();
