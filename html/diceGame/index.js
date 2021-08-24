@@ -6,7 +6,7 @@ function purchase(value, type) { // Used to purchase an upgrade
             purchased = true;
             points -= dice[value][0];
             diceAmount += lastElement(dice[value]);
-            let max = lastElement(lastElement(Object.values(dice)));
+            let max = lastElement(lastElement(Object.values(dice)))*2;
             while (diceAmount > (max*2)-1) {
                 diceAmount -= max;
                 permaDiceAmount += 4;
