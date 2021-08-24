@@ -53,6 +53,9 @@
         if ($PRIVILEGE["restartServer"]) {
             echo "<button onClick='restart()' >Restart Server</button>";
         }
+        if ($PRIVILEGE["updateServer"]) {
+            echo "<button onClick='update()' >Update Server</button>";
+        }
         echo "<table id='log'>";
         echo "<tr><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";
         $id = 0;

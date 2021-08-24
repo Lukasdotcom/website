@@ -273,6 +273,11 @@ try:
                 os.remove(location + "restart.json")
                 os.system(f"python3 {__file__}")
                 exit()
+            if os.path.isfile(location + "update.json"):
+                writeLog("Server is being updated.", 12)
+                os.remove(location + "update.json")
+                os.system("git pull")
+                writeLog("Server updated successfully.", 12)
             if not skipGPIO:
                 if GPIO.input(10):
                     GPIO.output(8, GPIO.HIGH)

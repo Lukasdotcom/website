@@ -58,6 +58,21 @@ function collapseCategories() {
         localStorage.collapseCategories = "";
     }
 }
+function update() {
+    const ajax = new XMLHttpRequest();
+    
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            alert("Updating Server.")
+        } else {
+            alert("Error something went wrong.")
+        }
+        window.location.reload();      
+        }
+    ajax.open("POST", "/api.php");
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajax.send(`server=update&key='${getCookie('user')}'`); 
+}
 function restart() {
     const ajax = new XMLHttpRequest();
     

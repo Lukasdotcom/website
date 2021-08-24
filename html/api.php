@@ -131,6 +131,14 @@ if($_GET["internet"] == "data") { // Will give internet data
     } else {
         missingPrivilege($USERNAME);
     }
+} elseif ($_POST["server"] == "update") { // To delete an entry in log
+    if ($PRIVILEGE["updateServer"]) {
+        echo "Updating.";
+        $update = fopen("update.json", "w");
+        fclose($update);
+    } else {
+        missingPrivilege($USERNAME);
+    }
 } else {
     http_response_code(400);
     echo "Invalid command";
