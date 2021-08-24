@@ -222,13 +222,13 @@ $(document).ready(function() {
             if (numbers > 1) {
                 $("#multiplier").text(`Multiplier x${multiplier[numbers][0]}! You got a ${multiplier[numbers][1]}!`);
             }
-            $('#multiplier').effect("bounce", { times: 5, distance: 40 }, "slow")
             Object.keys(rollResult).forEach(function(value) {
                 $(`#${value}sidedResult`).text(rollResult[value]);
             });
             $("#diceRolls").text(parseInt($("#diceRolls").text())+1);
             $("#roll").show();
             $("#stopRoll").hide();
+            $('#multiplier').effect("bounce", { times: 5, distance: 40 }, "slow")
             updateLayout();
         })
         $("#roll").hide();

@@ -8,15 +8,6 @@ body {
     margin-left: 200px;
 }
 
-.red button {
-    color: red;
-    border: 1px solid red;
-}
-
-.red button:hover {
-    background-color: rgba(255, 0, 0, 0.877);
-}
-
 a {
     color: rgb(42, 42, 255);
 }
@@ -104,4 +95,16 @@ input[type="number"] {
 .grayed {
 	color: gray;
 	border-color: grey;
+}
+
+.column2 {
+    float: left;
+    width: 50%;
+}
+.red:hover {
+	background-color: red;
+}
+.red {
+	color: red;
+	border-color: red;
 }

@@ -20,17 +20,20 @@
     echo "<div class='main'>";
     ?>
     <h1>Dice Game</h1>
-    <p>You have rolled the dice <c id="diceRolls">0</c> times.</p>
-    <h3>Permanent Upgrades</h3>
-    <div id='reset'></div>
-    <h3 id='dice'>Dice Shop</h3>
-    <div id='diceShop'></div>
-    <button id='roll'>Roll dice</button>
-    <h2 id='multiplier'></h2>
-    <div id='rollResult'></div>
-    <p>You have <c id='points'>0</c> point(s).</p>
-    <br>
-    <button onclick="completeReset()">Reset Game Completely</button>
+    <div class='column2'>
+        <p>You have rolled the dice <c id="diceRolls">0</c> times.</p>
+        <p>You have <c id='points'>0</c> point(s).</p>
+        <button id='roll'>Roll dice</button>
+        <h2 id='multiplier'></h2>
+        <div id='rollResult'></div>
+    </div>
+    <div class='column2'>
+        <h3>Permanent Upgrades</h3>
+        <div id='reset'></div>
+        <h3 id='dice'>Dice Upgrades</h3>
+        <div id='diceShop'></div>
+    </div>
+    <button class='red' onclick="completeReset()">Reset Game Completely</button>
     </div>
 </body>
 
