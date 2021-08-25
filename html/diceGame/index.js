@@ -6,11 +6,6 @@ function purchase(value, type) { // Used to purchase an upgrade
             purchased = true;
             points -= dice[value][0];
             diceAmount += lastElement(dice[value]);
-            let max = lastElement(lastElement(Object.values(dice)))*2;
-            while (diceAmount > (max)-1) {
-                diceAmount -= max;
-                permaDiceAmount += 4;
-            }
         }
     } else if (type == 1) { // Used to upgrade max dice
         if (maxDiceCost[value][0] > points || purchased) {
@@ -39,10 +34,6 @@ function purchase(value, type) { // Used to purchase an upgrade
             permaDiceAmount += lastElement(dice[value]);
             diceAmount += lastElement(dice[value]);
             let max = lastElement(lastElement(Object.values(dice)))*2;
-            while (diceAmount > (max)-1) {
-                diceAmount -= max;
-                permaDiceAmount += 4;
-            }
         }
     } else if (type == 4) { // Used to upgrade perma max dice
         if (maxDiceCost[value][1] > points || purchased) {
@@ -55,8 +46,71 @@ function purchase(value, type) { // Used to purchase an upgrade
                 maxDice = permaMaxDice;
             }
         }
+    } else if (type == 5) { // Used to purchase rolls of the winner die
+        if ((superRollCost * value) > points || purchased) {
+            alert("Something went wrong you can not purchase this.");
+        } else {
+            purchased = true;
+            points -= value * superRollCost;
+            console.log(value);
+            superRoll(value);
+        }
+    }
+    let max = lastElement(lastElement(Object.values(dice)))*2;
+    while (diceAmount > (max)-1) {
+        diceAmount -= max;
+        permaDiceAmount += 4;
+    }
+    while (permaDiceAmount > (max)-1) {
+        permaDiceAmount -= max;
+        superRoll(1);
     }
     updateLayout();
+}
+function superRoll(rollsLeft) { // Roll a 20 sided die to be able to win the game
+    $("#winGameRoll").text('Roll 20 sided die');
+    $("#winGameRollsLeft").text(rollsLeft);
+    rollsLeft -= 1;
+    $(`#winGameText`).html(``);
+    $("#winGame").show();
+    $("#winGameRoll").click(function() {
+        let guess = parseInt($("#guess").val());
+        $("#winGameRoll").off("click");
+        $("#winGameRoll").text('Stop roll');
+        $(`#winGameText`).html(`The die rolled <c id='winGameRollResult'></c>.`);
+        let rollInterval = setInterval(function() {
+            $(`#winGameRollResult`).text(randomInt(1, 20));
+        },40);
+        $("#winGameRoll").click(function () {
+            $("#winGameRoll").off("click");
+            clearInterval(rollInterval);
+            if (guess != parseInt($(`#winGameRollResult`).text())) {
+                $(`#winGameText`).html(`<h3 id='winMessage'>Correct guess, You have won!</h3>${$(`#winGameText`).html()}`);
+                $('#winMessage').effect("bounce", { times: 5, distance: 40 }, "slow");
+                $("#winGameRoll").text('Restart game and play again');
+                $("#winGameRoll").click(function () {
+                    $("#winGameRoll").off("click");
+                    $("#winGame").hide();
+                    completeReset();
+                })
+            } else if (rollsLeft > 0) {
+                $(`#winGameText`).html(`</p>Wrong guess. :(</p>${$(`#winGameText`).html()}`);
+                $("#winGameRoll").text('Try Again');
+                $("#winGameRoll").click(function () {
+                    $("#winGameRoll").off("click");
+                    superRoll(rollsLeft);
+                })
+            } else {
+                $(`#winGameText`).html(`</p>Wrong guess. :(</p>${$(`#winGameText`).html()}`);
+                $("#winGameRoll").text('close');
+                $("#winGameRoll").click(function () {
+                    $("#winGameRoll").off("click");
+                    $("#winGame").hide();
+                })
+            }
+        })
+        
+    })
 }
 function diceCounter(diceNumber) { // Will return all the dice the player has according to a variable
     let ownedDice = JSON.parse(JSON.stringify(dice));
@@ -69,6 +123,7 @@ function diceCounter(diceNumber) { // Will return all the dice the player has ac
     return ownedDice
 }
 function updateLayout() { // Will update the layout of the shop to make sure the information is up to date
+    // Does the dice shop
     let text = "";
     let ownedDice = diceCounter(diceAmount);
     let counter = 1;
@@ -96,6 +151,7 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         text += `<p>Max dice ${maxDice} is the max.</p>`;
     }
     $("#diceShop").html(text);
+    // Does the perma shop
     text = '';
     ownedDice = diceCounter(permaDiceAmount);
     Object.keys(dice).forEach(function(value) {
@@ -134,9 +190,23 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         text += `You can not reset anymore.</p>`;
     }
     $("#reset").html(text);
+    // Updates the points
     $('#points').text(points);
+    // Updates the other shop
+    text = 'Buy a roll with the winning die. ';
+    if (purchased) {
+        text += `<button class='grayed'>You already bought something.</button></p>`;
+    } else if (superRollCost <= points) {
+        let purchaseAmount = Math.floor(points / superRollCost);
+        text += `<button onClick = 'purchase(${purchaseAmount}, 5)'>Roll dice ${purchaseAmount} time(s) for ${purchaseAmount * superRollCost}</button></p>`;
+    } else {
+        text += `<button class='grayed'>You need ${superRollCost} points to reset.</button></p>`;
+    }
+    $('#otherShop').html(text);
+    // Saves the game
     save();
 }
+superRollCost = 400;
 maxDiceCost = {
     2 : [4, 20],
     3 : [12, 60],
@@ -178,7 +248,7 @@ function completeReset() { // Completely restarts the game
     maxDice = 1; // Stores the max amount of dice
     permaMaxDice = 1; // Stores the max amount of dice at reset
     $("#diceRolls").text(0); // Resets the dice rolls
-    save();
+    $("#rollResult").html('');
     updateLayout();
 }
 function save() { // Saves the game
@@ -236,7 +306,7 @@ $(document).ready(function() {
         });
         $("#rollResult").html(text);
         text += `<p>You have <c id='points'></c> points.</p>`
-        window.rollInterval = setInterval(function() {
+        let rollInterval = setInterval(function() {
             Object.keys(rollResult).forEach(function(value) {
                 $(`#${value}sidedResult`).text(randomInt(1, parseInt(value)));
             });
