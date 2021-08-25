@@ -52,8 +52,15 @@ function purchase(value, type) { // Used to purchase an upgrade
         } else {
             purchased = true;
             points -= value * superRollCost;
-            console.log(value);
             superRoll(value);
+        }
+    } else if (type == 6) { // Used to purchase a bonus
+        if ((bonusCost * value) > points || purchased) {
+            alert("Something went wrong you can not purchase this.");
+        } else {
+            purchased = true;
+            points -= value * bonusCost;
+            bonus += value;
         }
     }
     let max = lastElement(lastElement(Object.values(dice)))*2;
@@ -177,7 +184,11 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     } else {
         text += `<p>Perma max dice ${permaMaxDice} is the max.</p>`;
     }
-    text += `<p>Reset level at ${reset}. `;
+    $("#reset").html(text);
+    // Updates the points
+    $('#points').text(points);
+    // Updates the other shop
+    text = `<p>Reset level at ${reset} or x${reset ** 2}. `;
     if (resetCost[reset+1] !== undefined) {
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
@@ -189,11 +200,16 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     } else {
         text += `You can not reset anymore.</p>`;
     }
-    $("#reset").html(text);
-    // Updates the points
-    $('#points').text(points);
-    // Updates the other shop
-    text = 'Buy a roll with the winning die. ';
+    text += `<p>Buy a bonus that gives you points every turn. You are at a +${bonus} bonus. `;
+    if (purchased) {
+        text += `<button class='grayed'>You already bought something.</button></p>`;
+    } else if (bonusCost <= points) {
+        let purchaseAmount = Math.floor(points / bonusCost);
+        text += `<button onClick = 'purchase(${purchaseAmount}, 6)'>Purchase ${purchaseAmount} bonus points for ${purchaseAmount * bonusCost}</button></p>`;
+    } else {
+        text += `<button class='grayed'>You need ${bonusCost} points to buy a bonus.</button></p>`;
+    }
+    text += '<p>Buy a roll with the winning die. ';
     if (purchased) {
         text += `<button class='grayed'>You already bought something.</button></p>`;
     } else if (superRollCost <= points) {
@@ -207,6 +223,7 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     save();
 }
 superRollCost = 400;
+bonusCost = 10;
 maxDiceCost = {
     2 : [4, 20],
     3 : [12, 60],
@@ -247,6 +264,7 @@ function completeReset() { // Completely restarts the game
     purchased = false; // if the user has purchased something this turn
     maxDice = 1; // Stores the max amount of dice
     permaMaxDice = 1; // Stores the max amount of dice at reset
+    bonus = 0; // The bonus points given every turn
     $("#diceRolls").text(0); // Resets the dice rolls
     $("#rollResult").html('');
     updateLayout();
@@ -258,6 +276,7 @@ function save() { // Saves the game
     localStorage.permaMaxDice = permaMaxDice;
     localStorage.diceRolls = $("#diceRolls").text();
     localStorage.permaDiceAmount = permaDiceAmount;
+    localStorage.bonus = bonus;
 }
 $(document).ready(function() {  
     if (localStorage.reset == undefined) {
@@ -270,6 +289,7 @@ $(document).ready(function() {
         maxDice = parseInt(localStorage.maxDice); // Stores the max amount of dice
         permaMaxDice = parseInt(localStorage.permaMaxDice); // Stores the max amount of dice at reset
         permaDiceAmount = parseInt(localStorage.permaDiceAmount); // Used to store what dice the user gets at reset
+        bonus = parseInt(localStorage.bonus); // The bonus points given every turn
         $("#diceRolls").text(parseInt(localStorage.diceRolls)); // Stores the amount of dice rolls
         updateLayout();
     }
@@ -298,12 +318,15 @@ $(document).ready(function() {
         numbers = lastElement(numbers);
         points *= multiplier[numbers][0];
         points *= 2 ** reset;
+        points += bonus;
         let text = "";
         text += `<button id='stopRoll'>Stop roll</button>`;
         $("#multiplier").text('')
         Object.keys(rollResult).forEach(function(value) {
             text += `<p>${value} sided die rolled <c id='${value}sidedResult'></c>.</p>`;
         });
+        text += `<p>x${2 ** reset} reset multiplier.</p>`;
+        text += `<p>+${bonus} points bonus.</p>`;
         $("#rollResult").html(text);
         text += `<p>You have <c id='points'></c> points.</p>`
         let rollInterval = setInterval(function() {
