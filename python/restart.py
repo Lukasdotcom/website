@@ -276,7 +276,7 @@ try:
             if os.path.isfile(location + "update.json"):
                 writeLog("Server is being updated.", 12)
                 os.remove(location + "update.json")
-                os.system("git reset --hard")
+                os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git reset --hard")
                 os.system("git pull")
                 writeLog("Server updated successfully.", 12)
             if not skipGPIO:
