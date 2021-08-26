@@ -21,7 +21,9 @@
         <h1>Welcome to the Schaefer Family website!</h1>
         <p>This website is a personal project by Lukas Schaefer to practice web development and the source code for this website is on <a href="https://github.com/Lukasdotcom/website" target="_blank" rel="noopener noreferrer" >github</a>.</p>
         <a href="/floppy.php">
-            <img src="/favicon/android-chrome-512x512.png" alt="Picture of the great bun bun Floppy.">
+            <?php 
+            createImage("floppy", "Picture of the great bun bun Floppy.");
+            ?>
         </a>
     </div>
 </body>

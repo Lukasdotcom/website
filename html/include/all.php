@@ -8,7 +8,8 @@ echo '<meta http-equiv="content-language" content="en-us">
     <link rel="manifest" href="/favicon/site.webmanifest">
     <link rel="stylesheet" type="text/css" href="/css/website.css" />
     <script type="text/javascript" src="/javascript/jquery.js"></script>
-    <script type="text/javascript" src="/javascript/jquery-ui.js"></script>';
+    <script type="text/javascript" src="/javascript/jquery-ui.js"></script>
+    <script type="text/javascript" src="/javascript/functions.js"></script>';
 if (false) {
   echo '<script type="text/javascript">
       (function(c,l,a,r,i,t,y){
@@ -27,4 +28,13 @@ try {
 if (false) {
   // Adds google analytics
   echo "<!-- Global site tag (gtag.js) - Google Analytics --> <script async src='https://www.googletagmanager.com/gtag/js?id=G-LDTH4Z14QQ'></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-LDTH4Z14QQ'); </script>";
+}
+/**
+ * Creates an image that loads a simple image before loading the entire image.
+ * @param string $img used as the name of the image
+ */
+function createImage($img, $alt, $style="width:100%;") {
+  echo "<img id='first$img' loading='eager' src='/img/$img.first.jpg' alt='$alt' style='$style'>";
+  echo "<img id='min$img' onload='imageLoad(`$img`, true)' src='/img/$img.min.jpg' alt='$alt' style='$style display: none;'>";
+  echo "<img id='$img' src='' alt='$alt' style='$style display: none;'>";
 }

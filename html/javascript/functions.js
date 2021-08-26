@@ -38,3 +38,15 @@ function randomInt(min, max) { // returns a random number between min (included)
 function lastElement(array) { // returns the last element in an array
     return array[array.length - 1];
 }
+
+function imageLoad(name, medium) { // used for better loading of image
+    if (medium) {
+        $(`#first${name}`).hide();
+        $(`#min${name}`).show();
+        $(`#${name}`).attr("src", `/img/${name}.jpg`);
+        $(`#${name}`).attr("onload", `imageLoad('${name}', false)`);
+    } else {
+        $(`#min${name}`).hide();
+        $(`#${name}`).show()
+    }
+}

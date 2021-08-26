@@ -40,7 +40,9 @@
     echo $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"];?>/cookieClicker/index.js";<br>
     script.id = "hostname";<br>
     document.head.appendChild(script);</div>
-    <img src='/img/cookieClicker.png' alt='Picture of the addon' width="100%">
+    <?php
+    createImage("cookieClicker", "Picture of the addon.");
+    ?>
     <h3>Terms of Use or license</h3>
     <p>
     <?php 
