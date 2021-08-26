@@ -24,6 +24,7 @@ function purchase(value, type) { // Used to purchase an upgrade
             maxDice = permaMaxDice;
             diceAmount = permaDiceAmount;
             reset += 1;
+            bonus = 0;
         }
     } else if (type == 3) { // Used to buy a perma die
         if (dice[value][1] > points || purchased) {
@@ -91,7 +92,7 @@ function superRoll(rollsLeft) { // Roll a 20 sided die to be able to win the gam
         $("#winGameRoll").click(function () {
             $("#winGameRoll").off("click");
             clearInterval(rollInterval);
-            if (guess != parseInt($(`#winGameRollResult`).text())) {
+            if (guess == parseInt($(`#winGameRollResult`).text())) {
                 $(`#winGameText`).html(`<h3 id='winMessage'>Correct guess, You have won!</h3>${$(`#winGameText`).html()}`);
                 $('#winMessage').effect("bounce", { times: 5, distance: 40 }, "slow");
                 $("#winGameRoll").text('Restart game and play again');
@@ -188,7 +189,7 @@ function updateLayout() { // Will update the layout of the shop to make sure the
     // Updates the points
     $('#points').text(points);
     // Updates the other shop
-    text = `<p>Reset level at ${reset} or x${reset ** 2}. `;
+    text = `<p>Reset level at ${reset} or x${2 ** reset}. `;
     if (resetCost[reset+1] !== undefined) {
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
