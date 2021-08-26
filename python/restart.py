@@ -277,7 +277,7 @@ try:
                 writeLog("Server is being updated.", 12)
                 os.remove(location + "update.json")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git reset --hard")
-                os.system("git pull")
+                os.system("git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull")
                 writeLog("Server updated successfully.", 12)
             if not skipGPIO:
                 if GPIO.input(10):
