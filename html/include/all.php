@@ -34,7 +34,7 @@ if (false) {
  * @param string $img used as the name of the image
  */
 function createImage($img, $alt, $style="width:100%;") {
-  echo "<img id='first$img' loading='eager' src='/img/$img.first.jpg' alt='$alt' style='$style'>";
-  echo "<img id='min$img' onload='imageLoad(`$img`, true)' src='/img/$img.min.jpg' alt='$alt' style='$style display: none;'>";
+  echo "<img id='first$img' onload='imageLoad(`$img`, `first`)' src='/img/$img.first.jpg' alt='$alt' style='$style'>";
+  echo "<img id='min$img' src='' alt='$alt' style='$style display: none;'>";
   echo "<img id='$img' src='' alt='$alt' style='$style display: none;'>";
 }
