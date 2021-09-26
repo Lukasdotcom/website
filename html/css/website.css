@@ -103,11 +103,13 @@ input[type="number"] {
     width: 50%;
 }
 
-.red:hover {
+.red button:hover {
     background-color: red;
+    border-color: red;
+    color: black;
 }
 
-.red {
+.red button {
     color: red;
     border-color: red;
 }
