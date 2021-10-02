@@ -22,7 +22,7 @@
     $youtubeInfo = file_get_contents("space3.json");
     $youtubeInfo = json_decode($youtubeInfo, true);
     $newData = false;
-    if ($youtubeInfo + 3600 < time()) {
+    if ($youtubeInfo[0] + 3600 < time()) {
         $newData = true;
     }
     if ($newData) {
@@ -40,17 +40,19 @@
             }
         }
         curl_close($ch);
-        $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/html5.zip";
-        file_put_contents("html5.zip", fopen($url, 'r'));
-        $zip = new ZipArchive;
-        $res = $zip->open('html5.zip');
-        if ($res === TRUE) {
-            delete_folder("html5");
-            $zip->extractTo('html5');
-            $zip->close();
-            unlink('html5.zip');
+        if ($name != $youtubeInfo[1]) {
+            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/html5.zip";
+            file_put_contents("html5.zip", fopen($url, 'r'));
+            $zip = new ZipArchive;
+            $res = $zip->open('html5.zip');
+            if ($res === TRUE) {
+                delete_folder("html5");
+                $zip->extractTo('html5');
+                $zip->close();
+                unlink('html5.zip');
+            }
         }
-        $data = json_encode(time());
+        $data = json_encode([time(), $name]);
         $jsonFile = fopen("space3.json", "w");
         fwrite($jsonFile, $data);
         fclose($jsonFile);
