@@ -1,5 +1,19 @@
 <?php
 require_once("ip.php");
+function delete_folder($path){ #Used to delete a folder
+    if (is_dir($path) === true){
+        $files = array_diff(scandir($path), array('.', '..'));
+        foreach ($files as $file){
+          delete_folder(realpath($path) . '/' . $file);
+        }
+        return rmdir($path);
+      }
+    else if (is_file($path) === true){
+        return unlink($path);
+    }
+    return false;
+}
+
 function sanitize($value)
 {
   $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-#:. ";
