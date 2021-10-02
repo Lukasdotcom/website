@@ -17,7 +17,7 @@
     echo "<div class='main'>";?>
     <h1>Space 3</h1>
     <iframe src='html5/space 3.html' height='480', width='853'></iframe>
-    <p>For a link to an expanded version <a href="html5/space 3.html">click here</a>.</p>
+    <p>For a link to an expanded version <a href="html5/Space 3.html">click here</a>.</p>
     <?php
     $youtubeInfo = file_get_contents("space3.json");
     $youtubeInfo = json_decode($youtubeInfo, true);
