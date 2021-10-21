@@ -92,7 +92,7 @@ if($_GET["internet"] == "data") { // Will give internet data
         // If the username and password are valid a cookie entry is put into the database and the cookie is put on the user
         $USERNAME = $_POST["username"];
         // logs the fact that a login happened and if a signup happened
-        if ($_POST["signup"]) {
+        if ($_POST["login"] == "signup") {
             writeLog(2, "$USERNAME created by $address");
         }
         writeLog(0, "$USERNAME was logged in by $address");
