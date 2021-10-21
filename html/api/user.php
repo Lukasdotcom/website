@@ -68,6 +68,7 @@ if ($_GET["type"] === "view") { // Will return all privileges the user has in a 
         $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
         dbCommand("UPDATE users SET password = '$password' WHERE username='$user';");
         echo "Saved new password for $user.";
+        writeLog(1, "$user's password was changed by $USERNAME or $address");
     } else {
         missingPrivilege($USERNAME);
     }
@@ -78,6 +79,11 @@ if ($_GET["type"] === "view") { // Will return all privileges the user has in a 
         dbCommand("DELETE FROM cookies WHERE username = '$user';");
         dbCommand("DELETE FROM privileges WHERE username = '$user';");
         echo "Deleted user $user.";
+        if ($USERNAME == $user) {
+            writeLog(1, "$user deleted their own user with ip of $address");
+        } else {
+            writeLog(1, "$user was deleted by $USERNAME or $address");
+        }
     } else {
         missingPrivilege($USERNAME);
     }
