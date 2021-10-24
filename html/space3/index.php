@@ -18,7 +18,7 @@
     <h1>Space 3</h1>
     <iframe src='html5/Space3.html' height='480', width='853'></iframe>
     <h3>How To Play</h3>
-    <p>Use the arrow keys to fly in different directions and space bar to shoot.</p>
+    <p>Use the arrow keys to move and the spacebar to shoot and the a key to use the ability.</p>
     <h3>What is this Game?</h3>
     <p>An improved version of space 2 which is linked <a href="https://chrome.google.com/webstore/detail/space-2/dppioefgnilecmpdjigboccmefagjgoh" target="_blank" rel="noopener noreferrer">here</a></p>
     <p>For a link to an expanded version <a href="html5/Space3.html">click here</a>.</p>
