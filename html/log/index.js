@@ -100,6 +100,8 @@ $(document).ready(function() {
             document.getElementById(`${types[i]["name"]}.text`).style.color = colors[i][1];
             document.getElementById(`${types[i]["name"]}.color`).value = colors[i][1];
         }
+    if (localStorage.logSearch == undefined) {
+        localStorage.logSearch = "";
     }
     search(localStorage.logSearch);
 });
