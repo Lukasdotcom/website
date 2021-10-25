@@ -99,7 +99,9 @@ $(document).ready(function() {
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.color = colors[i][1];
             document.getElementById(`${types[i]["name"]}.color`).value = colors[i][1];
+            document.getElementById(`${types[i]["name"]}`).value = colors[i][0];
         }
+    }
     if (localStorage.logSearch == undefined) {
         localStorage.logSearch = "";
     }
