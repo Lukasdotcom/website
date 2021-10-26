@@ -249,7 +249,7 @@ multiplier = { // list of multipliers for the amount of dices that are the same;
     6 : [8, "Sextuple"]
 }
 resetCost = {} // Stores the cost of a reset
-for (let i=0; i<10; i++) {
+for (let i=0; i<50; i++) {
     resetCost[i] = 12 * (4 ** i);
 }
 counter = 1;
