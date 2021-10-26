@@ -230,7 +230,8 @@ maxDiceCost = {
     3 : [12, 60],
     4 : [24, 120],
     5 : [36, 180],
-    6 : [45, 225]
+    6 : [48, 240],
+    7 : [62, 310]
 }
 dice = { // A list of information for the dices
     4 : [3, 15],
@@ -238,7 +239,8 @@ dice = { // A list of information for the dices
     8: [10, 50],
     10: [16, 80],
     12: [22, 110],
-    20: [28, 140]
+    16: [28, 140],
+    20: [34, 170]
 }
 multiplier = { // list of multipliers for the amount of dices that are the same; doubles, triples, etc.
     1 : [1, "Single"],
@@ -246,7 +248,8 @@ multiplier = { // list of multipliers for the amount of dices that are the same;
     3 : [2, "Triple"],
     4 : [3, "Quadruple"],
     5 : [5, "Quintuple"],
-    6 : [8, "Sextuple"]
+    6 : [8, "Sextuple"],
+    7 : [12, "Septuple"]
 }
 resetCost = {} // Stores the cost of a reset
 for (let i=0; i<50; i++) {
