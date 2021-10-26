@@ -331,7 +331,6 @@ $(document).ready(function() {
         multiplier_text = "";
         numbers.forEach(function(value) {
             points *= multiplier[value][0];
-            console.log(multiplier[value]);
             if (multiplier[value][0] > 1) {
                 if (multiplier_text) {
                     multiplier_text += `, ${multiplier[value][1]}`;
