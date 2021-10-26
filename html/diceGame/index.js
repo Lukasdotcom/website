@@ -234,7 +234,7 @@ maxDiceCost = {
     7 : [62, 310],
     8 : [78, 390],
     9 : [98, 490],
-    9 : [120, 600]
+    10 : [120, 600]
 }
 dice = { // A list of information for the dices
     4 : [3, 15],
