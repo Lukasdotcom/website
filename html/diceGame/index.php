@@ -30,19 +30,20 @@
         </div>
     </div>
     <div class='column2'>
-        <p>You have rolled the dice <c id="diceRolls">0</c> times.</p>
-        <p>You have <c id='points'>0</c> point(s).</p>
-        <button id='roll'>Roll dice</button>
+        <h3>Roll Result</h3>
         <h2 id='multiplier'></h2>
         <div id='rollResult'></div>
+        <button id='roll'>Roll dice</button>
+        <p>You have rolled the dice <c id="diceRolls">0</c> times.</p>
+        <p>You have <c id='points'>0</c> point(s).</p>
         <h3>Other Purchases</h3>
         <div id='otherShop'></div>
     </div>
     <div class='column2'>
-        <h3>Permanent Upgrades</h3>
-        <div id='reset'></div>
         <h3>Dice Upgrades</h3>
         <div id='diceShop'></div>
+        <h3>Permanent Upgrades</h3>
+        <div id='reset'></div>
     </div>
     <button class='red' onclick="completeReset()">Reset Game Completely</button>
     </div>

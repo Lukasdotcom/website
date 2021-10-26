@@ -217,51 +217,50 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         let purchaseAmount = Math.floor(points / superRollCost);
         text += `<button onClick = 'purchase(${purchaseAmount}, 5)'>Roll dice ${purchaseAmount} time(s) for ${purchaseAmount * superRollCost}</button></p>`;
     } else {
-        text += `<button class='grayed'>You need ${superRollCost} points to reset.</button></p>`;
+        text += `<button class='grayed'>You need ${superRollCost} to roll the die.</button></p>`;
     }
     $('#otherShop').html(text);
     // Saves the game
     save();
 }
-superRollCost = 400;
+superRollCost = 1000;
 bonusCost = 10;
-maxDiceCost = {
-    2 : [4, 20],
-    3 : [12, 60],
-    4 : [24, 120],
-    5 : [36, 180],
-    6 : [48, 240],
-    7 : [62, 310],
-    8 : [78, 390],
-    9 : [98, 490],
-    10 : [120, 600]
-}
-dice = { // A list of information for the dices
-    4 : [3, 15],
-    6 : [4, 20],
-    8: [10, 50],
-    10: [16, 80],
-    12: [22, 110],
-    16: [28, 140],
-    20: [34, 170],
-    24: [42, 210],
-    28: [50, 250],
-    30: [58, 290]
-}
 multiplier = { // list of multipliers for the amount of dices that are the same; doubles, triples, etc.
     1 : [1, "Single"],
     2 : [1.5, "Double"],
     3 : [2, "Triple"],
-    4 : [3, "Quadruple"],
-    5 : [5, "Quintuple"],
-    6 : [8, "Sextuple"],
-    7 : [12, "Septuple"],
-    8 : [17, "Octuple"],
-    9 : [23, "Nontuple"],
-    10 : [30, "Dectuple"]
+    4 : [4, "Quadruple"],
+    5 : [8, "Quintuple"],
+    6 : [16, "Sextuple"],
+    7 : [32, "Septuple"],
+    8 : [64, "Octuple"],
+    9 : [128, "Nonuple"],
+    10 : [256, "Decuple"],
+    11 : [512, "Undecuple"],
+    12 : [1024, "Duodecuple"],
+    13 : [2048, "Tredecuple"],
+    14 : [4096, "Quattuordecuple"],
+    15 : [8192, "Quindecuple"],
+    16 : [16384, "Sexdecuple"],
+    17 : [32768, "Septendecuple"],
+    18 : [65536, "Octodecuple"],
+    19 : [131072, "Novemdecuple"],
+    20 : [262144, "Vigintuple"]
+}
+maxDiceCost = { } // The cost of the maximum amount of dice.
+dice = { } // A list of information for the dices
+current_max_dice_cost = -2;
+current_dice_cost = 0;
+for (let i=1; i<=Object.keys(multiplier).length; i++) {
+    current_max_dice_cost += i * 2;
+    if (i>1) {
+        maxDiceCost[i] = [current_max_dice_cost, current_max_dice_cost*5];
+    }
+    current_dice_cost += i;
+    dice[i * 2] = [current_dice_cost, current_dice_cost*5];
 }
 resetCost = {} // Stores the cost of a reset
-for (let i=0; i<50; i++) {
+for (let i=0; i<=50; i++) {
     resetCost[i] = 12 * (4 ** i);
 }
 counter = 1;
@@ -306,7 +305,7 @@ $(document).ready(function() {
         $("#diceRolls").text(parseInt(localStorage.diceRolls)); // Stores the amount of dice rolls
         updateLayout();
     }
-    $("#roll").click(function () {
+    $("#roll").click(function () {  // Used to roll the die
         points = 0;
         purchased = false;
         let amount = diceCounter(diceAmount);
@@ -327,19 +326,34 @@ $(document).ready(function() {
             }
         });
         numbers = Object.values(numbers);
-        numbers.sort();
-        numbers = lastElement(numbers);
-        points *= multiplier[numbers][0];
+        numbers.sort().reverse();
+        total_multiplier = 1;
+        multiplier_text = "";
+        numbers.forEach(function(value) {
+            points *= multiplier[value][0];
+            console.log(multiplier[value]);
+            if (multiplier[value][0] > 1) {
+                if (multiplier_text) {
+                    multiplier_text += `, ${multiplier[value][1]}`;
+                } else {
+                    multiplier_text += `${multiplier[value][1]}`;
+                }
+            }
+            total_multiplier *= multiplier[value][0];
+        })
+        numbers = numbers[0];
+        multiplier_text = `Multiplier x${total_multiplier}! You got a ${multiplier_text}!`;
         points *= 2 ** reset;
+        points = Math.floor(points);
         points += bonus;
         let text = "";
-        text += `<button id='stopRoll'>Stop roll</button>`;
         $("#multiplier").text('')
         Object.keys(rollResult).forEach(function(value) {
             text += `<p>${value} sided die rolled <c id='${value}sidedResult'></c>.</p>`;
         });
         text += `<p>x${2 ** reset} reset multiplier.</p>`;
         text += `<p>+${bonus} points bonus.</p>`;
+        text += `<button id='stopRoll'>Stop roll</button>`;
         $("#rollResult").html(text);
         text += `<p>You have <c id='points'></c> points.</p>`
         let rollInterval = setInterval(function() {
@@ -347,12 +361,12 @@ $(document).ready(function() {
                 $(`#${value}sidedResult`).text(randomInt(1, parseInt(value)));
             });
         },40)
-        $("#stopRoll").click(function() {
+        $("#stopRoll").click(function() { // Used to stop the roll and add the points for the roll
             $("#stopRoll").off("click")
             clearInterval(rollInterval);
             $("#points").text(points);
             if (numbers > 1) {
-                $("#multiplier").text(`Multiplier x${multiplier[numbers][0]}! You got a ${multiplier[numbers][1]}!`);
+                $("#multiplier").text(multiplier_text);
             }
             Object.keys(rollResult).forEach(function(value) {
                 $(`#${value}sidedResult`).text(rollResult[value]);
