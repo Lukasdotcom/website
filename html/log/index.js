@@ -99,7 +99,6 @@ $(document).ready(function() {
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.color = colors[i][1];
             document.getElementById(`${types[i]["name"]}.color`).value = colors[i][1];
-            console.log(colors[i][0])
             document.getElementById(`${types[i]["name"]}`).checked = colors[i][0];
         }
     }
