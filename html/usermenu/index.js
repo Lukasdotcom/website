@@ -136,4 +136,34 @@ $(document).ready(function() {
     $("#save").click(function() {save()});
     $("#changePassword").click(function() {password()});
     $("#delete").click(function() {deleteUser()});
+    $("#download").click(function() {
+        let ajax = new XMLHttpRequest();
+        ajax.onload = function() {
+            if (ajax.status == 200) {
+                $("#saveStatus").append(`Downloaded Preferences. `);
+                newLocalStorage = JSON.parse(this.response);
+                Object.keys(newLocalStorage).forEach(function(value) {
+                    localStorage[value] = newLocalStorage[value];
+                });
+            } else {
+                $("#saveStatus").append(`Error while loading: ${this.response}. `);
+            }
+        }
+        ajax.open("POST", "/api/localStorage.php");
+        ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        ajax.send(`load='true'&key=${getCookie("user")}`);
+    });
+    $("#upload").click(function() {
+        let ajax = new XMLHttpRequest();
+        ajax.onload = function() {
+            if (ajax.status == 200) {
+                $("#saveStatus").append(`${this.response}. `);
+            } else {
+                $("#saveStatus").append(`Error while loading: ${this.response}. `);
+            }
+        }
+        ajax.open("POST", "/api/localStorage.php");
+        ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        ajax.send(`save=${JSON.stringify(localStorage)}&key=${getCookie("user")}`);
+    });
 });

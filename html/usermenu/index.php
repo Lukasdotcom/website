@@ -50,6 +50,8 @@
         echo "<input type='password' id='password' name='password'><br>";
         echo "<button id='changePassword' type='button'>Change Password</button>";
         echo "</div>";
+        echo "<br><button id='upload' type='button'>Save Preferences to Cloud</button>";
+        echo "<br><button id='download' type='button'>Download Preferences from Cloud</button>";
     }
     ?>
     <p id='saveStatus' style='color: green'> </p>

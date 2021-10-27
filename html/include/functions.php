@@ -46,6 +46,16 @@ function dbCommand($command) {
   mysqli_query($connection, $command);
   mysqli_close($connection);
 }
+/**
+ * Sends prepared statemends with one variable
+ */
+function dbCommandPrepare($command, $variable) {
+  $connection = dbConnect();
+  $stmt = mysqli_prepare($connection, $command);
+  mysqli_stmt_bind_param($stmt, "s", $variable);
+  mysqli_stmt_execute($stmt);
+  mysqli_close($connection);
+}
 /** 
  * Sends a request to the database for a search
  * 
