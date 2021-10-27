@@ -76,6 +76,7 @@ if ($_GET["type"] === "view") { // Will return all privileges the user has in a 
     $user = $_POST["username"];
     if ($USERNAME == $user or $PRIVILEGE["deleteUser"]) {
         dbCommand("DELETE FROM users WHERE username = '$user';");
+        dbCommand("DELETE FROM localStorage WHERE username = '$user';");
         dbCommand("DELETE FROM cookies WHERE username = '$user';");
         dbCommand("DELETE FROM privileges WHERE username = '$user';");
         echo "Deleted user $user.";
