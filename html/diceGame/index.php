@@ -4,10 +4,10 @@
 
 <head>
     <title>
-        Schaefer Family - Dice game
+        Dice game
     </title>
     <?php
-    $DESCRIPTION = "A simple dice game";
+    $DESCRIPTION = "A simple dice game where you can roll some dice to collect more points and use those points to buy upgrades for the dice.";
     require_once '../include/all.php';
     ?>
     <script type='text/javascript' src='/javascript/functions.js'></script>
