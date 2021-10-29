@@ -53,3 +53,16 @@ function imageLoad(name, quality) { // used for better loading of image
         $(`#${name}`).show()
     }
 }
+
+function beautify(val) // Will make a big number easier to read
+{
+    const shortcut = ["", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion"]
+    const digits = (val, count = -1) => {
+        if(val || count == -1){
+            return digits(Math.floor(val / 10), ++count);
+        }
+        return count;
+    };
+	let length = digits(val);
+	return `${Math.floor(val / (10**(length - (length % 3) - 3))) / 1000} ${shortcut[Math.floor(length / 3)]}`
+}

@@ -140,9 +140,9 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
         } else if (dice[value][0] <= points) {
-            text += `<button onClick = 'purchase(${value}, 0)'>Buy for ${dice[value][0]}</button></p>`;
+            text += `<button onClick = 'purchase(${value}, 0)'>Buy for ${beautify(dice[value][0])}</button></p>`;
         } else {
-            text += `<button class='grayed'>You need ${dice[value][0]} points to buy</button></p>`;
+            text += `<button class='grayed'>You need ${beautify(dice[value][0])} points to buy</button></p>`;
         }
         counter *= 2;
     });
@@ -151,9 +151,9 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
         } else if (maxDiceCost[maxDice+1][0] <= points) {
-            text += `<button onClick = 'purchase(${maxDice+1}, 1)'>Buy for ${maxDiceCost[maxDice+1][0]}</button></p>`;
+            text += `<button onClick = 'purchase(${maxDice+1}, 1)'>Buy for ${beautify(maxDiceCost[maxDice+1][0])}</button></p>`;
         } else {
-            text += `<button class='grayed'>You need ${maxDiceCost[maxDice+1][0]} points to upgrade.</button></p>`;
+            text += `<button class='grayed'>You need ${beautify(maxDiceCost[maxDice+1][0])} points to upgrade.</button></p>`;
         }
     } else {
         text += `<p>Max dice ${maxDice} is the max.</p>`;
@@ -167,9 +167,9 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
         } else if (dice[value][1] <= points) {
-            text += `<button onClick = 'purchase(${value}, 3)'>Buy for ${dice[value][1]}</button></p>`;
+            text += `<button onClick = 'purchase(${value}, 3)'>Buy for ${beautify(dice[value][1])}</button></p>`;
         } else {
-            text += `<button class='grayed'>You need ${dice[value][1]} points to buy</button></p>`;
+            text += `<button class='grayed'>You need ${beautify(dice[value][1])} points to buy</button></p>`;
         }
         counter *= 2;
     });
@@ -178,46 +178,46 @@ function updateLayout() { // Will update the layout of the shop to make sure the
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
         } else if (maxDiceCost[permaMaxDice+1][1] <= points) {
-            text += `<button onClick = 'purchase(${permaMaxDice+1}, 4)'>Buy for ${maxDiceCost[permaMaxDice+1][1]}</button></p>`;
+            text += `<button onClick = 'purchase(${permaMaxDice+1}, 4)'>Buy for ${beautify(maxDiceCost[permaMaxDice+1][1])}</button></p>`;
         } else {
-            text += `<button class='grayed'>You need ${maxDiceCost[permaMaxDice+1][1]} points to upgrade.</button></p>`;
+            text += `<button class='grayed'>You need ${beautify(maxDiceCost[permaMaxDice+1][1])} points to upgrade.</button></p>`;
         }
     } else {
         text += `<p>Perma max dice ${permaMaxDice} is the max.</p>`;
     }
     $("#reset").html(text);
     // Updates the points
-    $('#points').text(points);
+    $('#points').text(beautify(points));
     // Updates the other shop
-    text = `<p>Reset level at ${reset} or x${2 ** reset}. `;
+    text = `<p>Reset level at ${reset} or x${beautify(2 ** reset)}. `;
     if (resetCost[reset+1] !== undefined) {
         if (purchased) {
             text += `<button class='grayed'>You already bought something.</button></p>`;
         } else if (resetCost[reset] <= points) {
-            text += `<button onClick = 'purchase(${reset}, 2)'>Reset for ${resetCost[reset]}</button></p>`;
+            text += `<button onClick = 'purchase(${reset}, 2)'>Reset for ${beautify(resetCost[reset])}</button></p>`;
         } else {
-            text += `<button class='grayed'>You need ${resetCost[reset]} points to reset.</button></p>`;
+            text += `<button class='grayed'>You need ${beautify(resetCost[reset])} points to reset.</button></p>`;
         }
     } else {
         text += `You can not reset anymore.</p>`;
     }
-    text += `<p>Buy a bonus that gives you points every turn. You are at a +${bonus} bonus. `;
+    text += `<p>Buy a bonus that gives you points every turn. You are at a +${beautify(bonus)} bonus. `;
     if (purchased) {
         text += `<button class='grayed'>You already bought something.</button></p>`;
     } else if (bonusCost <= points) {
         let purchaseAmount = Math.floor(points / bonusCost);
-        text += `<button onClick = 'purchase(${purchaseAmount}, 6)'>Purchase ${purchaseAmount} bonus points for ${purchaseAmount * bonusCost}</button></p>`;
+        text += `<button onClick = 'purchase(${purchaseAmount}, 6)'>Purchase ${beautify(purchaseAmount)} bonus points for ${beautify(purchaseAmount * bonusCost)}</button></p>`;
     } else {
-        text += `<button class='grayed'>You need ${bonusCost} points to buy a bonus.</button></p>`;
+        text += `<button class='grayed'>You need ${beautify(bonusCost)} points to buy a bonus.</button></p>`;
     }
     text += '<p>Buy a roll with the winning die. ';
     if (purchased) {
         text += `<button class='grayed'>You already bought something.</button></p>`;
     } else if (superRollCost <= points) {
         let purchaseAmount = Math.floor(points / superRollCost);
-        text += `<button onClick = 'purchase(${purchaseAmount}, 5)'>Roll dice ${purchaseAmount} time(s) for ${purchaseAmount * superRollCost}</button></p>`;
+        text += `<button onClick = 'purchase(${purchaseAmount}, 5)'>Roll dice ${beautify(purchaseAmount)} time(s) for ${beautify(purchaseAmount * superRollCost)}</button></p>`;
     } else {
-        text += `<button class='grayed'>You need ${superRollCost} to roll the die.</button></p>`;
+        text += `<button class='grayed'>You need ${beautify(superRollCost)} to roll the die.</button></p>`;
     }
     $('#otherShop').html(text);
     // Saves the game
@@ -249,7 +249,7 @@ multiplier = { // list of multipliers for the amount of dices that are the same;
 }
 maxDiceCost = { } // The cost of the maximum amount of dice.
 dice = { } // A list of information for the dices
-current_max_dice_cost = -2;
+current_max_dice_cost = 0;
 current_dice_cost = 0;
 for (let i=1; i<=Object.keys(multiplier).length; i++) {
     current_max_dice_cost += i * 2;
@@ -341,7 +341,7 @@ $(document).ready(function() {
             total_multiplier *= multiplier[value][0];
         })
         numbers = numbers[0];
-        multiplier_text = `Multiplier x${total_multiplier}! You got a ${multiplier_text}!`;
+        multiplier_text = `Multiplier x${beautify(total_multiplier)}! You got a ${multiplier_text}!`;
         points *= 2 ** reset;
         points = Math.floor(points);
         points += bonus;
@@ -350,8 +350,8 @@ $(document).ready(function() {
         Object.keys(rollResult).forEach(function(value) {
             text += `<p>${value} sided die rolled <c id='${value}sidedResult'></c>.</p>`;
         });
-        text += `<p>x${2 ** reset} reset multiplier.</p>`;
-        text += `<p>+${bonus} points bonus.</p>`;
+        text += `<p>x${beautify(2 ** reset)} reset multiplier.</p>`;
+        text += `<p>+${beautify(bonus)} points bonus.</p>`;
         text += `<button id='stopRoll'>Stop roll</button>`;
         $("#rollResult").html(text);
         text += `<p>You have <c id='points'></c> points.</p>`
@@ -363,7 +363,7 @@ $(document).ready(function() {
         $("#stopRoll").click(function() { // Used to stop the roll and add the points for the roll
             $("#stopRoll").off("click")
             clearInterval(rollInterval);
-            $("#points").text(points);
+            $("#points").text(beautify(points));
             if (numbers > 1) {
                 $("#multiplier").text(multiplier_text);
             }
