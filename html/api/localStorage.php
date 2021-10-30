@@ -2,7 +2,7 @@
 require_once "api.php";
 if ($_POST["save"] and $USERNAME) {
     dbCommand("DELETE FROM localStorage WHERE username='$USERNAME'");
-    dbCommandPrepare("INSERT INTO localStorage VALUES ('$USERNAME', ?)", $OGPOST["save"]);
+    dbCommand("INSERT INTO localStorage VALUES ('$USERNAME', ?)", [$OGPOST["save"]]);
     echo "Saved Preferences";
 } elseif ($_POST["load"]) {
     $response = dbRequest2("SELECT * FROM localStorage WHERE username='$USERNAME'", "data");

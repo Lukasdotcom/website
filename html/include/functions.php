@@ -40,20 +40,19 @@ function dbConnect()
 }
 /**
  * Can send any command to the database that is put into this function
+ * prepare is used for prepared statementes
  */
-function dbCommand($command) {
+function dbCommand($command, $prepare=[]) {
   $connection = dbConnect();
-  mysqli_query($connection, $command);
-  mysqli_close($connection);
-}
-/**
- * Sends prepared statemends with one variable
- */
-function dbCommandPrepare($command, $variable) {
-  $connection = dbConnect();
-  $stmt = mysqli_prepare($connection, $command);
-  mysqli_stmt_bind_param($stmt, "s", $variable);
-  mysqli_stmt_execute($stmt);
+  $length = count($prepare);
+  if ($length == 0) {
+    mysqli_query($connection, $command);
+  } else if ($length == 1) {
+    $stmt = mysqli_prepare($connection, $command);
+    mysqli_stmt_bind_param($stmt, "s", $prepare[0]);
+    mysqli_stmt_execute($stmt);
+    mysqli_close($connection);
+  }
   mysqli_close($connection);
 }
 /** 
