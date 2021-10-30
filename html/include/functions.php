@@ -51,7 +51,6 @@ function dbCommand($command, $prepare=[]) {
     $stmt = mysqli_prepare($connection, $command);
     mysqli_stmt_bind_param($stmt, "s", $prepare[0]);
     mysqli_stmt_execute($stmt);
-    mysqli_close($connection);
   }
   mysqli_close($connection);
 }
@@ -95,11 +94,21 @@ function dbRequest($result, $table, $searchCat, $searchCriteria, $Type)
  * 
  * @param string $command the entire sql command
  * @param string $result the column to search will return all if left empty
+ * @param array $prepare is a list of all the prepared statemends
  */
-function dbRequest2($command, $result="*")
+function dbRequest2($command, $result="*", $prepare=[])
 {
   $connection = dbConnect();
-  $response = mysqli_query($connection, $command);
+  $length = count($prepare);
+  if ($length == 0) {
+    $response = mysqli_query($connection, $command);
+  } else if ($length == 1) {
+    $stmt = mysqli_prepare($connection, $command);
+    $parameter1 = $prepare[0];
+    mysqli_stmt_bind_param($stmt, "s", $parameter1);
+    mysqli_stmt_execute($stmt);
+    $response = mysqli_stmt_get_result($stmt);
+  }
   mysqli_close($connection);
   if (mysqli_num_rows($response) > 0) {
     $data = [];
