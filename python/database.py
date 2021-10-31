@@ -47,6 +47,8 @@ def createTable(name, coulumns):  # Will create a table in the database
             command += " bigint, "
         elif x[1] == 4:
             command += " text, "
+        elif x[1] == 5:
+            command += f" int AUTO_INCREMENT, PRIMARY KEY (`{x[0]}`), "
         else:
             command += " int, "
     command = command[: len(command) - 2]
@@ -134,7 +136,8 @@ def repair():  # Repairs all tables
         "requests": [["ip", 0], ["time", 1]],
         "cookieClicker": [["username", 0], ["room", 0], ["cookies", 2], ["cookiesPs", 2], ["lastUpdate", 3]],
         "cookieClickerCommand": [["username", 0], ["room", 0], ["javascript", 0]],
-        "localStorage" : [["username", 0], ["data", 4]]
+        "localStorage" : [["username", 0], ["data", 4]],
+        "space3" : [["id", 5], ["owner", 0], ["title", 0], ["description", 4], ["preferences", 4]]
     }
     changedTables = []
     for x in databaseDict:
