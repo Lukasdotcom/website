@@ -1,5 +1,6 @@
 <?php
 require_once "api.php";
+header("Access-Control-Allow-Origin: *"); // Used to allow Space 3's api to be used on any domain
 if (gettype($OGGET["search"]) == "string") { // Used for searching the database
     $searchTerm = $OGGET["search"];
     $searchTerm = "%$searchTerm%";

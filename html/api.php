@@ -70,6 +70,7 @@ if($_GET["internet"] == "data") { // Will give internet data
         exit();
     }
     if ($_POST["login"] === "signup") { // Will check if a signup was done
+        header("Access-Control-Allow-Origin: *"); // Will allow it from any origin to allow for space 3 to work in any domain
         $RESULT = dbRequest("username", "users", "username", $_POST["username"], 0);
         if ($RESULT == False) {
             $PASSWORD = password_hash($_POST["password"], PASSWORD_BCRYPT);
