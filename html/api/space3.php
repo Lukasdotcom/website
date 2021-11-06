@@ -11,6 +11,16 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
     } else {
         $response = array_slice($response, 0, $defaultLength);
     }
+    // Used to check if the user requesting this liked each result
+    $length = count($response);
+    for($i=0;$i<$length;++$i) {
+        $liked = false;
+        if ($USERNAME) {
+            $id = $response[$i]["id"];
+            $liked = boolval(dbRequest2("SELECT * FROM space3likes WHERE id=$id and account='$USERNAME'"));
+        }
+        $response[$i]["liked"] = $liked;
+    }
     echo json_encode($response);
 } elseif ($_POST["update"] and $USERNAME) { // Used to update or add to the space 3 addons
     if ($_POST["id"]) {
@@ -30,14 +40,43 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
             echo "Updated description/title for preference with id $id.";
         }
         dbCommand("DELETE FROM space3 WHERE id='$id' and owner='$USERNAME'");
-        dbCommand("INSERT INTO space3 (`id`, `owner`, `title`, `description`, `preferences`) VALUES ('$id', '$USERNAME', ?, ?, ?)", $prepare=[$OGPOST["title"], $OGPOST["description"], $newPreference]);
+        dbCommand("INSERT INTO space3 (`id`, `owner`, `title`, `description`, `preferences`, `likes`) VALUES ('$id', '$USERNAME', ?, ?, ?)", $prepare=[$OGPOST["title"], $OGPOST["description"], $newPreference]);
     } else {
-        dbCommand("INSERT INTO space3 (`owner`, `title`, `description`, `preferences`) VALUES ('$USERNAME', ?, ?, ?)", $prepare=[$OGPOST["title"], $OGPOST["description"], $OGPOST["preferences"]]);
+        dbCommand("INSERT INTO space3 (`owner`, `title`, `description`, `preferences`, `likes`) VALUES ('$USERNAME', ?, ?, ?, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $OGPOST["preferences"]]);
         echo "Added new preference with id $id";
     }
 } elseif ($_POST["delete"] and $USERNAME) { // Used to delete a preference
     dbCommand("DELETE FROM space3 WHERE id='$id' and owner='$USERNAME'");
-}else {
+    dbCommand("DELETE FROM space3likes WHERE id='$id'");
+} elseif ($_POST["like"] and $USERNAME) { // Used to like/unlike a preference
+    $id = $_POST["like"];
+    $info = dbRequest2("SELECT * FROM space3 WHERE id=$id");
+    if ($info) {
+        if ($info[0]["owner"] == $USERNAME) { // Makes sure that the owner is not liking their won preference.
+            echo 'You can not like your own preference';
+        } else {
+            // Checks if this is a like or an unlike.
+            $likes = dbRequest2("SELECT * FROM space3likes WHERE id=$id");
+            if ($likes) {
+                $count = count($likes);
+            } else {
+                $count = 0;
+            }
+            if (dbRequest2("SELECT * FROM space3likes WHERE id=$id and account='$USERNAME'")) {
+                $count = $count - 1;
+                dbCommand("DELETE FROM space3likes WHERE id=$id and account='$USERNAME'");
+                echo "Unliked preference with id $id";
+            } else {
+                $count = $count + 1;
+                dbCommand("INSERT INTO space3likes VALUES ($id, '$USERNAME')");
+                echo "Liked preference with id $id";
+            }
+            dbCommand("UPDATE space3 SET likes='$count' WHERE id=$id");
+        }
+    } else {
+        echo "Invalid preference";
+    }
+} else {
     http_response_code(400);
     echo "Invalid command";
 }
