@@ -46,8 +46,10 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
         echo "Added new preference with id $id";
     }
 } elseif ($_POST["delete"] and $USERNAME) { // Used to delete a preference
+    $id = $_POST["delete"];
     dbCommand("DELETE FROM space3 WHERE id='$id' and owner='$USERNAME'");
     dbCommand("DELETE FROM space3likes WHERE id='$id'");
+    echo "Preference number $id deleted";
 } elseif ($_POST["like"] and $USERNAME) { // Used to like/unlike a preference
     $id = $_POST["like"];
     $info = dbRequest2("SELECT * FROM space3 WHERE id=$id");
