@@ -4,13 +4,9 @@ header("Access-Control-Allow-Origin: *"); // Used to allow Space 3's api to be u
 if (gettype($OGGET["search"]) == "string") { // Used for searching the database
     $searchTerm = $OGGET["search"];
     $searchTerm = "%$searchTerm%";
-    $defaultLength = 20;
-    $response = dbRequest2("SELECT * FROM space3 WHERE description LIKE ?", $result="*", $prepare=[$searchTerm]);
-    if (intval($_GET["length"])) {
-        $response = array_slice($response, 0, $_GET["length"]);
-    } else {
-        $response = array_slice($response, 0, $defaultLength);
-    }
+    $defaultLength = 100;
+    $response = dbRequest2("SELECT id, owner, title, description, likes, downloads FROM space3 WHERE description LIKE ?", $result="*", $prepare=[$searchTerm]);
+    $response = array_slice($response, 0, $_GET["length"]);
     // Used to check if the user requesting this liked each result
     $length = count($response);
     for($i=0;$i<$length;++$i) {
@@ -40,10 +36,10 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
             echo "Updated description/title for preference with id $id.";
         }
         dbCommand("DELETE FROM space3 WHERE id='$id' and owner='$USERNAME'");
-        dbCommand("INSERT INTO space3 (`id`, `owner`, `title`, `description`, `preferences`, `likes`) VALUES ('$id', '$USERNAME', ?, ?, ?)", $prepare=[$OGPOST["title"], $OGPOST["description"], $newPreference]);
+        dbCommand("INSERT INTO space3 (`id`, `owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$id', '$USERNAME', ?, ?, ?, 0, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $newPreference]);
     } else {
-        dbCommand("INSERT INTO space3 (`owner`, `title`, `description`, `preferences`, `likes`) VALUES ('$USERNAME', ?, ?, ?, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $OGPOST["preferences"]]);
-        echo "Added new preference with id $id";
+        dbCommand("INSERT INTO space3 (`owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$USERNAME', ?, ?, ?, 0, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $OGPOST["preferences"]]);
+        echo "Added new preference";
     }
 } elseif ($_POST["delete"] and $USERNAME) { // Used to delete a preference
     $id = $_POST["delete"];
@@ -77,6 +73,17 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
         }
     } else {
         echo "Invalid preference";
+    }
+} elseif ($_GET["download"]) { // Used to download a preference
+    $id = $_GET["download"];
+    $response = dbRequest2("SELECT preferences, downloads FROM space3 WHERE id=$id");
+    if ($response[0]) {
+        $downloads = $response[0]["downloads"] + 1;
+        dbCommand("UPDATE space3 SET downloads='$downloads' WHERE id=$id");
+        echo $response[0]["preferences"];
+    } else {
+        http_response_code(400);
+        echo "Did not find preference.";
     }
 } else {
     http_response_code(400);
