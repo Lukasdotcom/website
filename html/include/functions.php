@@ -116,6 +116,14 @@ function dbRequest2($command, $result="*", $prepare=[])
     mysqli_stmt_bind_param($stmt, "s", $parameter1);
     mysqli_stmt_execute($stmt);
     $response = mysqli_stmt_get_result($stmt);
+  } else if ($length == 3) {
+    $stmt = mysqli_prepare($connection, $command);
+    $parameter1 = $prepare[0];
+    $parameter2 = $prepare[1];
+    $parameter3 = $prepare[2];
+    mysqli_stmt_bind_param($stmt, "sss", $parameter1, $parameter2, $parameter3);
+    mysqli_stmt_execute($stmt);
+    $response = mysqli_stmt_get_result($stmt);
   }
   mysqli_close($connection);
   if (mysqli_num_rows($response) > 0) {

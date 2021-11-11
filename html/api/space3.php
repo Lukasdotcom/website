@@ -5,7 +5,7 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
     $searchTerm = $OGGET["search"];
     $searchTerm = "%$searchTerm%";
     $defaultLength = 100;
-    $response = dbRequest2("SELECT id, owner, title, description, likes, downloads FROM space3 WHERE description LIKE ?", $result="*", $prepare=[$searchTerm]);
+    $response = dbRequest2("SELECT id, owner, title, description, likes, downloads FROM space3 WHERE description LIKE ? or title LIKE ? or owner LIKE ? ORDER BY likes DESC, downloads DESC", $result="*", $prepare=[$searchTerm, $searchTerm, $searchTerm]);
     $response = array_slice($response, 0, $_GET["length"]);
     // Used to check if the user requesting this liked each result
     $length = count($response);
