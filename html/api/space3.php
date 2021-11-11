@@ -9,6 +9,7 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
     $response = array_slice($response, 0, $_GET["length"]);
     // Used to check if the user requesting this liked each result
     $length = count($response);
+    $favorites = [];
     for($i=0;$i<$length;++$i) {
         $liked = false;
         if ($USERNAME) {
@@ -16,7 +17,12 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
             $liked = boolval(dbRequest2("SELECT * FROM space3likes WHERE id=$id and account='$USERNAME'"));
         }
         $response[$i]["liked"] = $liked;
+        if ($liked or $response[$i]["owner"] == $USERNAME) {
+            array_push($favorites, $response[$i]);
+            unset($response[$i]);
+        }
     }
+    $response = array_merge($favorites, $response);
     echo json_encode($response);
 } elseif ($_POST["update"] and $USERNAME) { // Used to update or add to the space 3 addons
     if ($_POST["id"]) {
