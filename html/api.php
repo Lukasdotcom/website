@@ -57,6 +57,7 @@ if($_GET["internet"] == "data") { // Will give internet data
         missingPrivilege($USERNAME);
     }
 } elseif ($_POST["login"]) { // Used to login or signup and get the cookie
+    header("Access-Control-Allow-Origin: *"); // Will allow it from any origin to allow for space 3 to work in any domain
     // Will check if the ip address has passed its throttle point
     $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
     $jsonData = json_decode($jsonInfo, true);
@@ -96,7 +97,7 @@ if($_GET["internet"] == "data") { // Will give internet data
             writeLog(2, "$USERNAME created by $address");
         }
         writeLog(0, "$USERNAME was logged in by $address");
-        $Time = time() + 3600;
+        $Time = time() + 3600*12;
         $Cookie = $USERNAME;
         $Cookie .= microtime();
         $Cookie = sanitize(substr(sha1($Cookie), 5));
