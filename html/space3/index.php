@@ -16,7 +16,7 @@
     include '../include/menu.php';
     echo "<div class='main'>";?>
     <h1>Space 3</h1>
-    <iframe src='html5/Space3.html' height='480', width='853'></iframe>
+    <iframe src='pwa/Space3.html' height='480', width='853'></iframe>
     <h3>How To Play</h3>
     <p>Use the arrow keys to move and the spacebar to shoot and the a key to use the ability.</p>
     <h3>What is this Game?</h3>
