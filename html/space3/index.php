@@ -20,8 +20,10 @@
     <h3>How To Play</h3>
     <p>Use the arrow keys to move and the spacebar to shoot and the a key to use the ability.</p>
     <h3>What is this Game?</h3>
-    <p>An improved version of space 2 which is linked <a href="https://chrome.google.com/webstore/detail/space-2/dppioefgnilecmpdjigboccmefagjgoh" target="_blank" rel="noopener noreferrer">here</a></p>
-    <p>For a link to an expanded version <a href="html5/Space3.html">click here</a>.</p>
+    <p>For a link to an expanded version <a href="pwa/Space3.html">click here</a>.</p>
+    <p>For the original game which this was based on go to <a href="https://chrome.google.com/webstore/detail/space-2/dppioefgnilecmpdjigboccmefagjgoh" target="_blank" rel="noopener noreferrer">here</a></p>
+    <p>For a windows download <a href="windows.zip">click here</a>.</p>
+    <p>For a mac download <a href="macos.zip">click here</a>.</p>
     <?php
     $youtubeInfo = file_get_contents("space3.json");
     $youtubeInfo = json_decode($youtubeInfo, true);
@@ -44,22 +46,26 @@
             }
         }
         curl_close($ch);
-        if ($name != $youtubeInfo[1]) {
-            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/html5.zip";
-            file_put_contents("html5.zip", fopen($url, 'r'));
-            $zip = new ZipArchive;
-            $res = $zip->open('html5.zip');
-            if ($res === TRUE) {
-                delete_folder("html5");
-                $zip->extractTo('html5');
-                $zip->close();
-                unlink('html5.zip');
-            }
-        }
         $data = json_encode([time(), $name]);
         $jsonFile = fopen("space3.json", "w");
         fwrite($jsonFile, $data);
         fclose($jsonFile);
+        if ($name != $youtubeInfo[1] and $name) {
+            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/pwa.zip";
+            file_put_contents("pwa.zip", fopen($url, 'r'));
+            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/macos.zip";
+            file_put_contents("macos.zip", fopen($url, 'r'));
+            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/windows.zip";
+            file_put_contents("windows.zip", fopen($url, 'r'));
+            $zip = new ZipArchive;
+            $res = $zip->open('pwa.zip');
+            if ($res === TRUE) {
+                delete_folder("pwa");
+                $zip->extractTo('pwa');
+                $zip->close();
+                unlink('pwa.zip');
+            }
+        }
     }
     ?>
     </div>

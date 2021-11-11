@@ -11,8 +11,11 @@
    # redirect internally all requests to maintenance.php 
    RewriteRule $ /maintenance.php [L]
 </IfModule>
-#Will redirect from all json files
-RedirectMatch 403 \.(json)$
+#Will redirect from confidential files
+<Files config.json>
+   order allow,deny
+   deny from all
+</Files>
 
 # Used to reomve the index.php from url
 Options +FollowSymlinks -Indexes
