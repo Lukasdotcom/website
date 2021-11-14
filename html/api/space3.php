@@ -27,6 +27,9 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
 } elseif ($_POST["update"] and $USERNAME) { // Used to update or add to the space 3 addons
     if ($_POST["id"]) {
         $id = $_POST["id"];
+        $info = dbRequest2("SELECT likes, downloads FROM space3 WHERE id='$id' and owner='$USERNAME'");
+        $downloads = $info[0]["downloads"];
+        $likes = $info[0]["likes"];
         if ($OGPOST["preferences"]) { // Will check if the preferences need to be updated
             $newPreference = $OGPOST["preferences"];
             echo "Overwrote preference with id $id.";
@@ -34,8 +37,6 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
             $newPreference = dbRequest2("SELECT preferences FROM space3 WHERE id='$id' and owner='$USERNAME'", $result="preferences");
             if ($newPreference) {
                 $newPreference = $newPreference[0];
-                $downloads = $newPreference["downloads"];
-                $likes = $newPreference["likes"];
             } else {
                 http_response_code(401);
                 echo "You do not own this preference.";
