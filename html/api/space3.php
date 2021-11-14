@@ -34,6 +34,8 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
             $newPreference = dbRequest2("SELECT preferences FROM space3 WHERE id='$id' and owner='$USERNAME'", $result="preferences");
             if ($newPreference) {
                 $newPreference = $newPreference[0];
+                $downloads = $newPreference["downloads"];
+                $likes = $newPreference["likes"];
             } else {
                 http_response_code(401);
                 echo "You do not own this preference.";
@@ -42,7 +44,7 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
             echo "Updated description/title for preference with id $id.";
         }
         dbCommand("DELETE FROM space3 WHERE id='$id' and owner='$USERNAME'");
-        dbCommand("INSERT INTO space3 (`id`, `owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$id', '$USERNAME', ?, ?, ?, 0, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $newPreference]);
+        dbCommand("INSERT INTO space3 (`id`, `owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$id', '$USERNAME', ?, ?, ?, $likes, $downloads)", $prepare=[$OGPOST["title"], $OGPOST["description"], $newPreference]);
     } else {
         dbCommand("INSERT INTO space3 (`owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$USERNAME', ?, ?, ?, 0, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $OGPOST["preferences"]]);
         echo "Added new preference";
