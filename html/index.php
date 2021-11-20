@@ -8,7 +8,7 @@
         Schaefer Family
     </title>
     <?php
-    $DESCRIPTION - "Main page of schaefer family website.";
+    $DESCRIPTION = "Main page of schaefer family website.";
     include 'include/all.php';
     ?>
 </head>
