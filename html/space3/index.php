@@ -21,7 +21,8 @@
     <p>Use the arrow keys to move and the spacebar to shoot and the a key to use the ability.</p>
     <h3>What is this Game?</h3>
     <p>For a link to an expanded version <a href="pwa/Space3.html">click here</a>.</p>
-    <p>For the original game which this was based on go to <a href="https://chrome.google.com/webstore/detail/space-2/dppioefgnilecmpdjigboccmefagjgoh" target="_blank" rel="noopener noreferrer">here</a></p>
+    <p>For a link to the souce code <a href="https://github.com/Lukasdotcom/space-3" target="_blank" rel="noopener noreferrer">click here</a>.</p>
+    <p>For the original game(space 2) which this was based on go to <a href="https://chrome.google.com/webstore/detail/space-2/dppioefgnilecmpdjigboccmefagjgoh" target="_blank" rel="noopener noreferrer">here</a></p>
     <p>For a windows download <a href="windows.zip">click here</a>.</p>
     <p>For a mac download <a href="macos.zip">click here</a>.</p>
     <?php
