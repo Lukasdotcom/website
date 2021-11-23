@@ -316,4 +316,14 @@ except Exception as e:
             GPIO.output(8, GPIO.HIGH)
             time.sleep(1)
             GPIO.output(8, GPIO.LOW)
+            if GPIO.input(10):
+                time.sleep(0.5)
+                if GPIO.input(10):
+                    for x in range(10):
+                        GPIO.output(8, GPIO.HIGH)
+                        time.sleep(0.1)
+                        GPIO.output(8, GPIO.LOW)
+                        time.sleep(0.1)
+                    os.system(f"python3 {__file__}")
+                    exit()
             time.sleep(1)
