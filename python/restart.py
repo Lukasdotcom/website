@@ -319,6 +319,7 @@ except Exception as e:
             if GPIO.input(10):
                 time.sleep(0.5)
                 if GPIO.input(10):
+                    writeLog("Server is being restarted through button", 12)
                     for x in range(10):
                         GPIO.output(8, GPIO.HIGH)
                         time.sleep(0.1)
