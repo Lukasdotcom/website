@@ -292,9 +292,11 @@ try:
                 if temp() > configuration["fanStart"] and not fanOn:
                     GPIO.output(16, GPIO.HIGH)
                     fanOn = True
+                    writeLog(f'Fan was turned on with a temprature of {temp()}', 13)
                 elif temp() < configuration["fanStop"] and fanOn:
                     GPIO.output(16, GPIO.LOW)
                     fanOn = False
+                    writeLog(f'Fan was turned off with a temprature of {temp()}', 13)
                 if GPIO.input(10):
                     GPIO.output(8, GPIO.HIGH)
                     time.sleep(0.2)
