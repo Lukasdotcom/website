@@ -288,10 +288,10 @@ try:
                 writeLog("Server updated successfully.", 12)
             if not skipGPIO:
                 # Checks if the fans need to turn on or off
-                if temp() > configuration["startFan"] and not fanOn:
+                if temp() > configuration["fanStart"] and not fanOn:
                     GPIO.output(16, GPIO.HIGH)
                     fanOn = True
-                elif temp() < configuration["stopFan"] and fanOn:
+                elif temp() < configuration["fanStop"] and fanOn:
                     GPIO.output(16, GPIO.LOW)
                     fanOn = False
                 if GPIO.input(10):
