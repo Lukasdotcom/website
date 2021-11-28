@@ -19,6 +19,10 @@ def error(e):
     return "".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))
 
 
+def temp(): # Returns the temprature of the RPI
+    return readFile("/sys/class/thermal/thermal_zone0/temp") / 1000
+
+
 def writeFile(location, info):  # Will write info in json format to a file
     with open(location, "w") as f:
         json.dump(info, f)
@@ -61,6 +65,8 @@ if not skipGPIO:
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(8, GPIO.OUT)
+    # Will setup the GPIO fan
+    GPIO.setup(16, GPIO.OUT)
 try:
 
     def writeLog(message, kind):  # Will automatically add to the log
@@ -203,6 +209,7 @@ try:
         os.remove(location + "maintenance-mode")
     except:
         1
+    fanOn = False
     writeLog("Server has finished booting procedure", 12)
     # Will update the time every minute to make sure electricity outages are reported to the minute precise and will request a check to see if the wifi status needs to be changed
     while True:
@@ -280,6 +287,13 @@ try:
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull")
                 writeLog("Server updated successfully.", 12)
             if not skipGPIO:
+                # Checks if the fans need to turn on or off
+                if temp() > configuration["startFan"] and not fanOn:
+                    GPIO.output(16, GPIO.HIGH)
+                    fanOn = True
+                elif temp() < configuration["stopFan"] and fanOn:
+                    GPIO.output(16, GPIO.LOW)
+                    fanOn = False
                 if GPIO.input(10):
                     GPIO.output(8, GPIO.HIGH)
                     time.sleep(0.2)
