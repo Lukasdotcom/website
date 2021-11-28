@@ -58,7 +58,7 @@
         }
         if ($PRIVILEGE["serverStatus"]) {
             echo "<h3>Server Status</h3>";
-            echo "<p>Uptime: <c id='uptime'></c></p>";
+            echo "<p>Time: <c id='uptime'></c></p>";
             echo "<p> Temp=<c id='temp'></c>˚C</p>";
             echo "<script>updateStats();setInterval(updateStats, 1000);</script>";
         }
