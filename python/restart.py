@@ -272,6 +272,7 @@ try:
                 internetOn = router.turnOnInternet()
             else:
                 internetOn = True
+        GPIO.output(16, GPIO.LOW) # Resets the fan
         # Will check every 2 seconds if the button is pressed and when it is show it on the led and then wait another second to verify that it is an actual press
         while True:
             time.sleep(2)
