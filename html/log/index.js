@@ -107,3 +107,23 @@ $(document).ready(function() {
     }
     search(localStorage.logSearch);
 });
+function updateStats() {
+    const ajax = new XMLHttpRequest();
+    
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            $("#uptime").text(ajax.responseText);
+        }
+        }
+    ajax.open("GET", `/api/server.php?uptime=true&key='${getCookie('user')}'`);
+    ajax.send(); 
+    const ajax2 = new XMLHttpRequest();
+    
+    ajax2.onload = function() {
+        if (ajax2.status == 200) {
+            $("#temp").text(ajax2.responseText);
+        }    
+        }
+    ajax2.open("GET", `/api/server.php?temp=true&key='${getCookie('user')}'`);
+    ajax2.send(); 
+}

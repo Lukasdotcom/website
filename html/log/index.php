@@ -56,6 +56,12 @@
         if ($PRIVILEGE["updateServer"]) {
             echo "<button onClick='update()' >Update Server</button>";
         }
+        if ($PRIVILEGE["serverStatus"]) {
+            echo "<h3>Server Status</h3>";
+            echo "<p>Uptime: <c id='uptime'></c></p>";
+            echo "<p id='temp'></p>";
+            echo "<script>updateStats();setInterval(updateStats, 1000);</script>";
+        }
         echo "<table id='log'>";
         echo "<tr><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";
         $id = 0;
