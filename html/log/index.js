@@ -107,12 +107,22 @@ $(document).ready(function() {
     }
     search(localStorage.logSearch);
 });
+var offline = false;
 function updateStats() {
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
         if (ajax.status == 200) {
             $("#uptime").text(ajax.responseText);
+            if (offline) {
+                offline = false;
+                $(".offline").hide();
+            }
+        } else {
+            if (!offline) {
+                offline = true;
+                $(".offline").show();
+            }
         }
         }
     ajax.open("GET", `/api/server.php?uptime=true&key='${getCookie('user')}'`);
@@ -122,7 +132,16 @@ function updateStats() {
     ajax2.onload = function() {
         if (ajax2.status == 200) {
             $("#temp").text(ajax2.responseText);
-        }    
+            if (offline) {
+                offline = false;
+                $(".offline").hide();
+            }
+        } else {
+            if (!offline) {
+                offline = true;
+                $(".offline").show();
+            }
+        }   
         }
     ajax2.open("GET", `/api/server.php?temp=true&key='${getCookie('user')}'`);
     ajax2.send(); 

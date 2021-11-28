@@ -57,6 +57,7 @@
             echo "<button onClick='update()' >Update Server</button>";
         }
         if ($PRIVILEGE["serverStatus"]) {
+            echo "<h2 class='offline' style='display: none;'>You are offline</h2>";
             echo "<h3>Server Status</h3>";
             echo "<p>Time: <c id='uptime'></c></p>";
             echo "<p> Temp=<c id='temp'></c>˚C</p>";
