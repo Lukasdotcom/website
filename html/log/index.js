@@ -88,7 +88,39 @@ function restart() {
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`server=restart&key='${getCookie('user')}'`); 
 }
+function updateLog() { // Used to update the log.
+    const ajax = new XMLHttpRequest();
+    
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            let response = JSON.parse(ajax.response);
+            if (response) {
+                response.forEach(appendLogData);
+                search($("#searchText").val());
+                latestTime = lastElement(response)["time"]
+            }
+        } else {
+            if (!offline) {
+                offline = true;
+                $(".offline").show();
+            }
+        }
+        setTimeout(updateLog, 4000)
+        search($("#searchText").val());
+        }
+    ajax.open("GET", `/api/server.php?log=true&key='${getCookie('user')}'&startTime=${latestTime}`);
+    ajax.send(); 
+}
+function appendLogData(item, index, array) { // Used to add a log to the users screen
+    let date = new Date(item["time"]*1000);
+    let information = `<tr id='${logLength}' style='color:${types[item["type"]]["color"]}'><td id='${logLength}.category'>${types[item["type"]]["name"]}<td/><td id='${logLength}.message'>${item["message"]}<td/><td id='${logLength}.time'>${item["time"]}<td/><td id='${logLength}.clockTime'>${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} at ${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}<td/></tr>`;
+    $(information).insertAfter("#tableHeader")
+    logLength ++;
+}
+var logLength = 0;
+var latestTime = 0; // Stores the latest log time
 $(document).ready(function() {
+    updateLog();
     collapseCategories();
     collapseCategories();
     if (localStorage.log != undefined) {
@@ -107,7 +139,7 @@ $(document).ready(function() {
     }
     search(localStorage.logSearch);
 });
-var offline = false;
+var offline = false; // Stores if the user is offline
 function updateStats() {
     const ajax = new XMLHttpRequest();
     

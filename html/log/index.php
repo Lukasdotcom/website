@@ -28,8 +28,7 @@
             <script type='text/javascript' src='/javascript/functions.js'></script>";
         echo "<h1>Server Log</h1>";
         echo "<label for='searchText'>Search:</label>
-                <input id='searchText' placeholder='Search'></input>
-                <button type='button' onClick='search(document.getElementById(`searchText`).value)'>Search</button><br>";
+                <input id='searchText' placeholder='Search' oninput='search(document.getElementById(`searchText`).value)'></input><br>";
         echo '<form method="post" action="/log/">
             <input type="submit" value="reload"></form>';
         $typeList = dbRequest("*", "logType", "", "", 2);
@@ -64,25 +63,7 @@
             echo "<script>updateStats();setInterval(updateStats, 1000);</script>";
         }
         echo "<table id='log'>";
-        echo "<tr><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";
-        $id = 0;
-        foreach ($logData as $log) {
-            $time = $log["time"];
-            $date = date("m-d-Y", $time);
-            $clockTime = date("H:i:s", $time);
-            $message = $log["message"];
-            $type = dbRequest("*", "logType", "type", $log["type"], 0)[0];
-            $category = $type["name"];
-            $color = $type["color"];
-            echo "<tr id='$id' style='color: $color'><td id='$id.category'>$category</td><td id='$id.message' >$message </td><td id='$id.time' >$time</td><td id='$id.clockTime' >$clockTime at $date</td>";
-            if ($PRIVILEGE["deleteLog"]) {
-                echo "<td id='$id.button' style='color: white'><button type='button' onClick='remove(`$message`, `$time`, `$id`)'>Delete</button><br></td>";
-            }
-            echo "</tr>";
-            $id += 1;
-        }
-        $id -= 1;
-        echo "<script>var logLength = $id;</script>";
+        echo "<tr id='tableHeader'><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";
         echo "</table>";
     }
     ?>
