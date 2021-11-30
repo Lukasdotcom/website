@@ -29,8 +29,6 @@
         echo "<h1>Server Log</h1>";
         echo "<label for='searchText'>Search:</label>
                 <input id='searchText' placeholder='Search' oninput='search(document.getElementById(`searchText`).value)'></input><br>";
-        echo '<form method="post" action="/log/">
-            <input type="submit" value="reload"></form>';
         $typeList = dbRequest("*", "logType", "", "", 2);
         $jsonTypeList = json_encode($typeList);
         $id = 0;
@@ -54,6 +52,11 @@
         }
         if ($PRIVILEGE["updateServer"]) {
             echo "<button onClick='update()' >Update Server</button>";
+        }
+        if ($PRIVILEGE["deleteLog"]) {
+            echo "<script>var deleteLog = true</script>";
+        } else {
+            echo "<script>var deleteLog = false</script>";
         }
         if ($PRIVILEGE["serverStatus"]) {
             echo "<h2 class='offline' style='display: none;'>You are offline</h2>";

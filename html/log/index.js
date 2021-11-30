@@ -111,7 +111,11 @@ function updateLog() { // Used to update the log.
 }
 function appendLogData(item, index, array) { // Used to add a log to the users screen
     let date = new Date(item["time"]*1000);
-    let information = `<tr id='${logLength}' style='color:${types[item["type"]]["color"]}'><td id='${logLength}.category'>${types[item["type"]]["name"]}<td/><td id='${logLength}.message'>${item["message"]}<td/><td id='${logLength}.time'>${item["time"]}<td/><td id='${logLength}.clockTime'>${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} at ${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}<td/></tr>`;
+    let information = `<tr id='${logLength}' style='color:${types[item["type"]]["color"]}'><td id='${logLength}.category'>${types[item["type"]]["name"]}</td><td id='${logLength}.message'>${item["message"]}</td><td id='${logLength}.time'>${item["time"]}</td><td id='${logLength}.clockTime'>${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} at ${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}</td>`;
+    if (deleteLog) {
+        information += `<td id='${logLength}.button' style='color: white'><button type='button' onClick="remove('${item["message"]}', '${item["time"]}', '${logLength}')">Delete</button><br></td>`;
+    } 
+    information += "</tr>";
     $(information).insertAfter("#tableHeader")
     logLength ++;
 }
