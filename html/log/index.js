@@ -33,10 +33,9 @@ function remove(message, time, id) {
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
-            document.getElementById(id).style.display = "none";
-            document.getElementById(`${id}.category`).innerHTML = "deleted";
+            document.getElementById(id).remove();
         } else {
-            window.location.reload();
+            alert("Could not delete log entry.")
         }
     }
     ajax.open("POST", "/api.php");
