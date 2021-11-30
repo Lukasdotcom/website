@@ -319,7 +319,7 @@ try:
             if time.time() % 60 <= 2:
                 break
 except Exception as e:
-    with open(location + "error.txt", "w") as f:
+    with open(location + "error.log", "w") as f:
         f.write(error(e))
     f = open(location + "maintenance-mode", "w")
     f.close()
