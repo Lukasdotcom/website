@@ -141,7 +141,7 @@ $(document).ready(function() {
     search(localStorage.logSearch);
 });
 var offline = false; // Stores if the user is offline
-function updateStats() {
+function updateUptime() {
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
@@ -157,9 +157,12 @@ function updateStats() {
                 $(".offline").show();
             }
         }
+        setTimeout(updateUptime, 1000);
         }
     ajax.open("GET", `/api/server.php?uptime=true&key='${getCookie('user')}'`);
     ajax.send(); 
+}
+function updateTemp() {
     const ajax2 = new XMLHttpRequest();
     
     ajax2.onload = function() {
@@ -175,6 +178,7 @@ function updateStats() {
                 $(".offline").show();
             }
         }   
+        setTimeout(updateTemp, 1000);
         }
     ajax2.open("GET", `/api/server.php?temp=true&key='${getCookie('user')}'`);
     ajax2.send(); 

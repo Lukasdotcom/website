@@ -63,7 +63,7 @@
             echo "<h3>Server Status</h3>";
             echo "<p>Time: <c id='uptime'></c></p>";
             echo "<p> Temp=<c id='temp'></c>˚C</p>";
-            echo "<script>updateStats();setInterval(updateStats, 1000);</script>";
+            echo "<script>updateUptime();updateTemp();</script>";
         }
         echo "<table id='log'>";
         echo "<tr id='tableHeader'><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";
