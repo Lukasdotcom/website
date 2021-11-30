@@ -66,8 +66,7 @@ function update() {
             alert("Updating Server.")
         } else {
             alert("Error something went wrong.")
-        }
-        window.location.reload();      
+        }     
         }
     ajax.open("POST", "/api.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -81,8 +80,7 @@ function restart() {
             alert("Restarting Server.")
         } else {
             alert("Error something went wrong.")
-        }
-        window.location.reload();      
+        }    
         }
     ajax.open("POST", "/api.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
