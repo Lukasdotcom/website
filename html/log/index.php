@@ -64,6 +64,21 @@
             echo "<p>Time: <c id='uptime'></c></p>";
             echo "<p> Temp=<c id='temp'></c>˚C</p>";
             echo "<script>updateUptime();updateTemp();</script>";
+            if (file_exists("../error.log")) {
+                if ($_POST["delete"] == "error") {
+                    unlink("../error.log");
+                    writeLog(4, "Error log deleted by $USERNAME or $address");
+                } else {
+                    echo "<h2>Previous Server Error</h2>";
+                    echo "<p>";
+                    echo file_get_contents("../error.log");
+                    echo "</p>";
+                    echo '<form method="post" action="/log/">
+                        <button name="delete" value="error" type="submit">Delete Error Log.</button>
+                        </form><br>';
+                }
+                
+            }
         }
         echo "<table id='log'>";
         echo "<tr id='tableHeader'><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";

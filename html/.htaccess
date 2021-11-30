@@ -16,7 +16,10 @@
    order allow,deny
    deny from all
 </Files>
-
+<Files error.log>
+   order allow,deny
+   deny from all
+</Files>
 # Used to reomve the index.php from url
 Options +FollowSymlinks -Indexes
 RewriteBase /

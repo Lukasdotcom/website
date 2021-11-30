@@ -7,7 +7,7 @@ python/__pycache__/
 maintenance-mode
 !logTypes.json
 python/config.json
-error.txt
+error.log
 /html/space3/pwa
 /html/space3/macos.zip
 /html/space3/windows.zip
