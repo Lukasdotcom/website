@@ -63,7 +63,7 @@
             echo "<h3>Server Status</h3>";
             echo "<p>Time: <c id='uptime'></c></p>";
             echo "<p> Temp=<c id='temp'></c>˚C</p>";
-            echo "<script>updateUptime();updateTemp();</script>";
+            echo "<script>var serverStatus = true;</script>";
             if (file_exists("../error.log")) {
                 if ($_POST["delete"] == "error") {
                     unlink("../error.log");

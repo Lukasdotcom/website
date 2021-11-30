@@ -139,6 +139,10 @@ $(document).ready(function() {
         localStorage.logSearch = "";
     }
     search(localStorage.logSearch);
+    if (serverStatus) {
+        updateUptime();
+        updateTemp();
+    }
 });
 var offline = false; // Stores if the user is offline
 function updateUptime() {
