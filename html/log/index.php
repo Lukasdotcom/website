@@ -71,7 +71,7 @@
                 } else {
                     echo "<h2>Previous Server Error</h2>";
                     echo "<p>";
-                    echo file_get_contents("../error.log");
+                    echo htmlspecialchars(file_get_contents("../error.log"));
                     echo "</p>";
                     echo '<form method="post" action="/log/">
                         <button name="delete" value="error" type="submit">Delete Error Log.</button>
