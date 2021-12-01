@@ -17,7 +17,7 @@ function deleteUser() { // Used to delete a user
     }
     ajax.open("POST", `/api/user.php`);
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`type=delete&key=${getCookie("user")}&username=${user}`);
+    ajax.send(`type=delete&key=${getCookie("user")}&user=${user}`);
 }
 function password() { // Used to change the password
     let ajax = new XMLHttpRequest();
@@ -31,7 +31,7 @@ function password() { // Used to change the password
     }
     ajax.open("POST", `/api/user.php`);
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`type=password&key=${getCookie("user")}&username=${user}&password=${$("#password").val()}`);
+    ajax.send(`type=password&key=${getCookie("user")}&user=${user}&password=${$("#password").val()}`);
 }
 function search() { // Gets the data for the search
     user = $("#user").val();
@@ -149,9 +149,8 @@ $(document).ready(function() {
                 $("#saveStatus").append(`Error while loading: ${this.response}. `);
             }
         }
-        ajax.open("POST", "/api/localStorage.php");
-        ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`load='true'&key=${getCookie("user")}`);
+        ajax.open("GET", `/api/localStorage.php?load='true'&key=${getCookie("user")}`);
+        ajax.send();
     });
     $("#upload").click(function() {
         let ajax = new XMLHttpRequest();
