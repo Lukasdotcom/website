@@ -75,8 +75,6 @@ var multiplayer = {
                         cookies = Beautify(Game.cookies);
                         cookiesPs = Beautify(Game.cookiesPs);
                         age = 0;
-                    } else {
-                        button = `<a class='option' onClick='multiplayer.donate(10, "${username}")'>Donate 10%</button>`;
                     }
                 }
                 html += `<tr style='${style}'><td>${username}</td><td>${cookies}</td><td>${cookiesPs}</td><td>${humanReadableTime(age)}</td><td>${button}</td></tr>`;
@@ -88,14 +86,6 @@ var multiplayer = {
     internalCookies: null, // Used to store a more precise cookie amount
     hostname: hostname,
     lastFetch: null, // Says the last time that the data was updated
-    donate: function(percentage, user) { // the donation function
-        let amount = Math.round(Game.cookies / 10);
-        Game.Spend(amount);
-        let ajax = new XMLHttpRequest();
-        ajax.open("POST", `${this.hostname}/api/cookieClicker.php`);
-        ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`sender=${Game.bakeryName}&username=${user}&cookies=${amount}&room=${multiplayer.room}&type=donate`);
-    }
 } 
 // This will make sure that Jquery is loaded before starting everything
 var waitForJQuery = setInterval(function () {
