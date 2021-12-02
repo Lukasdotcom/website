@@ -7,9 +7,9 @@
         Schaefer Family - Login
     </title>
     <?php
-    $DESCRIPTION - "Login page for Schaefer family.";
+    $DESCRIPTION = "Login page for Schaefer family.";
     include 'include/all.php';
-    if ($USERNAME != NULL) {
+    if ($USERNAME) {
         setcookie("user", "", time() - 300);
         $USERNAME = Null;
     }
@@ -24,7 +24,7 @@
     ?>
     <h1>Login or Signup Here</h1>
     <?php
-    if ($USERNAME != NULL) {
+    if ($USERNAME) {
         echo "You have logged out<br><br>";
     }
     // If logged out a login form will come

@@ -18,3 +18,10 @@ function missingPrivilege($USERNAME) { // Used to see if the user is not logged 
         echo "Not logged in";
     }
 }
+function loggedIn($USERNAME) {
+    if (! $USERNAME) {
+        http_response_code(401);
+        echo "Not logged in";
+        exit();
+    }
+}

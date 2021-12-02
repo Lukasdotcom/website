@@ -15,8 +15,8 @@
     <?php
     include '../include/menu.php';
     echo "<div class='main'>";
-    if ($USERNAME == NULL) { // Checks that the user is logged in or if the new user or login information is valid
-        header("Refresh:3; url=/login.php");
+    if (! $USERNAME) { // Checks that the user is logged in or if the new user or login information is valid
+        header("Refresh:3; url=/login.php", true);
         echo "<h2>You are not logged in redirecting...</h2>";
     } else {
         echo "<script type='text/javascript' src='index.js'></script>

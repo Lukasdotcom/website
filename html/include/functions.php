@@ -13,8 +13,26 @@ function delete_folder($path){ #Used to delete a folder
     }
     return false;
 }
-
-function sanitize($value)
+/** 
+ * Is like the array_key_exists function but returns if the key in the array is equal to the compare value.
+ * 
+ * @param string $key The key for the area.
+ * @param array $array The array to be searched. 
+ * @param string $compare The string it should be compared with
+ * @return bool False if the key does not exist in array or does not equal compare. True otherwise
+ */
+function array_key_value(string $key, array $array, string $compare) {
+  if (array_key_exists($key, $array)) {
+    if ($array[$key] == $compare) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+function sanitize($value) # Used to sanitize a value very strictly
 {
   $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-#:. ";
   $validChars = str_split($validChars);
@@ -30,6 +48,9 @@ function sanitize($value)
 function dbConnect()
 { // Is used to connect to the database
   $SERVERLOCATION = "localhost";
+  if (!file_exists($_SERVER["DOCUMENT_ROOT"] . "/config.json")) {
+    exit();
+  }
   $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
   $jsonData = json_decode($jsonInfo, true);
   $DATA_USERNAME = $jsonData["database"]["username"];
@@ -94,7 +115,7 @@ function dbRequest($result, $table, $searchCat, $searchCriteria, $Type)
     }
     return $data;
   } else {
-    return False;
+    return [];
   }
 }
 /**
@@ -137,7 +158,7 @@ function dbRequest2($command, $result="*", $prepare=[])
     }
     return $data;
   } else {
-    return False;
+    return [];
   }
 }
 /**
@@ -221,7 +242,7 @@ function root($user)
  */
 function writeLog($type, $message)
 {
-  dbAdd([$type, $message, mktime()], "log");
+  dbAdd([$type, $message, time()], "log");
 }
 // Creates a way to see uncleaned user input if neccessary
 $OGPOST = $_POST;
@@ -238,12 +259,19 @@ foreach ($_COOKIE as $pointer => $value) {
   $_COOKIE[$pointer] = sanitize($value);
 }
 // Removes all expired cookies from the database
-$Time = mkTime();
+$Time = time();
 dbRemove("cookies", "expire", $Time, 1);
 $PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity", "restartServer", "updateServer", "serverStatus"];
+function noUser() { # Used to set everything up as if no yser is logged in
+  global $USERNAME, $PRIVILEGE, $PRIVILEGELIST;
+  $USERNAME = "";
+  foreach ($PRIVILEGELIST as $option) {
+    $PRIVILEGE[$option] = false;
+  }
+}
 // Checks the cookie value and sees if the database contains that value
-$COOKIEID = $_COOKIE["user"];
-if ($COOKIEID) {
+if (array_key_exists("user", $_COOKIE)) {
+  $COOKIEID = $_COOKIE["user"];
   $USERNAME = dbRequest("username", "cookies", "cookie", $COOKIEID, 0);
   if ($USERNAME) {
     setcookie("user", $COOKIEID, time() + 600, "/");
@@ -268,5 +296,9 @@ if ($COOKIEID) {
         }
       }
     }
+  } else {
+    noUser();
   }
+} else {
+  noUser();
 }

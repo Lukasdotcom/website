@@ -8,14 +8,14 @@
     </title>
     <?php
     $DESCRIPTION = "The internet schedule for the Schaefer family";
-    include 'include/all.php';
+    include '../include/all.php';
     ?>
 </head>
 
 <body>
     <?php
-    include 'include/menu.php';
-    $jsonInfo = file_get_contents("http://127.0.0.1/api.php?internet=data");
+    include '../include/menu.php';
+    $jsonInfo = file_get_contents("http://127.0.0.1/api/internet.php?data=data");
     $schedule = json_decode($jsonInfo, true);
     $topPriority = end($schedule)["id"];
     if (!$topPriority) {
@@ -23,8 +23,8 @@
     }
     echo "<div class='main'>
         <h1>Internet Schedule</h1>
-        <script type='text/javascript' src='javascript/internet.js'></script>
-        <script type='text/javascript' src='javascript/functions.js'></script>
+        <script type='text/javascript' src='index.js'></script>
+        <script type='text/javascript' src='/javascript/functions.js'></script>
         <script> var topPriority = $topPriority; </script>
         <table id='internetTable'><tr><th>Priority</th><th>Start Time</th><th>End Time</th><th>Expiration Time</th><th></th></tr>";
     foreach ($schedule as $one) {

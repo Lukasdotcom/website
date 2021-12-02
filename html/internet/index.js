@@ -12,9 +12,9 @@ function remove(id) {
             document.getElementById("saveStatus").innerHTML = ajax.responseText;
         }
         }
-    ajax.open("POST", "api.php");
+    ajax.open("POST", "/api/internet.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`internet=delete&id='${id}'&key='${getCookie('user')}'`);
+    ajax.send(`delete='${id}'&key='${getCookie('user')}'`);
     document.getElementById(id + ".row").remove()
 }
 function save(id) {
@@ -31,9 +31,9 @@ function save(id) {
             document.getElementById("saveStatus").innerHTML = ajax.responseText;
         }      
         }
-    ajax.open("POST", "api.php");
+    ajax.open("POST", "/api/internet.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`internet=edit&id='${id}'&startHour='${document.getElementById(id + '.startHour').value}'&startMinute='${document.getElementById(id + '.startMinute').value}'&endHour='${document.getElementById(id + '.endHour').value}'&endMinute='${document.getElementById(id + '.endMinute').value}'&expire='${document.getElementById(id + '.expire').value}'&key='${getCookie('user')}'`); 
+    ajax.send(`edit='${id}'&startHour='${document.getElementById(id + '.startHour').value}'&startMinute='${document.getElementById(id + '.startMinute').value}'&endHour='${document.getElementById(id + '.endHour').value}'&endMinute='${document.getElementById(id + '.endMinute').value}'&expire='${document.getElementById(id + '.expire').value}'&key='${getCookie('user')}'`); 
 }
 function addRow() {
     topPriority ++;

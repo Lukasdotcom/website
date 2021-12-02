@@ -26,11 +26,16 @@
     <p>For a windows download <a href="windows.zip">click here</a>.</p>
     <p>For a mac download <a href="macos.zip">click here</a>.</p>
     <?php
-    $youtubeInfo = file_get_contents("space3.json");
-    $youtubeInfo = json_decode($youtubeInfo, true);
-    $newData = false;
-    if ($youtubeInfo[0] + 3600 < time()) {
+    if (file_exists("space3.json")) {
+        $youtubeInfo = file_get_contents("space3.json");
+        $youtubeInfo = json_decode($youtubeInfo, true);
+        $newData = false;
+        if ($youtubeInfo[0] + 3600 < time()) {
+            $newData = true;
+        }
+    } else {
         $newData = true;
+        $youtubeInfo = [time(), "null"];
     }
     if ($newData) {
         $url = "https://api.github.com/repos/lukasdotcom/space-3/git/refs/tags";
@@ -39,32 +44,34 @@
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         $data = curl_exec($ch);
-        $data = json_decode($data);
-        $data = end($data);
-        foreach ($data as $key => $value) {
-            if ($key == "ref") {
-                $name = substr($value, 10);
+        if ($data) {
+            $data = json_decode($data);
+            $data = end($data);
+            foreach ($data as $key => $value) {
+                if ($key == "ref") {
+                    $name = substr($value, 10);
+                }
             }
-        }
-        curl_close($ch);
-        $data = json_encode([time(), $name]);
-        $jsonFile = fopen("space3.json", "w");
-        fwrite($jsonFile, $data);
-        fclose($jsonFile);
-        if ($name != $youtubeInfo[1] and $name) {
-            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/pwa.zip";
-            file_put_contents("pwa.zip", fopen($url, 'r'));
-            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/macos.zip";
-            file_put_contents("macos.zip", fopen($url, 'r'));
-            $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/windows.zip";
-            file_put_contents("windows.zip", fopen($url, 'r'));
-            $zip = new ZipArchive;
-            $res = $zip->open('pwa.zip');
-            if ($res === TRUE) {
-                delete_folder("pwa");
-                $zip->extractTo('pwa');
-                $zip->close();
-                unlink('pwa.zip');
+            curl_close($ch);
+            $data = json_encode([time(), $name]);
+            $jsonFile = fopen("space3.json", "w");
+            fwrite($jsonFile, $data);
+            fclose($jsonFile);
+            if ($name != $youtubeInfo[1] and $name) {
+                $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/pwa.zip";
+                file_put_contents("pwa.zip", fopen($url, 'r'));
+                $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/macos.zip";
+                file_put_contents("macos.zip", fopen($url, 'r'));
+                $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/windows.zip";
+                file_put_contents("windows.zip", fopen($url, 'r'));
+                $zip = new ZipArchive;
+                $res = $zip->open('pwa.zip');
+                if ($res === TRUE) {
+                    delete_folder("pwa");
+                    $zip->extractTo('pwa');
+                    $zip->close();
+                    unlink('pwa.zip');
+                }
             }
         }
     }

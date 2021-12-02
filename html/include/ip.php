@@ -1,6 +1,10 @@
 <?php
 // Will check if this is requested through cloudflare
-$address = sanitize(apache_request_headers()["cf-connecting-ip"]);
-if (! $address) {
-    $address = $_SERVER["REMOTE_ADDR"]; // Variable that stores the IP address of user accessing the website
+if (array_key_exists("cf-connecting-ip", apache_request_headers())) {
+    $address = sanitize(apache_request_headers()["cf-connecting-ip"]);
+    if (! $address) {
+        $address = $_SERVER["REMOTE_ADDR"]; // Variable that stores the IP address of user accessing the website
+    }
+} else {
+    $address = $_SERVER["REMOTE_ADDR"];
 }

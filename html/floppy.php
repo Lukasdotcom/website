@@ -7,7 +7,7 @@
         Schaefer Family - Floppy
     </title>
     <?php
-    $DESCRIPTION - "The great bun bun's videos. Floppy has many great videos.";
+    $DESCRIPTION = "The great bun bun's videos. Floppy has many great videos.";
     include 'include/all.php';
     ?>
 </head>
@@ -19,10 +19,14 @@
     ?>
     <h1>Floppy Videos!</h1>
     <?php
-    $youtubeInfo = file_get_contents("floppy.json");
-    $youtubeInfo = json_decode($youtubeInfo, true);
-    $newData = false;
-    if ($youtubeInfo["date"] + 3600 < time()) {
+    if (file_exists("floppy.json")) {
+        $youtubeInfo = file_get_contents("floppy.json");
+        $youtubeInfo = json_decode($youtubeInfo, true);
+        $newData = false;
+        if ($youtubeInfo["date"] + 3600 < time()) {
+            $newData = true;
+        }
+    } else {
         $newData = true;
     }
     if ($newData) {

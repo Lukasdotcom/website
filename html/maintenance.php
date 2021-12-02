@@ -6,7 +6,7 @@
         Schaefer Family - Maintenance
     </title>
     <?php
-    header('Retry-After: 3600');
+    header('Retry-After: 3600', true);
     http_response_code(503);
     ?>
 </head>

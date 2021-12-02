@@ -20,10 +20,14 @@
     <h1>Soccer Videos!</h1>
     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/kPdi0NANkwg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     <?php
-    $youtubeInfo = file_get_contents("soccer.json");
-    $youtubeInfo = json_decode($youtubeInfo, true);
-    $newData = false;
-    if ($youtubeInfo["date"] + 3600 < time()) {
+    if (file_exists("soccer.json")) {
+        $youtubeInfo = file_get_contents("soccer.json");
+        $youtubeInfo = json_decode($youtubeInfo, true);
+        $newData = false;
+        if ($youtubeInfo["date"] + 3600 < time()) {
+            $newData = true;
+        }
+    } else {
         $newData = true;
     }
     if ($newData) {

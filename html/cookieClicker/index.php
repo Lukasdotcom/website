@@ -46,7 +46,13 @@
     <h3>Terms of Use or license</h3>
     <p>
     <?php 
-    echo file_get_contents("../../LICENSE");
+    if (file_exists("../../LICENSE")) {
+        echo file_get_contents("../../LICENSE");
+    } else {
+        ?>
+        Could not find license!
+        <?php
+    }
     ?>
     </p>
 </div>

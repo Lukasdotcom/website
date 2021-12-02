@@ -1,11 +1,14 @@
 <?php
 require_once "api.php";
 header("Access-Control-Allow-Origin: *"); // Used to allow Space 3's api to be used on any domain
-if (gettype($OGGET["search"]) == "string") { // Used for searching the database
+if (array_key_exists("search", $OGGET)) { // Used for searching the database
     $searchTerm = $OGGET["search"];
     $searchTerm = "%$searchTerm%";
-    $defaultLength = 100;
+    $defaultLength = 100; # The default length that is returned
     $response = dbRequest2("SELECT id, owner, title, description, likes, downloads FROM space3 WHERE description LIKE ? or title LIKE ? or owner LIKE ? ORDER BY likes DESC, downloads DESC", $result="*", $prepare=[$searchTerm, $searchTerm, $searchTerm]);
+    if (!array_key_exists("length", $_GET)) {
+        $_GET["length"] = $defaultLength;
+    }
     $response = array_slice($response, 0, $_GET["length"]);
     // Used to check if the user requesting this liked each result
     $length = count($response);
@@ -24,13 +27,14 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
     }
     $response = array_merge($favorites, $response);
     echo json_encode($response);
-} elseif ($_POST["update"] and $USERNAME) { // Used to update or add to the space 3 addons
-    if ($_POST["id"]) {
+} elseif (array_key_exists("update", $_POST) and array_key_exists("title", $_POST) and array_key_exists("description", $_POST)) { // Used to update or add to the space 3 addons
+    loggedIn($USERNAME);
+    if (array_key_exists("id", $_POST)) {
         $id = $_POST["id"];
         $info = dbRequest2("SELECT likes, downloads FROM space3 WHERE id='$id' and owner='$USERNAME'");
         $downloads = $info[0]["downloads"];
         $likes = $info[0]["likes"];
-        if ($OGPOST["preferences"]) { // Will check if the preferences need to be updated
+        if (array_key_exists("preferences", $OGPOST)) { // Will check if the preferences need to be updated
             $newPreference = $OGPOST["preferences"];
             echo "Overwrote preference with id $id.";
         } else {
@@ -47,19 +51,25 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
         dbCommand("DELETE FROM space3 WHERE id='$id' and owner='$USERNAME'");
         dbCommand("INSERT INTO space3 (`id`, `owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$id', '$USERNAME', ?, ?, ?, $likes, $downloads)", $prepare=[$OGPOST["title"], $OGPOST["description"], $newPreference]);
     } else {
-        dbCommand("INSERT INTO space3 (`owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$USERNAME', ?, ?, ?, 0, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $OGPOST["preferences"]]);
-        echo "Added new preference";
+        if (array_key_exists("preference", $OGPOST)) {
+            dbCommand("INSERT INTO space3 (`owner`, `title`, `description`, `preferences`, `likes`, `downloads`) VALUES ('$USERNAME', ?, ?, ?, 0, 0)", $prepare=[$OGPOST["title"], $OGPOST["description"], $OGPOST["preferences"]]);
+            echo "Added new preference";
+        } else {
+            http_response_code(400);
+            echo "Invalid command";
+        }
     }
-} elseif ($_POST["delete"] and $USERNAME) { // Used to delete a preference
+} elseif (array_key_exists("delete", $_POST) and $USERNAME) { // Used to delete a preference
     $id = $_POST["delete"];
     dbCommand("DELETE FROM space3 WHERE id='$id' and owner='$USERNAME'");
     dbCommand("DELETE FROM space3likes WHERE id='$id'");
     echo "Preference number $id deleted";
-} elseif ($_POST["like"] and $USERNAME) { // Used to like/unlike a preference
+} elseif (array_key_exists("like", $_POST) and $USERNAME) { // Used to like/unlike a preference
     $id = $_POST["like"];
     $info = dbRequest2("SELECT * FROM space3 WHERE id=$id");
     if ($info) {
         if ($info[0]["owner"] == $USERNAME) { // Makes sure that the owner is not liking their won preference.
+            http_response_code(401);
             echo 'You can not like your own preference';
         } else {
             // Checks if this is a like or an unlike.
@@ -81,9 +91,10 @@ if (gettype($OGGET["search"]) == "string") { // Used for searching the database
             dbCommand("UPDATE space3 SET likes='$count' WHERE id=$id");
         }
     } else {
+        http_response_code(404);
         echo "Invalid preference";
     }
-} elseif ($_GET["download"]) { // Used to download a preference
+} elseif (array_key_exists("download", $_GET)) { // Used to download a preference
     $id = $_GET["download"];
     $response = dbRequest2("SELECT preferences, downloads FROM space3 WHERE id=$id");
     if ($response[0]) {

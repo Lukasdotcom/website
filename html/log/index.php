@@ -15,13 +15,13 @@
     <?php
     require_once '../include/menu.php';
     echo "<div class='main'>";
-    if ($USERNAME == NULL) {
+    if (! $USERNAME) {
         echo "<h2>You are not logged in redirecting...</h2>";
-        header("Refresh:3; url=/login.php");
+        header("Refresh:3; url=/login.php", true);
         http_response_code(401);
     } elseif (!$PRIVILEGE["viewLog"]) {
         http_response_code(403);
-        header("Refresh:3; url=/index.php");
+        header("Refresh:3; url=/index.php", true);
         echo "<h2>Forbidden redirecting...</h2>";
     } else {
         echo "<script type='text/javascript' src='index.js'></script>
@@ -45,8 +45,6 @@
             echo "<div style='color: $color;' id='$type.text'><input type='checkbox' id='$type' name='$type' $checked>$type; Color: <input type='color' value='$color' id='$type.color'><button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button></div>";
             $id++;
         }
-        // Will echo the server log if logged in
-        $logData = array_reverse(dbRequest("*", "log", "", "", 2));
         if ($PRIVILEGE["restartServer"]) {
             echo "<button onClick='restart()' >Restart Server</button>";
         }

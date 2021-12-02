@@ -38,9 +38,9 @@ function remove(message, time, id) {
             alert("Could not delete log entry.")
         }
     }
-    ajax.open("POST", "/api.php");
+    ajax.open("POST", "/api/log.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`log=remove&message=${message}&time=${time}&key='${getCookie('user')}'`); 
+    ajax.send(`remove=true&message=${message}&time=${time}&key='${getCookie('user')}'`); 
 }
 function collapseCategories() {
     if (! localStorage.collapseCategories) {
@@ -67,9 +67,9 @@ function update() {
             alert("Error something went wrong.")
         }     
         }
-    ajax.open("POST", "/api.php");
+    ajax.open("POST", "/api/server.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`server=update&key='${getCookie('user')}'`); 
+    ajax.send(`update=true&key='${getCookie('user')}'`); 
 }
 function restart() {
     const ajax = new XMLHttpRequest();
@@ -81,9 +81,9 @@ function restart() {
             alert("Error something went wrong.")
         }    
         }
-    ajax.open("POST", "/api.php");
+    ajax.open("POST", "/api/server.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`server=restart&key='${getCookie('user')}'`); 
+    ajax.send(`restart=true&key='${getCookie('user')}'`); 
 }
 function updateLog() { // Used to update the log.
     const ajax = new XMLHttpRequest();
@@ -105,7 +105,7 @@ function updateLog() { // Used to update the log.
         setTimeout(updateLog, 4000)
         search($("#searchText").val());
         }
-    ajax.open("GET", `/api/server.php?log=true&key='${getCookie('user')}'&startTime=${latestTime}`);
+    ajax.open("GET", `/api/log.php?data=true&key='${getCookie('user')}'&startTime=${latestTime}`);
     ajax.send(); 
 }
 function appendLogData(item, index, array) { // Used to add a log to the users screen

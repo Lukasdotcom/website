@@ -1,6 +1,6 @@
 <?php
 include 'functions.php';
-// Contains the favicon, the css stylesheet, meta tags, and clarity
+// Contains the favicon, the css stylesheet, meta tags, and js
 echo '<meta http-equiv="content-language" content="en-us">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -21,9 +21,9 @@ if (false) {
     </script>';
 }
 
-try {
+if (isset($DESCRIPTION)) {
   echo "<meta name='Description' content='$DESCRIPTION'>";
-} catch (Exception $e) {
+} else {
   echo "<meta name='Description' content='No Description Available'>";
 }
 if (false) {
