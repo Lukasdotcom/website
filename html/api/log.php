@@ -2,7 +2,7 @@
 require_once "api.php";
 if (array_key_exists("data", $_GET)){ // Gets the log
     if ($PRIVILEGE["viewLog"]) {
-        echo json_encode(array_reverse(dbRequest("*", "log", "", "", 2)));
+        echo json_encode(dbRequest("*", "log", "", "", 2));
     } else {
         missingPrivilege($USERNAME);
     }
