@@ -137,7 +137,9 @@ def repair():  # Repairs all tables
         "cookieClicker": [["username", 0], ["room", 0], ["cookies", 2], ["cookiesPs", 2], ["lastUpdate", 3]],
         "localStorage" : [["username", 0], ["data", 4]],
         "space3" : [["id", 5], ["owner", 0], ["title", 0], ["description", 4], ["preferences", 4], ["likes", 1], ["downloads", 1]],
-        "space3likes" : [["id", 1], ["account", 0]]
+        "space3likes" : [["id", 1], ["account", 0]],
+        "golfGamePlayers" : [["gameID", 1], ["user", 0], ["points", 1], ["openCards", 4], ["hiddenCards", 4]],
+        "golfGame" : [["ID", 1], ["deck", 4], ["discard", 4], ["pointsToLose", 1], ["cardNumber", 1], ["flipNumber", 1], ["name", 0], ["password", 0]]
     }
     changedTables = []
     for x in databaseDict:
