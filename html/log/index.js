@@ -91,7 +91,7 @@ function updateLog() { // Used to update the log.
     ajax.onload = function() {
         if (ajax.status == 200) {
             let response = JSON.parse(ajax.response);
-            if (response) {
+            if (response.length) {
                 response.forEach(appendLogData);
                 search($("#searchText").val());
                 latestTime = lastElement(response)["time"]
