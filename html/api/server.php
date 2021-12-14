@@ -19,7 +19,7 @@ if (array_key_exists("uptime", $_GET)) { # Will return some status info for a se
 } elseif (array_key_exists("restart", $_POST)) { // To delete an entry in log
     if ($PRIVILEGE["restartServer"]) {
         echo "Restarting";
-        $restart = fopen("restart.json", "w");
+        $restart = fopen("../restart.json", "w");
         fclose($restart);
     } else {
         missingPrivilege($USERNAME);
@@ -27,7 +27,7 @@ if (array_key_exists("uptime", $_GET)) { # Will return some status info for a se
 } elseif (array_key_exists("update", $_POST)) { // To delete an entry in log
     if ($PRIVILEGE["updateServer"]) {
         echo "Updating.";
-        $update = fopen("update.json", "w");
+        $update = fopen("../update.json", "w");
         fclose($update);
     } else {
         missingPrivilege($USERNAME);
