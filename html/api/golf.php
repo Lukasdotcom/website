@@ -106,13 +106,14 @@ if ($USERNAME) {
                         dbCommand("UPDATE golfGamePlayers SET lastMode='' WHERE gameID='$id' and user='$USERNAME'");
                     }
                     if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and lastMode='waiting'")) { // Checks if all players are ready
+                        $id = $game["ID"];
                         $length = count($players);
                         $roundOver = false;
                         for ($i=0;$i<$length; $i++) { // Will addd some extra data to the game
                             $name = $players[$i]["user"];
                             $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE user='$name' and faceUp");
                             $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
-                            if (! dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE user='$name' and not faceUp")) {
+                            if (! dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID=$id and user='$name' and not faceUp")) {
                                 $roundOver = true;
                             }
                         }
