@@ -11,20 +11,21 @@
     require_once '../include/all.php';
     ?>
     <script type='text/javascript' src='/javascript/functions.js'></script>
-    <script type='text/javascript' src='index.js'></script>
 </head>
 
 <body>
     <?php
     require_once '../include/menu.php';
     echo "<div class='main'>";
+    ?>
+    <h1>Golf</h1>
+    <p>Golf is a very simple card game, for the specific rules go to <a href="https://bicyclecards.com/how-to-play/six-card-golf/" target="_blank" rel="noopener noreferrer">bicyclecards</a>.</p>
+    <?php
     if (! $USERNAME) {
-        echo "<h2>You are not logged in redirecting...</h2>";
-        header("Refresh:3; url=/login.php?redirect=golf", true);
-        http_response_code(401);
+        echo "<h2>You are not logged in. Please log in to Play.</h2>";
     } else {
         ?>
-        <h1>Golf</h1>
+        <script type='text/javascript' src='index.js'></script>
         <p>Join Game below here:</p>
         <table id='games'>
         </table>
