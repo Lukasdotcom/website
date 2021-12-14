@@ -63,6 +63,9 @@ function update(start=false, repeat=false) { // Used to request the latest infor
 
 function updateUI(changedFocus=false) { // Used to update the UI's info
     if (Object.keys(data).length) {
+        if (waiting) { // Checks if the game has just been started.
+            window.reload()
+        }
         if (data.action == "roundOver") { // Used to have the game pause until the user presses continue
             paused = true;
             $("#continue").show();
@@ -152,6 +155,7 @@ function updateUI(changedFocus=false) { // Used to update the UI's info
     } else {
         $("#wait").show();
         $("#game").hide();
+        waiting = true
     }
     return;
 }
@@ -164,6 +168,7 @@ function highlight(element) {
     }
     updateUI()
 }
+var waiting = false;
 var highlightCard = null; // The card currently selected.
 var highlightDeck = null; // The deck currently selected.
 var cardNumber = 0; // The number of cards
