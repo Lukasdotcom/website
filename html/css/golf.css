@@ -1,0 +1,21 @@
+.card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card-container > input[type='image'] {
+    width: min(20vh, 50%);
+    border-width: 10px;
+    margin: 0px;
+    border-radius: 20px;
+}
+
+.card-container :not(.highlight){
+    border-color: black;
+}
+
+.highlight {
+	border-color: green;
+	border-style: solid;
+}

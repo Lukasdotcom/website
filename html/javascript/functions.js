@@ -67,7 +67,7 @@ function beautify(val) // Will make a big number easier to read
 	return `${Math.floor(val / (10**(length - (length % 3) - 3))) / 1000} ${shortcut[Math.floor(length / 3)]}`
 }
 
-function JQerror(text, length=2000) { // Used to display an error to the user
+function JQerror(text, length=10000) { // Used to display an error to the user
     let id = `error${randomInt(0, 100000000)}`;
     text = `<div id='${id}' class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
                 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>

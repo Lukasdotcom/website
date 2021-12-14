@@ -18,8 +18,19 @@
     <?php
     require_once '../include/menu.php';
     echo "<div class='main'>";
+    if (! $USERNAME) {
+        echo "<h2>You are not logged in redirecting...</h2>";
+        header("Refresh:3; url=/login.php?redirect=golf", true);
+        http_response_code(401);
+    } else {
+        ?>
+        <h1>Golf</h1>
+        <p>Join Game below here</p>
+        <table id='games'>
+        </table>
+    <?php
+    }
     ?>
-    <h1>Golf</h1>
     </div>
 </body>
 
