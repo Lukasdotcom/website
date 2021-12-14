@@ -7,13 +7,33 @@ function update() { // Will update the game.
                 text += `<tr><td>${element.name}</td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.password ? `true` : "false"}</td><td><button onClick='joinGame(${element.ID})'>Join</button></td></tr>`;
             });
             $("#games").html(text);
+        } else {
+            JQerror(this.responseText);
         }
         setTimeout(update, 5000);
         }
     ajax.open("GET", `/api/golf.php?game=true&key='${getCookie('user')}'`);
     ajax.send(); 
 }
-
+function create() { // Will create a game
+    const ajax = new XMLHttpRequest();
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            JSON.parse(this.response).forEach(element => {
+                text += `<tr><td>${element.name}</td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.password ? `true` : "false"}</td><td><button onClick='joinGame(${element.ID})'>Join</button></td></tr>`;
+            });
+            $("#games").html(text);
+        }
+        setTimeout(update, 5000);
+        }
+    ajax.open("POST", `/api/golf.php`);
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    let password = '';
+    if ($("#password").val()) {
+        password = `&password=${$("#password").val()}`;
+    }
+    ajax.send(`create=${$("#name").val()}&cardNumber=${$("#cardNumber").val()}&flipNumber=${$("#flipNumber").val()}&playersToStart=${$("#playersToStart").val()}&key='${getCookie('user')}'${password}`); 
+}
 function joinGame(id) {
     window.location = `game.php?game=${id}`;
 }
@@ -21,4 +41,5 @@ function joinGame(id) {
 
 $(document).ready(function() {
     update();
+    $("#create").click(create);
 });

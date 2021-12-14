@@ -25,9 +25,18 @@
     } else {
         ?>
         <h1>Golf</h1>
-        <p>Join Game below here</p>
+        <p>Join Game below here:</p>
         <table id='games'>
         </table>
+        <p>Create Game below here:</p>
+        <div>
+            <label for="name">Name: </label><input type='text' value='' id="name"><br>
+            <label for="cardNumber">Cards: </label><input type='number' value='6' id="cardNumber"><br>
+            <label for="flipNumber">Flipped Cards at Start: </label><input type='number' value='2' id="flipNumber"><br>
+            <label for="playersToStart">Players: </label><input type='number' value='4' id="playersToStart"><br>
+            <label for="password">Password(leave blank for none): </label><input type='password' value='' id="password"><br>
+            <button id='create'>Create</button>
+        </div>
     <?php
     }
     ?>

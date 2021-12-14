@@ -82,7 +82,7 @@ function readyGame($game) {
 }
 if ($USERNAME) {
     if (array_key_exists("game", $_GET)){ // Gets the log
-        $data = dbRequest2("SELECT name, password, players, playersToStart, pointsToLose, cardNumber, flipNumber, ID FROM golfGame WHERE players != playersToStart");
+        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, ID FROM golfGame WHERE players != playersToStart");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
                 $data[$id]["password"] = true;
@@ -258,6 +258,18 @@ if ($USERNAME) {
             http_response_code(404);
             echo "Game not found";
         }
+    } elseif (array_key_exists("create", $_POST) and array_key_exists("cardNumber", $_POST) and array_key_exists("flipNumber", $_POST) and array_key_exists("playersToStart", $_POST)) { # Used to create a new room
+        $password = "";
+        $name = $_POST["create"];
+        $cardNumber = $_POST["cardNumber"];
+        $flipNumber = $_POST["flipNumber"];
+        $playersToStart = $_POST["playersToStart"];
+        $time = time();
+        if (array_key_exists("password", $_POST)) {
+            $password = $_POST["password"];
+        }
+        dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, '$name', '$password', 0, $playersToStart, -1, $time);");
+        echo "Create Game";
     } else {
         http_response_code(400);
         echo "Invalid command";
