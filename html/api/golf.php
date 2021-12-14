@@ -148,8 +148,7 @@ if ($USERNAME) {
                         $gameData = array( // Creates an array full of information about the game
                             "rules" => array(
                                 "flipNumber" => $game["flipNumber"],
-                                "cardNumber" => $game["cardNumber"],
-                                "pointsToLose" => $game["pointsToLose"]
+                                "cardNumber" => $game["cardNumber"]
                             ),
                             "currentPlayer" => $game["currentPlayer"],
                             "turnStartTime" => $game["turnStartTime"],
