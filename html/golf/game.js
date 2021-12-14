@@ -62,7 +62,7 @@ function update(start=false, repeat=false) { // Used to request the latest infor
 }
 
 function updateUI(changedFocus=false) { // Used to update the UI's info
-    if (data.length) {
+    if (Object.keys(data).length) {
         if (data.action == "roundOver") { // Used to have the game pause until the user presses continue
             paused = true;
             $("#continue").show();
