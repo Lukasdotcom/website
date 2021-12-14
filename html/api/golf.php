@@ -134,7 +134,7 @@ if ($USERNAME) {
                         }
                         dbCommand("UPDATE golfGamePlayers SET lastMode='$action' WHERE gameID='$id' and user='$USERNAME'");
                         $id = $game["ID"];
-                        if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' not lastMode='roundOver'")) { // The code for when a new round is started
+                        if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='roundOver'")) { // The code for when a new round is started
                             $length = count($players);
                             for ($i=0;$i<$length; $i++) { // Will calculate points for every player and add them to the total
                                 $newPoints = $players[$i]["points"] + calculatePoints($name, $game["ID"]);
