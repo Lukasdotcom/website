@@ -123,7 +123,7 @@ if ($USERNAME) {
                             dbCommand("UPDATE golfGameCards SET faceUp=1 WHERE gameID='$id'");
                             for ($i=0;$i<$length; $i++) { // Will uncover every card
                                 $name = $players[$i]["user"];
-                                $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE user='$name' and faceUp");
+                                $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID='$id' and user='$name' and faceUp");
                                 $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
                             }
                             $action = "roundOver";
