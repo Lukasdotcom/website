@@ -1,10 +1,10 @@
 function update() { // Will update the game.
-    var text = "<tr><th>Name</th><Players</th><th>Current Players</th><th>Max Players</th><th>Password</th></tr>";
+    var text = "<tr><th>Name</th><Players</th><th>Current Players</th><th>Max Players</th><th>Multiplier for Flipping Last Card</th><th>Password</th></tr>";
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
             JSON.parse(this.response).forEach(element => {
-                text += `<tr><td>${element.name}</td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.password ? `true` : "false"}</td><td><button onClick='joinGame(${element.ID})'>Join</button></td></tr>`;
+                text += `<tr><td>${element.name}</td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.multiplierForFlip}</td><td>${element.password ? `true` : "false"}</td><td><button onClick='joinGame(${element.ID})'>Join</button></td></tr>`;
             });
             $("#games").html(text);
         } else {
@@ -31,7 +31,7 @@ function create() { // Will create a game
     if ($("#password").val()) {
         password = `&password=${$("#password").val()}`;
     }
-    ajax.send(`create=${$("#name").val()}&cardNumber=${$("#cardNumber").val()}&flipNumber=${$("#flipNumber").val()}&playersToStart=${$("#playersToStart").val()}&key='${getCookie('user')}'${password}`); 
+    ajax.send(`create=${$("#name").val()}&cardNumber=${$("#cardNumber").val()}&flipNumber=${$("#flipNumber").val()}&playersToStart=${$("#playersToStart").val()}&multiplierForFlip=${$("#multiplierForFlip").val()}&key='${getCookie('user')}'${password}`); 
 }
 function joinGame(id) {
     window.location = `game.php?game=${id}`;

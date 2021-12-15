@@ -21,7 +21,13 @@ function calculatePoints($user, $game) {
             }
         }
     }
-    return $points;
+    // Used to check for the multiplier and multiply it to the points.
+    $multiplier = dbRequest2("SELECT multiplier FROM golfGamePlayers WHERE gameID='$game' and user='$user'");
+    if ($multiplier) {
+        return intval($points * $multiplier[0]["multiplier"]);
+    } else {
+        return $points;
+    }
 }
 /**
  * Is used to check if the deck  needs to be reshuffled and if it does it reshuffles the deck.
@@ -63,7 +69,7 @@ function readyGame($game) {
         for ($i=0;$i<$playerCount;$i++) { # Goes through every player and gives them their cards and puts them in the correct order.
             $name = $players[$i]["user"];
             $cardsToFlip = $flippedCards;
-            dbCommand("UPDATE golfGamePlayers SET orderID='$i' WHERE gameID='$game' and user='$name'");
+            dbCommand("UPDATE golfGamePlayers SET orderID='$i', multiplier=1, lastMode='' WHERE gameID='$game' and user='$name'");
             for ($j=1;$j<=$cards;$j++) {
                 $card = array_pop($deck);
                 if ($cardsToFlip > 0) {
@@ -82,7 +88,7 @@ function readyGame($game) {
 }
 if ($USERNAME) {
     if (array_key_exists("game", $_GET)){ // Gets the log
-        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, ID FROM golfGame WHERE players != playersToStart");
+        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, ID FROM golfGame WHERE players != playersToStart");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
                 $data[$id]["password"] = true;
@@ -113,11 +119,16 @@ if ($USERNAME) {
                             $name = $players[$i]["user"];
                             $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID='$id' and user='$name' and faceUp");
                             $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
-                            if (! dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID=$id and user='$name' and not faceUp")) {
+                            if (! dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID=$id and user='$name' and not faceUp")) { // Will check if a player has flipped all their cards.
                                 $roundOver = true;
                             }
                         }
                         if ($roundOver) { // Checks if the round is over
+                            // Gives the player who flips the last card the multiplierForFlip
+                            if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='roundOver' and gameID='$id'")) { // Checks if this is the first player done
+                                $newMultiplier = $selfPlayer["multiplier"] * $game["multiplierForFlip"];
+                                dbCommand("UPDATE golfGamePlayers SET multiplier='$newMultiplier' WHERE gameID='$id' and user='$USERNAME'");
+                            }
                             $length = count($players);
                             $id = $game["ID"];
                             // Will uncover every card
@@ -150,7 +161,8 @@ if ($USERNAME) {
                         $gameData = array( // Creates an array full of information about the game
                             "rules" => array(
                                 "flipNumber" => $game["flipNumber"],
-                                "cardNumber" => $game["cardNumber"]
+                                "cardNumber" => $game["cardNumber"],
+                                "multiplierForFlip" => $game["multiplierForFlip"]
                             ),
                             "currentPlayer" => $game["currentPlayer"],
                             "turnStartTime" => $game["turnStartTime"],
@@ -237,7 +249,7 @@ if ($USERNAME) {
             } elseif ($game["password"]) { // Checks if game requires a password
                 if (array_key_exists("password", $_POST)) { // Checks if password is given
                     if ($game["password"] === $_POST["password"]) {
-                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', '$USERNAME', 0, '[]', '[]', -1, 'waiting')");
+                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, '[]', '[]', -1, 'waiting')");
                         $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                         dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                         echo "Joined game";
@@ -250,7 +262,7 @@ if ($USERNAME) {
                     echo "Password required";
                 }
             } else {
-                dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', '$USERNAME', 0, -1, 'waiting')");
+                dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting')");
                 $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                 dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                 echo "Joined game";
@@ -259,11 +271,12 @@ if ($USERNAME) {
             http_response_code(404);
             echo "Game not found";
         }
-    } elseif (array_key_exists("create", $_POST) and array_key_exists("cardNumber", $_POST) and array_key_exists("flipNumber", $_POST) and array_key_exists("playersToStart", $_POST)) { # Used to create a new room
+    } elseif (array_key_exists("create", $_POST) and array_key_exists("cardNumber", $_POST) and array_key_exists("flipNumber", $_POST) and array_key_exists("playersToStart", $_POST) and array_key_exists("multiplierForFlip", $_POST)) { # Used to create a new room
         $password = "";
         $name = $_POST["create"];
         $cardNumber = intval($_POST["cardNumber"]);
         $flipNumber = intval($_POST["flipNumber"]);
+        $multiplierForFlip = floatval($_POST["multiplierForFlip"]);
         $playersToStart = $_POST["playersToStart"];
         $time = time();
         if (array_key_exists("password", $_POST)) {
@@ -272,7 +285,8 @@ if ($USERNAME) {
         $cardLimit = 100;
         $playerLimit = 100;
         if ($name and $cardNumber>0 and $cardNumber<$cardLimit and $flipNumber>0 and $flipNumber<$cardNumber and $playersToStart>0 and $playersToStart<$playerLimit) { // Makes sure that the game has valid inputs.
-            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, '$name', '$password', 0, $playersToStart, -1, $time);");
+            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, '$name', '$password', 0, $playersToStart, -1, $time)");
+            echo "INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, '$name', '$password', 0, $playersToStart, -1, $time)";
             echo "Created Game";
         } else {
             http_response_code(400);
