@@ -13,7 +13,7 @@ function login(username, password, signup) {  // Used to login/Signup and will r
                 location.replace("/usermenu/index.php");
             }
         } else {
-            document.getElementById("status").innerHTML = ajax.responseText;
+            JQerror(ajax.responseText);
         }
         }
     if (signup == true){
