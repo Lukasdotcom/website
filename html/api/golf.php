@@ -275,7 +275,8 @@ if ($USERNAME) {
             dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, '$name', '$password', 0, $playersToStart, -1, $time);");
             echo "Created Game";
         } else {
-            echo "ERROR invalid game";
+            http_response_code(400);
+            echo "ERROR invalid settings";
         }
     } else {
         http_response_code(400);

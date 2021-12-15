@@ -19,10 +19,9 @@ function create() { // Will create a game
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
-            JSON.parse(this.response).forEach(element => {
-                text += `<tr><td>${element.name}</td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.password ? `true` : "false"}</td><td><button onClick='joinGame(${element.ID})'>Join</button></td></tr>`;
-            });
-            $("#games").html(text);
+            update();
+        } else {
+            JQerror(this.response);
         }
         setTimeout(update, 5000);
         }
