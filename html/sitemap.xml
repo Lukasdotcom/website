@@ -15,7 +15,7 @@
 <loc>https://lschaefer.xyz/login.php</loc>
 </url>
 <url>
-<loc>https://lschaefer.xyz/internet.php</loc>
+<loc>https://lschaefer.xyz/internet/index.php</loc>
 </url>
 <url>
 <loc>https://lschaefer.xyz/space3/index.php</loc>
@@ -25,5 +25,8 @@
 </url>
 <url>
 <loc>https://lschaefer.xyz/diceGame/index.php</loc>
+</url>
+<url>
+<loc>https://lschaefer.xyz/golf/index.php</loc>
 </url>
 </urlset>

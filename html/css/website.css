@@ -135,3 +135,12 @@ input[type="number"] {
     margin-left: 220px;
     margin-right: 40px;
 }
+
+.right {
+    float: right;
+}
+
+.center {
+    display:flex;
+   justify-content:center;
+}

@@ -155,6 +155,11 @@ try:
         repaired = database.repair()
         for x in repaired:
             writeLog(f"Database {x} was corrupted/missing and was restored", 9)
+        # Will clean the golf games database
+        database.command(f"DELETE FROM golfGame WHERE turnStartTime<{time.time()-86400}") # Removes games that have not been touched for more than 24 hours
+        database.command("DELETE FROM golfGamePlayers WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGamePlayers.gameID = golfGame.ID)") # Removes players from games that do not exist
+        database.command("DELETE FROM golfGameCards WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGameCards.gameID = golfGame.ID)") # Removes players from games that do not exist
+
     # Will add to log if the GPIO library exists
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)

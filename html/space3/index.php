@@ -6,7 +6,7 @@
         Space 3
     </title>
     <?php
-    $DESCRIPTION = "Space 3 a simple game like Space 2. Where you fly a sapceship and try to survive for as long as possible while trying to kill as many other fighters as possible.";
+    $DESCRIPTION = "Space 3 a simple game like Space 2. Where you fly a spaceship and try to survive for as long as possible while trying to kill as many other fighters as possible.";
     include '../include/all.php';
     ?>
 </head>

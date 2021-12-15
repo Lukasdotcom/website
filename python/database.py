@@ -10,6 +10,12 @@ def readFile(
     with open(location) as f:
         return json.load(f)
 
+def command(command): # Will just execute a sql command
+    db, cursor = connect()
+    cursor.execute(command)
+    db.commit()
+    db.close()
+
 
 def connect():
     websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
@@ -26,7 +32,7 @@ def connect():
     return db, cursor
 
 
-def deleteTable(name):  # WIll delete a table in the database
+def deleteTable(name):  # Will delete a table in the database
     db, cursor = connect()
     command = "DROP TABLE " + name + ";"
     cursor.execute(command)
@@ -49,6 +55,8 @@ def createTable(name, coulumns):  # Will create a table in the database
             command += " text, "
         elif x[1] == 5:
             command += f" int AUTO_INCREMENT, PRIMARY KEY (`{x[0]}`), "
+        elif x[1] == 6:
+            command += " boolean, "
         else:
             command += " int, "
     command = command[: len(command) - 2]
@@ -137,7 +145,10 @@ def repair():  # Repairs all tables
         "cookieClicker": [["username", 0], ["room", 0], ["cookies", 2], ["cookiesPs", 2], ["lastUpdate", 3]],
         "localStorage" : [["username", 0], ["data", 4]],
         "space3" : [["id", 5], ["owner", 0], ["title", 0], ["description", 4], ["preferences", 4], ["likes", 1], ["downloads", 1]],
-        "space3likes" : [["id", 1], ["account", 0]]
+        "space3likes" : [["id", 1], ["account", 0]],
+        "golfGamePlayers" : [["gameID", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0]],
+        "golfGameCards" : [["gameID", 1], ["user", 0], ["card", 1], ["cardPlacement", 1], ["faceUp", 6]],
+        "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1]]
     }
     changedTables = []
     for x in databaseDict:

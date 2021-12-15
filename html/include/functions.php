@@ -147,16 +147,20 @@ function dbRequest2($command, $result="*", $prepare=[])
     $response = mysqli_stmt_get_result($stmt);
   }
   mysqli_close($connection);
-  if (mysqli_num_rows($response) > 0) {
-    $data = [];
-    while ($row = mysqli_fetch_assoc($response)) {
-      if ($result == "*") {
-        array_push($data, $row);
-      } else {
-        array_push($data, $row[$result]);
+  if ($response) {
+    if (mysqli_num_rows($response) > 0) {
+      $data = [];
+      while ($row = mysqli_fetch_assoc($response)) {
+        if ($result == "*") {
+          array_push($data, $row);
+        } else {
+          array_push($data, $row[$result]);
+        }
       }
+      return $data;
+    } else {
+      return [];
     }
-    return $data;
   } else {
     return [];
   }
