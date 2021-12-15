@@ -49,8 +49,11 @@
             echo "<script>var player='$USERNAME'</script>";
             ?>
             <script>var joined=true</script>
-            <h3 id='wait'>Waiting...</h3>
-            <div id='game' style="display: none;">
+            <div id='wait'>
+                <h3>Waiting...</h3>
+                <p>Invite others by sharing this link: <?php echo $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];?>
+            </div>
+                <div id='game' style="display: none;">
                 <div id='decks' class='card-container'>
                     <input type="image" id='discard' src='/img/deck/.jpg'>
                     <input type="image" id='deck' src='/img/deck/back.jpg'>
