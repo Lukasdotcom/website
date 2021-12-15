@@ -63,8 +63,9 @@ function update(start=false, repeat=false) { // Used to request the latest infor
 
 function updateUI(changedFocus=false) { // Used to update the UI's info
     if (Object.keys(data).length) {
-        if (waiting) { // Checks if the game has just been started.
-            window.reload()
+        if (waiting) { // Checks if the game just came from waiting.
+            waiting = false;
+            changedFocus = true;
         }
         if (data.action == "roundOver") { // Used to have the game pause until the user presses continue
             paused = true;
@@ -155,7 +156,7 @@ function updateUI(changedFocus=false) { // Used to update the UI's info
     } else {
         $("#wait").show();
         $("#game").hide();
-        waiting = true
+        waiting = true;
     }
     return;
 }
