@@ -120,8 +120,9 @@ if ($USERNAME) {
                         if ($roundOver) { // Checks if the round is over
                             $length = count($players);
                             $id = $game["ID"];
+                            // Will uncover every card
                             dbCommand("UPDATE golfGameCards SET faceUp=1 WHERE gameID='$id'");
-                            for ($i=0;$i<$length; $i++) { // Will uncover every card
+                            for ($i=0;$i<$length; $i++) {
                                 $name = $players[$i]["user"];
                                 $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID='$id' and user='$name' and faceUp");
                                 $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
@@ -137,8 +138,8 @@ if ($USERNAME) {
                         if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='roundOver'")) { // The code for when a new round is started
                             $length = count($players);
                             for ($i=0;$i<$length; $i++) { // Will calculate points for every player and add them to the total
-                                $newPoints = $players[$i]["points"] + calculatePoints($name, $game["ID"]);
                                 $name = $players[$i]["user"];
+                                $newPoints = $players[$i]["points"] + calculatePoints($name, $game["ID"]);
                                 dbCommand("UPDATE golfGamePlayers SET points=$newPoints WHERE gameID=$id and user='$name'");
                             }
                             $game = readyGame($id);
