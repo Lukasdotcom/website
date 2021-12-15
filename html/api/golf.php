@@ -261,15 +261,21 @@ if ($USERNAME) {
     } elseif (array_key_exists("create", $_POST) and array_key_exists("cardNumber", $_POST) and array_key_exists("flipNumber", $_POST) and array_key_exists("playersToStart", $_POST)) { # Used to create a new room
         $password = "";
         $name = $_POST["create"];
-        $cardNumber = $_POST["cardNumber"];
-        $flipNumber = $_POST["flipNumber"];
+        $cardNumber = intval($_POST["cardNumber"]);
+        $flipNumber = intval($_POST["flipNumber"]);
         $playersToStart = $_POST["playersToStart"];
         $time = time();
         if (array_key_exists("password", $_POST)) {
             $password = $_POST["password"];
         }
-        dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, '$name', '$password', 0, $playersToStart, -1, $time);");
-        echo "Create Game";
+        $cardLimit = 100;
+        $playerLimit = 100;
+        if ($name and $cardNumber>0 and $cardNumber<$cardLimit and $flipNumber>0 and $flipNumber<$cardNumber and $playersToStart>0 and $playersToStart<$playerLimit) { // Makes sure that the game has valid inputs.
+            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, '$name', '$password', 0, $playersToStart, -1, $time);");
+            echo "Created Game";
+        } else {
+            echo "ERROR invalid game";
+        }
     } else {
         http_response_code(400);
         echo "Invalid command";
