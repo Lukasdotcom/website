@@ -95,9 +95,12 @@ function updateUI(changedFocus=false) { // Used to update the UI's info
         for (let i = 1; i<=data.rules.cardNumber; i++) {
             cards[i] = "back";
         }
-        data.players[playerNumber].cards.forEach(element => {
-            cards[element.cardPlacement] = element.card;
-        });
+        if (data.players[playerNumber]["cards"]) {
+            data.players[playerNumber].cards.forEach(element => {
+                cards[element.cardPlacement] = element.card;
+            });
+        }
+        
         if (! changedFocus) {
             Object.keys(cards).forEach(element => { // Updates all neccessary cards
                 let url = `/img/deck/${cards[element]}.jpg`;
@@ -138,6 +141,12 @@ function updateUI(changedFocus=false) { // Used to update the UI's info
             } else {
                 $("#discard").attr("onclick", onclick="");
                 $("#deck").attr("onclick", onclick="");
+            }
+            // Shows who is eliminated
+            if (data.players[playerNumber].lastMode == "eliminated") {
+                $("#eliminated").show();
+            } else {
+                $("#eliminated").hide();
             }
         }
         // Shows the button when neccessary

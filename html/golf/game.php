@@ -53,13 +53,14 @@
                 <h3>Waiting...</h3>
                 <p>Invite others by sharing this link: <?php echo $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];?>
             </div>
-                <div id='game' style="display: none;">
+            <div id='game' style="display: none;">
                 <div id='decks' class='card-container'>
                     <input type="image" id='discard' src='/img/deck/.jpg'>
                     <input type="image" id='deck' src='/img/deck/back.jpg'>
                 </div>
                 <div id='left-arrow' style="margin-left:10px"></div>
                 <div id='right-arrow' class='right' style="margin-right:10px"></div>
+                <h2 id='eliminated' class='center' style="display: none;">Eliminated</h2>
                 <h3 class="center"><c id='name'></c>'s Points: <c id='points'></c></h3>
                 <h3 class="center">Points this turn: +<c id='newPoints'></c></h3>
                 <div id='cards' class='card-container'>
