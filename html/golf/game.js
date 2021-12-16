@@ -32,23 +32,19 @@ function submitMove() { // Used to submit a move
     ajax.send(`swap=${highlightCard}&swap2=${highlightDeck}&game=${game}&key=${getCookie("user")}`);
 }
 
-function update(start=false, repeat=false) { // Used to request the latest information
+function update(start=false, repeat=false, newFocus="") { // Used to request the latest information
     if (! paused) { // Checks if there is currently a pause on the update loop
         const ajax = new XMLHttpRequest();
         ajax.onload = function() {
             if (this.status == 200) {
                 data = JSON.parse(this.response);
-                if (start) {
-                    updateUI(changedFocus=true);
-                } else {
-                    updateUI();
-                }
+                updateUI(changedFocus=start, focus=newFocus);
             } else {
                 JQerror(this.responseText, 5000);
             }
             if (repeat) {
                 setTimeout(function() {
-                    update(start=false, repeat=true)
+                    update(start=false, repeat=true, focus=newFocus)
                 }, 5000);
             }
         }
@@ -61,7 +57,7 @@ function update(start=false, repeat=false) { // Used to request the latest infor
     }
 }
 
-function updateUI(changedFocus=false) { // Used to update the UI's info
+function updateUI(changedFocus=false, focus="") { // Used to update the UI's info
     if (Object.keys(data).length) {
         if (waiting) { // Checks if the game just came from waiting.
             waiting = false;
@@ -74,7 +70,15 @@ function updateUI(changedFocus=false) { // Used to update the UI's info
                 $("#continue").off("click");
                 $("#continue").hide();
                 paused = false;
-                update(start=true);
+                update(start=true, repeat=false, newFocus="root");
+            });
+        }
+        if (focus) { // Checks if a certain player should be focused on.
+            Object.keys(data.players).forEach(element => {
+                if (data.players[element].user == focus) {
+                    playerNumber = element;
+                    changedFocus=true;
+                }
             });
         }
         // Resets the highlights to make sure that not both are highlighted
@@ -84,10 +88,10 @@ function updateUI(changedFocus=false) { // Used to update the UI's info
         let maxPlayer = Object.keys(data.players).length-1;
         if (maxPlayer<playerNumber) {
             playerNumber = 0;
-            changedFocus=true
+            changedFocus=true;
         } else if (playerNumber < 0) {
             playerNumber = maxPlayer;
-            changedFocus=true
+            changedFocus=true;
         }
         $("#wait").hide();
         $("#game").show();
@@ -100,7 +104,6 @@ function updateUI(changedFocus=false) { // Used to update the UI's info
                 cards[element.cardPlacement] = element.card;
             });
         }
-        
         if (! changedFocus) {
             Object.keys(cards).forEach(element => { // Updates all neccessary cards
                 let url = `/img/deck/${cards[element]}.jpg`;
@@ -187,7 +190,7 @@ var data = {}; // Stores the entirety of the data
 var paused = false; // Checks if the game should not check for newer information.
 $(document).ready(function() {
     if (joined) {
-        update(start=true, repeat=true);
+        update(start=true, repeat=true, newFocus=player);
         $("#left-arrow").button({
             icon: "ui-icon-caret-1-w"
         })
