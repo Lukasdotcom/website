@@ -104,6 +104,12 @@ function updateUI(changedFocus=false, focus="") { // Used to update the UI's inf
                 cards[element.cardPlacement] = element.card;
             });
         }
+        // Enables your turn indicator when neccessary
+        if (data.action == "switch") {
+            $("#yourTurn").show();
+        } else {
+            $("#yourTurn").hide();
+        }
         if (! changedFocus) {
             Object.keys(cards).forEach(element => { // Updates all neccessary cards
                 let url = `/img/deck/${cards[element]}.jpg`;

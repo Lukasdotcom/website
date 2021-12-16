@@ -54,6 +54,7 @@
                 <p>Invite others by sharing this link: <?php echo $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];?>
             </div>
             <div id='game' style="display: none;">
+                <h2 id='yourTurn' style="display: none;" class="center">Your Turn</h2>
                 <div id='decks' class='card-container'>
                     <input type="image" id='discard' src='/img/deck/.jpg'>
                     <input type="image" id='deck' src='/img/deck/back.jpg'>
