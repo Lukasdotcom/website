@@ -64,7 +64,6 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
 }
 
 function updateUI(changedFocus=false, focus="") { // Used to update the UI's info
-    console.log(focus);
     if (Object.keys(data).length) {
         if (waiting) { // Checks if the game just came from waiting.
             waiting = false;
@@ -76,8 +75,9 @@ function updateUI(changedFocus=false, focus="") { // Used to update the UI's inf
             $("#continue").click(function() {
                 $("#continue").off("click");
                 $("#continue").hide();
+                let focusedPlayer = data.players[playerNumber].user;
                 paused = false;
-                update(start=true, repeat=false, newFocus="root");
+                update(start=true, repeat=false, newFocus=focusedPlayer);
             });
         }
         if (focus) { // Checks if a certain player should be focused on.
