@@ -87,7 +87,7 @@ function readyGame($game) {
             } else {
                 $mode = "eliminated";
             }
-            dbCommand("UPDATE golfGamePlayers SET orderID='$i', multiplier=1, lastMode='$mode' WHERE gameID='$game' and user='$name'");
+            dbCommand("UPDATE golfGamePlayers SET orderID='$i', multiplier=1, lastMode='$mode', upToDate=0 WHERE gameID='$game' and user='$name'");
         }
         $json_deck = json_encode($deck); # Updates the deck and discard pile.
         $time = time();
@@ -110,11 +110,14 @@ if ($USERNAME) {
             $game = dbRequest2("SELECT * FROM golfGame WHERE ID='$id'");
             if ($game) { // Will check if the game exists
                 $game = $game[0];
-                if ($game["players"] >= $game["playersToStart"]) {
+                if (dbRequest2("SELECT upToDate FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME' and upToDate") and ! array_key_exists("forceNew", $_GET)) {
+                    echo "No change";
+                    http_response_code(304);
+                } else if ($game["players"] >= $game["playersToStart"]) {
                     $players = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' ORDER BY orderID ASC");
                     $selfPlayer =  dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME'")[0];
                     $selfPlayerID = $selfPlayer["orderID"];
-                    if ($selfPlayer["lastMode"] == "waiting") {// Makes sure the server knows that the player is now ready.
+                    if ($selfPlayer["lastMode"] == "waiting") { // Makes sure the server knows that the player is now ready.
                         if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='waiting'")) { // Starts the game if neccessary.
                             $game = readyGame($id);
                         }
@@ -135,6 +138,7 @@ if ($USERNAME) {
                             }
                         }
                         if ($roundOver) { // Checks if the round is over
+                            dbCommand("UPDATE golfGamePlayers SET upToDate=0 WHERE gameID='$id'");
                             // Gives the player who flips the last card the multiplierForFlip
                             if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='roundOver' and gameID='$id'")) { // Checks if this is the first player done
                                 $newMultiplier = $selfPlayer["multiplier"] * $game["multiplierForFlip"];
@@ -190,6 +194,7 @@ if ($USERNAME) {
                             "action" => $action // Used to say the current action the player should do
                         );
                         echo json_encode($gameData);
+                        dbCommand("UPDATE golfGamePlayers SET upToDate=1 WHERE gameID='$id' and user='$USERNAME'");
                     } else {
                         echo "[]"; 
                     }
@@ -249,6 +254,7 @@ if ($USERNAME) {
             echo "Switched card #$card with $type"; // Responds with what action was just done.
             $time = time();
             dbCommand("UPDATE golfGame SET deck='$deck', discard='$discard', currentPlayer='$gameCurrentPlayer', turnStartTime='$time' WHERE id=$id");
+            dbCommand("UPDATE golfGamePlayers SET upToDate=0 WHERE gameID='$id'");
         } else {
             http_response_code(404);
             echo "Game does not exist";
@@ -268,7 +274,7 @@ if ($USERNAME) {
             } elseif ($game["password"]) { // Checks if game requires a password
                 if (array_key_exists("password", $_POST)) { // Checks if password is given
                     if ($game["password"] === $_POST["password"]) {
-                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, '[]', '[]', -1, 'waiting')");
+                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting', 0)");
                         $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                         dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                         echo "Joined game";
@@ -281,7 +287,7 @@ if ($USERNAME) {
                     echo "Password required";
                 }
             } else {
-                dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting')");
+                dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting', 0)");
                 $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                 dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                 echo "Joined game";

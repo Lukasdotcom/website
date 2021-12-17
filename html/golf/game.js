@@ -36,7 +36,9 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
     if (! paused) { // Checks if there is currently a pause on the update loop
         const ajax = new XMLHttpRequest();
         ajax.onload = function() {
-            if (this.status == 200) {
+            if (this.status == 304) {
+                1;
+            } else if (this.status == 200) {
                 data = JSON.parse(this.response);
                 updateUI(changedFocus=start, focus=newFocus);
             } else {
@@ -44,11 +46,15 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
             }
             if (repeat) {
                 setTimeout(function() {
-                    update(start=false, repeat=true, focus=newFocus)
-                }, 5000);
+                    update(start=false, repeat=true)
+                }, 500);
             }
         }
-        ajax.open("GET", `/api/golf.php?update=${game}&key=${getCookie("user")}`);
+        let forceNew = "";
+        if (start) {
+            forceNew = `&forceNew=true`;
+        }
+        ajax.open("GET", `/api/golf.php?update=${game}&key=${getCookie("user")}${forceNew}`);
         ajax.send();
     } else if (repeat) {
         setTimeout(function() {
@@ -58,6 +64,7 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
 }
 
 function updateUI(changedFocus=false, focus="") { // Used to update the UI's info
+    console.log(focus);
     if (Object.keys(data).length) {
         if (waiting) { // Checks if the game just came from waiting.
             waiting = false;
