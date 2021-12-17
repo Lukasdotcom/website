@@ -68,5 +68,20 @@
         "type": "13",
         "name": "Fan",
         "color": "#646464"
+    },
+    {
+        "type": "14",
+        "name": "Golf Game Created",
+        "color": "#006600"
+    },
+    {
+        "type": "15",
+        "name": "Golf Game Joined",
+        "color": "#006600"
+    },
+    {
+        "type": "16",
+        "name": "Deleted Game",
+        "color": "#006600"
     }
 ]

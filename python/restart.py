@@ -156,6 +156,9 @@ try:
         for x in repaired:
             writeLog(f"Database {x} was corrupted/missing and was restored", 9)
         # Will clean the golf games database
+        deleted = database.trueSearch(f"SELECT ID FROM golfGame WHERE turnStartTime<{time.time()-86400}")
+        for x in deleted:
+            writeLog(f"Game #{x[0]} deleted because it is too old", 16)
         database.command(f"DELETE FROM golfGame WHERE turnStartTime<{time.time()-86400}") # Removes games that have not been touched for more than 24 hours
         database.command("DELETE FROM golfGamePlayers WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGamePlayers.gameID = golfGame.ID)") # Removes players from games that do not exist
         database.command("DELETE FROM golfGameCards WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGameCards.gameID = golfGame.ID)") # Removes players from games that do not exist

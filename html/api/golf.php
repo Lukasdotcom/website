@@ -278,6 +278,7 @@ if ($USERNAME) {
                         $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                         dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                         echo "Joined game";
+                        writeLog(15, "$USERNAME joined game #$id as the $newPlayers player with ip of $address");
                     } else {
                         http_response_code(401);
                         echo "Wrong password";
@@ -291,6 +292,7 @@ if ($USERNAME) {
                 $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                 dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                 echo "Joined game";
+                writeLog(15, "$USERNAME joined game #$id as the $newPlayers player with ip of $address");
             }
         } else {
             http_response_code(404);
@@ -313,6 +315,7 @@ if ($USERNAME) {
         if ($name and $cardNumber>0 and $cardNumber<$cardLimit and $flipNumber>0 and $flipNumber<$cardNumber and $playersToStart>0 and $playersToStart<$playerLimit and $pointsToEnd>0) { // Makes sure that the game has valid inputs.
             dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time)");
             echo "Created Game";
+            writeLog(14, "$USERNAME created game for $playersToStart players and $cardNumber cards with ip of $address");
         } else {
             http_response_code(400);
             echo "ERROR invalid settings";

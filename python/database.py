@@ -16,6 +16,13 @@ def command(command): # Will just execute a sql command
     db.commit()
     db.close()
 
+def trueSearch(command): # Will just execute sql command and return result 
+    db, cursor = connect()
+    cursor.execute(command)
+    value = cursor.fetchall()
+    db.close()
+    return value
+
 
 def connect():
     websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
