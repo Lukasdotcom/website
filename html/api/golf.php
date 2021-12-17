@@ -194,7 +194,9 @@ if ($USERNAME) {
                             "action" => $action // Used to say the current action the player should do
                         );
                         echo json_encode($gameData);
-                        dbCommand("UPDATE golfGamePlayers SET upToDate=1 WHERE gameID='$id' and user='$USERNAME'");
+                        if (! array_key_exists("forceNew", $_GET)) { // Will make sure the browser is not confused
+                            dbCommand("UPDATE golfGamePlayers SET upToDate=1 WHERE gameID='$id' and user='$USERNAME'");
+                        }
                     } else {
                         echo "[]"; 
                     }
