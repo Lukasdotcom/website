@@ -291,6 +291,7 @@ try:
                 os.remove(location + "update.json")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git reset --hard")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull")
+                dailyMaintenance()
                 writeLog("Server updated successfully.", 12)
             if not skipGPIO:
                 # Checks if the fans need to turn on or off
