@@ -61,8 +61,9 @@
                 </div>
                 <div id='left-arrow' style="margin-left:10px"></div>
                 <div id='right-arrow' class='right' style="margin-right:10px"></div>
+                <h2 style="color: green; display: none;" class="center" id="playerTurn"><c class='name'></c>'s Turn</h2>
                 <h2 id='eliminated' class='center' style="display: none;">Eliminated</h2>
-                <h3 class="center"><c id='name'></c>'s Points: <c id='points'></c></h3>
+                <h3 class="center"><c class='name'></c>'s Points: <c id='points'></c></h3>
                 <h3 class="center">Points this turn: +<c id='newPoints'></c></h3>
                 <div id='cards' class='card-container'>
                 <?php 

@@ -138,7 +138,7 @@ function updateUI(focus="") { // Used to update the UI's info
         }
         // Makes sure the info about the player is right
         $("#points").text(data.players[playerNumber].points);
-        $("#name").text(data.players[playerNumber].user);
+        $(".name").text(data.players[playerNumber].user);
         if (player == data.players[playerNumber].user) {
             $("#discard").attr("onclick", onclick="highlight('discard')");
             $("#deck").attr("onclick", onclick="highlight('deck')");
@@ -147,10 +147,12 @@ function updateUI(focus="") { // Used to update the UI's info
             $("#deck").attr("onclick", onclick="");
         }
         // Shows who is eliminated
+        $("#eliminated").hide();
+        $("#playerTurn").hide();
         if (data.players[playerNumber].lastMode == "eliminated") {
             $("#eliminated").show();
-        } else {
-            $("#eliminated").hide();
+        } else if (data.players[playerNumber].lastMode == "switch") {
+            $("#playerTurn").show();
         }
         // Shows the button when neccessary
         if (highlightDeck && highlightCard && data.action == "switch") {
