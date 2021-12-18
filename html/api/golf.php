@@ -132,10 +132,10 @@ if ($USERNAME) {
                             $name = $players[$i]["user"];
                             $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID='$id' and user='$name' and faceUp");
                             $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
-                        }
-                        if ($selfPlayer["lastMode"] != "eliminated") {
-                            if (! dbRequest2("SELECT * FROM golfGameCards WHERE gameID=$id and user='$USERNAME' and not faceUp")) { // Will check if the player has flipped all their cards.
-                                $roundOver = true;
+                            if ($players[$i]["lastMode"] != "eliminated") {
+                                if (! dbRequest2("SELECT * FROM golfGameCards WHERE gameID=$id and user='$name' and not faceUp")) { // Will check if a player has flipped all their cards.
+                                    $roundOver = true;
+                                }
                             }
                         }
                         if ($roundOver) { // Checks if the round is over
