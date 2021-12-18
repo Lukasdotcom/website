@@ -134,7 +134,7 @@ if ($USERNAME) {
                             $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
                             if ($players[$i]["lastMode"] != "eliminated") {
                                 if (! dbRequest2("SELECT * FROM golfGameCards WHERE gameID=$id and user='$name' and not faceUp")) { // Will check if a player has flipped all their cards.
-                                    $roundOver = true;
+                                    $roundOver = $name;
                                 }
                             }
                         }
@@ -143,7 +143,7 @@ if ($USERNAME) {
                             // Gives the player who flips the last card the multiplierForFlip
                             if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='roundOver' and gameID='$id'")) { // Checks if this is the first player done
                                 $newMultiplier = $selfPlayer["multiplier"] * $game["multiplierForFlip"];
-                                dbCommand("UPDATE golfGamePlayers SET multiplier='$newMultiplier' WHERE gameID='$id' and user='$USERNAME'");
+                                dbCommand("UPDATE golfGamePlayers SET multiplier='$newMultiplier' WHERE gameID='$id' and user='$roundOver'");
                             }
                             $length = count($players);
                             $id = $game["ID"];
