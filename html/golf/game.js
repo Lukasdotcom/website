@@ -151,7 +151,7 @@ function updateUI(focus="") { // Used to update the UI's info
         $("#playerTurn").hide();
         if (data.players[playerNumber].lastMode == "eliminated") {
             $("#eliminated").show();
-        } else if (data.players[playerNumber].lastMode == "switch") {
+        } else if (playerNumber == data.currentPlayer) {
             $("#playerTurn").show();
         }
         // Shows the button when neccessary
