@@ -88,6 +88,7 @@ function readyGame($game) {
                 $mode = "eliminated";
             }
             dbCommand("UPDATE golfGamePlayers SET orderID='$i', multiplier=1, lastMode='$mode', upToDate=0 WHERE gameID='$game' and user='$name'");
+            writeLog(17, "New round started for game #$game");
         }
         $json_deck = json_encode($deck); # Updates the deck and discard pile.
         $time = time();

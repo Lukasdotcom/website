@@ -83,5 +83,10 @@
         "type": "16",
         "name": "Deleted Game",
         "color": "#006600"
+    },
+    {
+        "type": "17",
+        "name": "Golf New Round",
+        "color": "#006600"
     }
 ]
