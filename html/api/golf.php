@@ -111,8 +111,9 @@ if ($USERNAME) {
             $game = dbRequest2("SELECT * FROM golfGame WHERE ID='$id'");
             if ($game) { // Will check if the game exists
                 $game = $game[0];
-                if (dbRequest2("SELECT upToDate FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME' and upToDate") and ! array_key_exists("forceNew", $_GET)) {
+                if (dbRequest2("SELECT upToDate FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME' and upToDate")) {
                     echo "No change";
+                    header('alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400, h3-28=":443"; ma=86400, h3-27=":443"; ma=86400', true);
                     http_response_code(304);
                 } else if ($game["players"] >= $game["playersToStart"]) {
                     $players = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' ORDER BY orderID ASC");
@@ -195,9 +196,7 @@ if ($USERNAME) {
                             "action" => $action // Used to say the current action the player should do
                         );
                         echo json_encode($gameData);
-                        if (! array_key_exists("forceNew", $_GET)) { // Will make sure the browser is not confused
-                            dbCommand("UPDATE golfGamePlayers SET upToDate=1 WHERE gameID='$id' and user='$USERNAME'");
-                        }
+                        dbCommand("UPDATE golfGamePlayers SET upToDate=1 WHERE gameID='$id' and user='$USERNAME'");
                     } else {
                         echo "[]"; 
                     }
@@ -323,6 +322,10 @@ if ($USERNAME) {
             http_response_code(400);
             echo "ERROR invalid settings";
         }
+    } elseif (array_key_exists("forceUpdate", $_GET)) { // Used to force the update the next time an update is called
+        $id = $_GET["forceUpdate"];
+        dbCommand("UPDATE golfGamePlayers SET upToDate=0 WHERE gameID=$id and user='$USERNAME'");
+        echo "Force update for game #$id";
     } else {
         http_response_code(400);
         echo "Invalid command";

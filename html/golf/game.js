@@ -35,26 +35,32 @@ function submitMove() { // Used to submit a move
 function update(start=false, repeat=false, newFocus="") { // Used to request the latest information
     if (! paused) { // Checks if there is currently a pause on the update loop
         const ajax = new XMLHttpRequest();
-        ajax.onload = function() {
-            if (this.status == 304) {
-                1;
-            } else if (this.status == 200) {
-                data = JSON.parse(this.response);
-                updateUI(changedFocus=start, focus=newFocus);
-            } else {
-                JQerror(this.responseText, 5000);
+        if (start) { // Checks if it should clear the cache or not.
+            ajax.onload = function() {
+                if (this.status != 200) {
+                    JQerror(this.responseText, 5000);
+                }
+                update(start=false, repeat=repeat, newFocus=newFocus)
             }
-            if (repeat) {
-                setTimeout(function() {
-                    update(start=false, repeat=true)
-                }, 500);
+            ajax.open("GET", `/api/golf.php?forceUpdate=${game}&key=${getCookie("user")}`);
+        } else {
+            ajax.open("GET", `/api/golf.php?update=${game}&key=${getCookie("user")}`);
+            ajax.onload = function() {
+                if (this.status == 304) {
+                    1
+                } else if (this.status == 200) {
+                    data = JSON.parse(this.response);
+                    updateUI(focus=newFocus);
+                } else {
+                    JQerror(this.responseText, 5000);
+                }
+                if (repeat) {
+                    setTimeout(function() {
+                        update(start=false, repeat=true)
+                    }, 500);
+                }
             }
         }
-        let forceNew = "";
-        if (start) {
-            forceNew = `&forceNew=true`;
-        }
-        ajax.open("GET", `/api/golf.php?update=${game}&key=${getCookie("user")}${forceNew}`);
         ajax.send();
     } else if (repeat) {
         setTimeout(function() {
@@ -63,12 +69,8 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
     }
 }
 
-function updateUI(changedFocus=false, focus="") { // Used to update the UI's info
+function updateUI(focus="") { // Used to update the UI's info
     if (Object.keys(data).length) {
-        if (waiting) { // Checks if the game just came from waiting.
-            waiting = false;
-            changedFocus = true;
-        }
         if (data.action == "roundOver") { // Used to have the game pause until the user presses continue
             paused = true;
             $("#continue").show();
@@ -95,10 +97,8 @@ function updateUI(changedFocus=false, focus="") { // Used to update the UI's inf
         let maxPlayer = Object.keys(data.players).length-1;
         if (maxPlayer<playerNumber) {
             playerNumber = 0;
-            changedFocus=true;
         } else if (playerNumber < 0) {
             playerNumber = maxPlayer;
-            changedFocus=true;
         }
         $("#wait").hide();
         $("#game").show();
@@ -117,53 +117,40 @@ function updateUI(changedFocus=false, focus="") { // Used to update the UI's inf
         } else {
             $("#yourTurn").hide();
         }
-        if (! changedFocus) {
-            Object.keys(cards).forEach(element => { // Updates all neccessary cards
-                let url = `/img/deck/${cards[element]}.jpg`;
-                if ($(`#card${element}`).attr("src") != url) {
-                    $(`#card${element}`).attr("src", url)
-                }
-                if (element == highlightCard) {
-                    $(`#card${element}`).addClass("highlight");
-                } else {
-                    $(`#card${element}`).removeClass("highlight");
-                }
-            });
-            // Highlights the correct deck/discard
+        Object.keys(cards).forEach(element => { // Updates all neccessary cards
+            let url = `/img/deck/${cards[element]}.jpg`;
+            if ($(`#card${element}`).attr("src") != url) {
+                $(`#card${element}`).attr("src", url)
+            }
+            if (element == highlightCard && player == data.players[playerNumber].user) {
+                $(`#card${element}`).addClass("highlight");
+            } else {
+                $(`#card${element}`).removeClass("highlight");
+            }
+        });
+        // Highlights the correct deck/discard
+        if (player == data.players[playerNumber].user) {
             if (highlightDeck == "deck") {
                 $("#deck").addClass("highlight");
             } else if (highlightDeck == "discard") {
                 $("#discard").addClass("highlight");
             }
+        }
+        // Makes sure the info about the player is right
+        $("#points").text(data.players[playerNumber].points);
+        $("#name").text(data.players[playerNumber].user);
+        if (player == data.players[playerNumber].user) {
+            $("#discard").attr("onclick", onclick="highlight('discard')");
+            $("#deck").attr("onclick", onclick="highlight('deck')");
         } else {
-            // Makes sure the info about the player is right
-            $("#points").text(data.players[playerNumber].points);
-            $("#name").text(data.players[playerNumber].user);
-            highlightCard = null;
-            highlightDeck = null;
-            let html = ""
-            Object.keys(cards).forEach(element => {
-                let onClick = "";
-                if (player == data.players[playerNumber].user) {
-                    onClick = `onclick="highlight(${element})" `;
-                }
-                html += `<input type="image" ${onClick}id='card${element}' src='/img/deck/${cards[element]}.jpg'>`;
-            });
-            $("#cards").html(html);
-            cardNumber = data.rules.cardNumber
-            if (player == data.players[playerNumber].user) {
-                $("#discard").attr("onclick", onclick="highlight('discard')");
-                $("#deck").attr("onclick", onclick="highlight('deck')");
-            } else {
-                $("#discard").attr("onclick", onclick="");
-                $("#deck").attr("onclick", onclick="");
-            }
-            // Shows who is eliminated
-            if (data.players[playerNumber].lastMode == "eliminated") {
-                $("#eliminated").show();
-            } else {
-                $("#eliminated").hide();
-            }
+            $("#discard").attr("onclick", onclick="");
+            $("#deck").attr("onclick", onclick="");
+        }
+        // Shows who is eliminated
+        if (data.players[playerNumber].lastMode == "eliminated") {
+            $("#eliminated").show();
+        } else {
+            $("#eliminated").hide();
         }
         // Shows the button when neccessary
         if (highlightDeck && highlightCard && data.action == "switch") {
@@ -181,7 +168,6 @@ function updateUI(changedFocus=false, focus="") { // Used to update the UI's inf
     } else {
         $("#wait").show();
         $("#game").hide();
-        waiting = true;
     }
     return;
 }
@@ -194,10 +180,8 @@ function highlight(element) {
     }
     updateUI()
 }
-var waiting = false;
 var highlightCard = null; // The card currently selected.
 var highlightDeck = null; // The deck currently selected.
-var cardNumber = 0; // The number of cards
 var playerNumber = 0; // The current Player that is looked at in the UI
 var data = {}; // Stores the entirety of the data
 var paused = false; // Checks if the game should not check for newer information.

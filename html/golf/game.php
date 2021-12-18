@@ -65,6 +65,12 @@
                 <h3 class="center"><c id='name'></c>'s Points: <c id='points'></c></h3>
                 <h3 class="center">Points this turn: +<c id='newPoints'></c></h3>
                 <div id='cards' class='card-container'>
+                <?php 
+                $totalCards = $gameInfo["cardNumber"];
+                for ($i=1;$i<=$totalCards;$i++) { // Creates all the cards
+                    echo "<input type='image' onclick='highlight($i)' id='card$i' src='/img/deck/back.jpg'>";
+                }
+                ?>
                 </div>
                 <div class="center">
                     <button id='submitMove' style="display: none; font-size: 40px;" onclick="submitMove()">Submit Move</button>
