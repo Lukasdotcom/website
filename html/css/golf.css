@@ -5,7 +5,7 @@
 }
 
 .card-container > input[type='image'] {
-    width: min(20vh, 50%);
+    width: min(18vh, 50%);
     border-width: 10px;
     margin: 0px;
     border-radius: 20px;
