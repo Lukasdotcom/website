@@ -48,8 +48,10 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
         } else {
             ajax.open("GET", `/api/golf.php?update=${game}&key=${getCookie("user")}`);
             ajax.onload = function() {
-                if (! paused || this.status == 304 ) {
-                    if (this.status == 200 || this.status == 304) {
+                if (! paused) {
+                    if (this.status == 304) {
+                        1
+                    } else if (this.status == 200) {
                         data = JSON.parse(this.response);
                         updateUI(focus=newFocus);
                     } else {
