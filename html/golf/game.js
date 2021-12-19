@@ -37,27 +37,29 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
         const ajax = new XMLHttpRequest();
         if (start) { // Checks if it should clear the cache or not.
             ajax.onload = function() {
-                if (this.status != 200) {
-                    JQerror(this.responseText, 5000);
+                if (! paused) {
+                    if (this.status != 200) {
+                        JQerror(this.responseText, 5000);
+                    }
+                    update(start=false, repeat=repeat, newFocus=newFocus)
                 }
-                update(start=false, repeat=repeat, newFocus=newFocus)
             }
             ajax.open("GET", `/api/golf.php?forceUpdate=${game}&key=${getCookie("user")}`);
         } else {
             ajax.open("GET", `/api/golf.php?update=${game}&key=${getCookie("user")}`);
             ajax.onload = function() {
-                if (this.status == 304) {
-                    1
-                } else if (this.status == 200) {
-                    data = JSON.parse(this.response);
-                    updateUI(focus=newFocus);
-                } else {
-                    JQerror(this.responseText, 5000);
-                }
-                if (repeat) {
-                    setTimeout(function() {
-                        update(start=false, repeat=true)
-                    }, 500);
+                if (! paused || this.status == 304 ) {
+                    if (this.status == 200) {
+                        data = JSON.parse(this.response);
+                        updateUI(focus=newFocus);
+                    } else {
+                        JQerror(this.responseText, 5000);
+                    }
+                    if (repeat) {
+                        setTimeout(function() {
+                            update(start=false, repeat=true)
+                        }, 500);
+                    }
                 }
             }
         }
