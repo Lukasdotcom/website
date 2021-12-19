@@ -1,4 +1,4 @@
-function update() { // Will update the game.
+function update(repeat=false) { // Will update the game.
     var text = "<tr><th>Name</th><Players</th><th>Current Players</th><th>Max Players</th><th>Multiplier for Flipping Last Card</th><th>Start Points</th><th>Password</th></tr>";
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
@@ -10,7 +10,10 @@ function update() { // Will update the game.
         } else {
             JQerror(this.responseText);
         }
-        setTimeout(update, 5000);
+        if (repeat) {
+            setTimeout(update, 5000);
+
+        }
         }
     ajax.open("GET", `/api/golf.php?game=true&key='${getCookie('user')}'`);
     ajax.send(); 
@@ -39,6 +42,6 @@ function joinGame(id) {
 
 
 $(document).ready(function() {
-    update();
+    update(repeat=true);
     $("#create").click(create);
 });
