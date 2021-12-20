@@ -22,7 +22,7 @@ function submitMove() { // Used to submit a move
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (this.status == 200) {
-            update(start=true);
+            update(start=false);
         } else {
             JQerror(this.responseText);
         }

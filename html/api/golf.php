@@ -38,10 +38,13 @@ function reshuffleDeck($game) {
     if (!$deck) {
         $ID = $game["ID"];
         $discard = json_decode($game["discard"]);
-        $deck = array_pop($discard);
+        $newDiscard = array_pop($discard);
         shuffle($discard);
-        $discard = json_encode($discard);
-        $deck = json_encode($deck);
+        $deck = json_encode($discard);
+        $newDiscard = array(
+            $newDiscard
+        );
+        $discard = json_encode($newDiscard);
         dbCommand("UPDATE golfGame SET deck='$deck', discard='$discard' WHERE ID='$ID'");
         $game = dbRequest2("SELECT * FROM golfGame WHERE ID='$ID'")[0];
     }
