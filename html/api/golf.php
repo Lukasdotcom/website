@@ -101,12 +101,14 @@ function readyGame($game) {
 }
 if ($USERNAME) {
     if (array_key_exists("game", $_GET)){ // Gets the log
-        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE players != playersToStart");
+        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='root') ORDER BY turnStartTime DESC");
+        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE players != playersToStart ORDER BY players DESC");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
                 $data[$id]["password"] = true;
             }
         }
+        $data = array_merge($playing, $data);
         echo json_encode($data);
     } elseif (array_key_exists("update", $_GET)) {
         $id = $_GET["update"];

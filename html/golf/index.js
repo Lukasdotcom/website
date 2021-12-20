@@ -1,10 +1,14 @@
 function update(repeat=false) { // Will update the game.
-    var text = "<tr><th>Name</th><Players</th><th>Current Players</th><th>Max Players</th><th>Multiplier for Flipping Last Card</th><th>Start Points</th><th>Password</th></tr>";
+    var text = "<tr><th>Name</th><Players</th><th>Current Players</th><th>Max Players</th><th>Multiplier for Flipping Last Card</th><th>Points to Out</th><th>Password</th><th>Cards</th><th>Cards to flip</th></tr>";
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
             JSON.parse(this.response).forEach(element => {
-                text += `<tr><td>${element.name}</td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.multiplierForFlip}</td><td>${element.pointsToEnd}</td><td>${element.password ? `true` : "false"}</td><td><button onClick='joinGame(${element.ID})'>Join</button></td></tr>`;
+                let joinText = "Join";
+                if (element.players == element.playersToStart) {
+                    joinText = "Continue";
+                }
+                text += `<tr><td>${element.name} <button onClick='joinGame(${element.ID})'>${joinText}</button></td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.multiplierForFlip}</td><td>${element.pointsToEnd}</td><td>${element.password ? `true` : "false"}</td><td>${element.cardNumber}</td><td>${element.flipNumber}</td></tr>`;
             });
             $("#games").html(text);
         } else {
