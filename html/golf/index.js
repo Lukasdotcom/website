@@ -11,7 +11,9 @@ function update(repeat=false) { // Will update the game.
             JQerror(this.responseText);
         }
         if (repeat) {
-            setTimeout(update, 5000);
+            setTimeout(function() {
+                update(repeat=true);
+            }, 5000);
 
         }
         }
