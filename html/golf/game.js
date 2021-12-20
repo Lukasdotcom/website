@@ -23,6 +23,8 @@ function submitMove() { // Used to submit a move
     ajax.onload = function() {
         if (this.status == 200) {
             update(start=false);
+            highlightCard = null;
+            highlightDeck = null;
         } else {
             JQerror(this.responseText);
         }
@@ -81,6 +83,8 @@ function updateUI(focus="") { // Used to update the UI's info
             $("#continue").click(function() {
                 $("#continue").off("click");
                 $("#continue").hide();
+                highlightCard = null;
+                highlightDeck = null;
                 let focusedPlayer = data.players[playerNumber].user;
                 paused = false;
                 update(start=true, repeat=false, newFocus=focusedPlayer);
