@@ -42,7 +42,11 @@
             // Decodes the prefereneces
             $color = $logType["color"];
             $checked = "checked";
-            echo "<div style='color: $color;' id='$type.text'><input type='checkbox' id='$type' name='$type' $checked>$type; Color: <input type='color' value='$color' id='$type.color'><button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button></div>";
+            echo "<div style='color: $color;' id='$type.text'>
+                    <input type='checkbox' onClick='search($(`#searchText`).val())' id='$type' name='$type' $checked>
+                    $type; Color: <input type='color' onClick='search($(`#searchText`).val())' value='$color' id='$type.color'>
+                    <button type='button' onClick='resetColor(document.getElementById(`searchText`).value, `$type`, `$id`)'>Reset Color</button>
+                </div>";
             $id++;
         }
         if ($PRIVILEGE["restartServer"]) {
@@ -56,7 +60,7 @@
         } else {
             echo "<script>var deleteLog = false</script>";
         }
-        if ($PRIVILEGE["serverStatus"]) {
+        if ($PRIVILEGE["serverStatus"]) { // Used to detect if the server has recently had an error and displays it to the user
             echo "<h2 class='offline' style='display: none;'>You are offline</h2>";
             echo "<h3>Server Status</h3>";
             echo "<p>Time: <c id='uptime'></c></p>";
