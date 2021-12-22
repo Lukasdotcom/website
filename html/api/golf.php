@@ -101,7 +101,7 @@ function readyGame($game) {
 }
 if ($USERNAME) {
     if (array_key_exists("game", $_GET)){ // Gets the log
-        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='root') ORDER BY turnStartTime DESC");
+        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
         $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE players != playersToStart ORDER BY players DESC");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
@@ -317,15 +317,28 @@ if ($USERNAME) {
         if (array_key_exists("password", $_POST)) {
             $password = $_POST["password"];
         }
-        $cardLimit = 100;
-        $playerLimit = 100;
-        if ($name and $cardNumber>0 and $cardNumber<$cardLimit and $flipNumber>0 and $flipNumber<$cardNumber and $playersToStart>0 and $playersToStart<$playerLimit and $pointsToEnd>0) { // Makes sure that the game has valid inputs.
+        if (!$name) {
+            http_response_code(400);
+            echo "No game name given";
+        } elseif ($cardNumber <= 0) {
+            http_response_code(400);
+            echo "You need more than 0 cards";
+        } elseif ($flipNumber <= 0) {
+            http_response_code(400);
+            echo "You need to flip more than 0 cards";
+        } elseif ($playersToStart <= 0) {
+            http_response_code(400);
+            echo "You need to have more than 0 players";
+        } elseif ($pointsToEnd <= 0) {
+            http_response_code(400);
+            echo "The points to end need to be more than 0";
+        } elseif ($playersToStart * $cardNumber >= 52) {
+            http_response_code(400);
+            echo "There are not enough cards in a deck for that amount of players and cards";
+        } else {
             dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time)");
             echo "Created Game";
-            writeLog(14, "$USERNAME created game for $playersToStart players and $cardNumber cards with ip of $address");
-        } else {
-            http_response_code(400);
-            echo "ERROR invalid settings";
+            writeLog(14, "$USERNAME created game for $playersToStart players and $cardNumber cards and name $name with ip of $address");
         }
     } elseif (array_key_exists("forceUpdate", $_GET)) { // Used to force the update the next time an update is called
         $id = $_GET["forceUpdate"];
