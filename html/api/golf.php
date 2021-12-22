@@ -102,7 +102,7 @@ function readyGame($game) {
 if ($USERNAME) {
     if (array_key_exists("game", $_GET)){ // Gets the log
         $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
-        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE players != playersToStart ORDER BY players DESC");
+        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE players != playersToStart and NOT EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY players DESC");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
                 $data[$id]["password"] = true;
