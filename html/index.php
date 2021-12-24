@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 
 <html>
-
+<?php 
+if (! file_exists("config.json")) {
+    echo '<link rel="stylesheet" type="text/css" href="/css/website.css" />';
+    echo "<h2>Missing configuration please input configuration</h2>";
+}
+?>
 <head>
     <meta name="msvalidate.01" content="52F3C351645EB7619858FA8FCB20C441" />
     <title>
