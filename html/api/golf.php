@@ -127,6 +127,9 @@ if ($USERNAME) {
                     if ($selfPlayer["lastMode"] == "waiting") { // Makes sure the server knows that the player is now ready.
                         if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='waiting'")) { // Starts the game if neccessary.
                             $game = readyGame($id);
+                            $players = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' ORDER BY orderID ASC");
+                            $selfPlayer =  dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME'")[0];
+                            $selfPlayerID = $selfPlayer["orderID"];
                         }
                         dbCommand("UPDATE golfGamePlayers SET lastMode='' WHERE gameID='$id' and user='$USERNAME'");
                     }
