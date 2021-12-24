@@ -121,6 +121,10 @@ if ($USERNAME) {
                     header('alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400, h3-28=":443"; ma=86400, h3-27=":443"; ma=86400', true);
                     http_response_code(304);
                 } else if ($game["players"] >= $game["playersToStart"]) {
+                    while (dbRequest2("SELECT * FROM golfGame WHERE ID='$id' and locked")) {
+                        sleep(0.01);
+                    }
+                    dbCommand("UPDATE golfGame SET locked=1 WHERE ID='$id'");
                     $players = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' ORDER BY orderID ASC");
                     $selfPlayer =  dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME'")[0];
                     $selfPlayerID = $selfPlayer["orderID"];
@@ -208,6 +212,7 @@ if ($USERNAME) {
                     } else {
                         echo "[]"; 
                     }
+                    dbCommand("UPDATE golfGame SET locked=0 WHERE ID='$id'");
                 } else {
                     echo "[]";
                 }
