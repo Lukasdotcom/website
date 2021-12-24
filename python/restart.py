@@ -35,44 +35,46 @@ def readFile(location):
     with open(location) as f:
         return json.load(f)
 
-
-# Looks at the configuration at understands the config
-location = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
-    "websiteRoot"
-]
-configuration = readFile(location + "/config.json")
-developmentMachine = configuration["developer"]
-# Makes sure that the permissions are not wrong
-if not developmentMachine:
-    os.system("chown -R www-data:www-data " + location)
-    os.system("chmod 770 -R " + location)
-    os.system("chown -R mysql:mysql /var/lib/mysql")
-    os.system("chmod 770 -R /var/lib/mysql")
-f = open(location + "/maintenance-mode", "w")
-f.close()
-while (
-    True
-):  # Imports this library in a slow way because it is a pain and likes to not work
-    try:
-        import database
-        break
-    except:
-        continue
-internetOnDeafult = ["23", "0", "5", "0", "2147483000", "1"]
-internet = False
-if not skipGPIO:
-    # Will setup the gpio button
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(8, GPIO.OUT)
-    # Will setup the GPIO fan
-    GPIO.setup(16, GPIO.OUT)
-    GPIO.output(16, GPIO.LOW)
 try:
+    # Looks at the configuration at understands the config
+    location = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
+        "websiteRoot"
+    ]
+    configuration = readFile(location + "/config.json")
+    developmentMachine = configuration["developer"]
+    # Makes sure that the permissions are not wrong
+    if not developmentMachine:
+        os.system("chown -R www-data:www-data " + location)
+        os.system("chmod 770 -R " + location)
+        os.system("chown -R mysql:mysql /var/lib/mysql")
+        os.system("chmod 770 -R /var/lib/mysql")
+    f = open(location + "/maintenance-mode", "w")
+    f.close()
+    while (
+        True
+    ):  # Imports this library in a slow way because it is a pain and likes to not work
+        try:
+            import database
+            break
+        except:
+            continue
+    internetOnDeafult = ["23", "0", "5", "0", "2147483000", "1"]
+    internet = False
+    if not skipGPIO:
+        # Will setup the gpio button
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(8, GPIO.OUT)
+        # Will setup the GPIO fan
+        GPIO.setup(16, GPIO.OUT)
+        GPIO.output(16, GPIO.LOW)
 
     def writeLog(message, kind):  # Will automatically add to the log
-        database.appendValue("log", [str(kind), message, str(time.time())])
         print(message, time.time())
+        try:
+            database.appendValue("log", [str(kind), message, str(time.time())])
+        except:
+            print("Could not log message")
 
     # Checks if an action is neccessary to do on the wifi
 
@@ -329,29 +331,33 @@ try:
             if time.time() % 60 <= 2:
                 break
 except Exception as e:
-    with open(location + "error.log", "w") as f:
-        f.write(error(e))
-    f = open(location + "maintenance-mode", "w")
-    f.close()
-    if not developmentMachine:
-        os.system("chmod 750 -R " + location)
-        os.system("chown -R www-data:www-data " + location)
-    if skipGPIO:
-        raise Exception
-    else:
-        while True:
-            GPIO.output(8, GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(8, GPIO.LOW)
-            if GPIO.input(10):
-                time.sleep(0.5)
+    try:
+        with open(location + "error.log", "w") as f:
+            f.write(error(e))
+        f = open(location + "maintenance-mode", "w")
+        f.close()
+        if not developmentMachine:
+            os.system("chmod 750 -R " + location)
+            os.system("chown -R www-data:www-data " + location)
+        if skipGPIO:
+            raise Exception
+        else:
+            while True:
+                GPIO.output(8, GPIO.HIGH)
+                time.sleep(1)
+                GPIO.output(8, GPIO.LOW)
                 if GPIO.input(10):
-                    writeLog("Server is being restarted through button", 12)
-                    for x in range(10):
-                        GPIO.output(8, GPIO.HIGH)
-                        time.sleep(0.1)
-                        GPIO.output(8, GPIO.LOW)
-                        time.sleep(0.1)
-                    os.system(f"python3 {__file__}")
-                    exit()
+                    time.sleep(0.5)
+                    if GPIO.input(10):
+                        writeLog("Server is being restarted through button", 12)
+                        for x in range(10):
+                            GPIO.output(8, GPIO.HIGH)
+                            time.sleep(0.1)
+                            GPIO.output(8, GPIO.LOW)
+                            time.sleep(0.1)
+                        os.system(f"python3 {__file__}")
+                        exit()
+                time.sleep(1)
+    except Exception:
+        while True:
             time.sleep(1)
