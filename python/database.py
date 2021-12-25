@@ -24,17 +24,19 @@ def trueSearch(command): # Will just execute sql command and return result
     return value
 
 
-def connect():
+def connect(database=""):
     websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
         "websiteRoot"
     ]
     dbInfo = readFile(websiteRoot + "config.json")
+    if not database:
+        database = dbInfo["database"]["name"]
     try:
         db = mysql.connect(
             host="localhost",
             passwd=dbInfo["database"]["password"],
             user=dbInfo["database"]["username"],
-            database=dbInfo["database"]["name"],
+            database=database,
         )
     except: # Used to automatically create the user and database
         path = __file__[: __file__.rindex("/") + 1]
@@ -52,7 +54,7 @@ def connect():
             host="localhost",
             passwd=dbInfo["database"]["password"],
             user=dbInfo["database"]["username"],
-            database=dbInfo["database"]["name"],
+            database=database,
         )
         appendValue("log", [9, "Created the user for the database", str(time.time())])
     cursor = db.cursor()
@@ -147,13 +149,7 @@ def repair():  # Repairs all tables
         "websiteRoot"
     ]
     dbInfo = readFile(websiteRoot + "config.json")
-    db2 = mysql.connect(
-        host="localhost",
-        passwd=dbInfo["database"]["password"],
-        user=dbInfo["database"]["username"],
-        database="INFORMATION_SCHEMA",
-    )
-    cursor2 = db2.cursor()
+    db2, cursor2 = connect("INFORMATION_SCHEMA")
     databaseDict = {
         "cookies": [["cookie", 0], ["username", 0], ["expire", 1]],
         "internet": [
