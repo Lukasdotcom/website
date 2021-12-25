@@ -37,10 +37,14 @@ def readFile(location):
 
 try:
     # Looks at the configuration at understands the config
-    location = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
-        "websiteRoot"
-    ]
-    configuration = readFile(location + "/config.json")
+    try:
+        location = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
+            "websiteRoot"
+        ]
+        configuration = readFile(location + "/config.json")
+    except:
+        print("Could not find config file")
+        raise Exception
     developmentMachine = configuration["developer"]
     # Makes sure that the permissions are not wrong
     if not developmentMachine:
