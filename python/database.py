@@ -36,12 +36,11 @@ def connect():
             user=dbInfo["database"]["username"],
             database=dbInfo["database"]["name"],
         )
-    except: # Used to automatically create the user and 
+    except: # Used to automatically create the user and database
         path = __file__[: __file__.rindex("/") + 1]
         with open(path + "fix.sql") as f:
             text = f.read()
         text = text.replace("{username}", dbInfo["database"]["username"])
-        print(text)
         text = text.replace("{password}", dbInfo["database"]["password"])
         text = text.replace("{database}", dbInfo["database"]["name"])
         with open(path + "fix2.sql", 'w') as f:
