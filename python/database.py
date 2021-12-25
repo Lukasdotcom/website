@@ -2,7 +2,7 @@
 import mysql.connector as mysql
 import os
 import json
-
+import time
 
 def readFile(
     location,
@@ -29,12 +29,33 @@ def connect():
         "websiteRoot"
     ]
     dbInfo = readFile(websiteRoot + "config.json")
-    db = mysql.connect(
-        host="localhost",
-        passwd=dbInfo["database"]["password"],
-        user=dbInfo["database"]["username"],
-        database=dbInfo["database"]["name"],
-    )
+    try:
+        db = mysql.connect(
+            host="localhost",
+            passwd=dbInfo["database"]["password"],
+            user=dbInfo["database"]["username"],
+            database=dbInfo["database"]["name"],
+        )
+    except: # Used to automatically create the user and 
+        path = __file__[: __file__.rindex("/") + 1]
+        with open(path + "fix.sql") as f:
+            text = f.read()
+        text = text.replace("{username}", dbInfo["database"]["username"])
+        print(text)
+        text = text.replace("{password}", dbInfo["database"]["password"])
+        text = text.replace("{database}", dbInfo["database"]["name"])
+        with open(path + "fix2.sql", 'w') as f:
+            f.write(text)
+        os.system(f"mysql < {path}fix2.sql")
+        os.remove(path + "fix2.sql")
+        print("Created the user for the database", time.time())
+        db = mysql.connect(
+            host="localhost",
+            passwd=dbInfo["database"]["password"],
+            user=dbInfo["database"]["username"],
+            database=dbInfo["database"]["name"],
+        )
+        appendValue("log", [9, "Created the user for the database", str(time.time())])
     cursor = db.cursor()
     return db, cursor
 
