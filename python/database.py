@@ -56,7 +56,7 @@ def connect(database=""):
             user=dbInfo["database"]["username"],
             database=database,
         )
-        appendValue("log", [9, "Created the user for the database", str(time.time())])
+        appendValue("log", ["9", "Created the user for the database", str(time.time())])
     cursor = db.cursor()
     return db, cursor
 
