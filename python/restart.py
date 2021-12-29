@@ -26,7 +26,6 @@ def temp(): # Returns the temprature of the RPI
 def writeFile(location, info):  # Will write info in json format to a file
     with open(location, "w") as f:
         json.dump(info, f)
-    if not developmentMachine:
         os.system("chown -R www-data:www-data " + location)
 
 
@@ -47,11 +46,8 @@ try:
         raise Exception
     developmentMachine = configuration["developer"]
     # Makes sure that the permissions are not wrong
-    if not developmentMachine:
-        os.system("chown -R www-data:www-data " + location)
-        os.system("chmod 770 -R " + location)
-        os.system("chown -R mysql:mysql /var/lib/mysql")
-        os.system("chmod 770 -R /var/lib/mysql")
+    os.system("chown -R www-data:www-data " + location)
+    os.system("chmod 750 -R " + location)
     f = open(location + "/maintenance-mode", "w")
     f.close()
     while (
@@ -200,9 +196,7 @@ try:
         time.sleep(0.5)
         change = time.time() - times
         times = time.time()
-        if (
-            developmentMachine
-        ):  # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
+        if (developmentMachine):  # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
             break
     # Will turn on the internet to make sure that it is on
     if not developmentMachine:
@@ -345,9 +339,8 @@ except Exception as e:
             f.write(error(e))
         f = open(location + "maintenance-mode", "w")
         f.close()
-        if not developmentMachine:
-            os.system("chmod 750 -R " + location)
-            os.system("chown -R www-data:www-data " + location)
+        os.system("chmod 750 -R " + location)
+        os.system("chown -R www-data:www-data " + location)
         if skipGPIO:
             raise Exception
         else:
