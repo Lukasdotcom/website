@@ -243,8 +243,13 @@ try:
                 if developmentMachine:
                     writeLog("Doing fake backup", 9)
                 else:
-                    database.backUp("/var/lib/mysql", "/backup/main", False)
-                    database.backUp("/var/lib/mysql", "/backup/reserve", False)
+                    timeData = callTime()
+                    month = timeData[0]
+                    day = timeData[1]
+                    year = timeData[2]
+                    file = f"{month}-{day}-{year}.sql"
+                    writeLog("Ran backup on server and saved it to {file}", 12)
+                    database.backUp("/backup", file)
             except:
                 writeLog("Database backup failed", 9)
             try:
@@ -363,5 +368,6 @@ except Exception as e:
                         exit()
                 time.sleep(1)
     except Exception:
+        print("crash")
         while True:
             time.sleep(1)

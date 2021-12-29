@@ -4,9 +4,7 @@ import os
 import json
 import time
 
-def readFile(
-    location,
-):  # Loads the location of a certain file and returns that file if it is json
+def readFile(location):  # Loads the location of a certain file and returns that file if it is json
     with open(location) as f:
         return json.load(f)
 
@@ -107,21 +105,22 @@ def appendValue(table, value, coulumns=""):  # Will add a value to a table
     db.close()
 
 
-# Will backup(restore does nothing right now) a database
-def backUp(dbLocation, location, restore):
-    os.system("sudo service mysql stop")
-    command = "cp -pr "
-    if restore:
-        command += location
-        command += " "
-        command += dbLocation
-    else:
-        command += dbLocation
-        command += " "
-        command += location
-    command += " -r"
-    os.system(command)
-    os.system("sudo service mysql start")
+# Will backup a database to a certain location with a name of choosing
+def backUp(location, fileName):
+    websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
+        "websiteRoot"
+    ]
+    dbInfo = readFile(websiteRoot + "config.json")
+    username = dbInfo["database"]["username"]
+    password = dbInfo["database"]["password"]
+    database = dbInfo["database"]["name"]
+    locationdata = f"{location}/{fileName}"
+    print(locationdata)
+    os.system("service mysql stop")
+    if (not os.path.exists(location)):
+        os.system(f"mkdir {location}")
+    os.system(f"mysqldump -u {username} --password={password} --result-file={locationdata} {database}")
+    os.system("service mysql start")
 
 
 def search(table, where, search="*"):  # searches for value in table
