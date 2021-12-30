@@ -242,7 +242,7 @@ try:
                     day = timeData[1]
                     year = timeData[2]
                     file = f"{month}-{day}-{year}.sql"
-                    writeLog("Ran backup on server and saved it to {file}", 12)
+                    writeLog(f"Ran backup on server and saved it to {file}", 12)
                     database.backUp("/backup", file)
             except:
                 writeLog("Database backup failed", 9)

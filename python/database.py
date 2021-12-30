@@ -116,11 +116,9 @@ def backUp(location, fileName):
     database = dbInfo["database"]["name"]
     locationdata = f"{location}/{fileName}"
     print(locationdata)
-    os.system("service mysql stop")
     if (not os.path.exists(location)):
         os.system(f"mkdir {location}")
     os.system(f"mysqldump -u {username} --password={password} --result-file={locationdata} {database}")
-    os.system("service mysql start")
 
 
 def search(table, where, search="*"):  # searches for value in table
