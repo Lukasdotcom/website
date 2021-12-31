@@ -158,7 +158,7 @@ try:
                 writeLog("Doing fake backup", 9)
             else:
                 timeData = callTime()
-                month = timeData[0]
+                month = timeData[6]
                 day = timeData[1]
                 year = timeData[2]
                 hour = timeData[3]
