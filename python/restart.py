@@ -158,12 +158,12 @@ try:
                 writeLog("Doing fake backup", 9)
             else:
                 timeData = callTime()
-                month = timeData[6]
+                month = timeData[0]
                 day = timeData[1]
                 year = timeData[2]
                 hour = timeData[3]
                 minute = timeData[4]
-                file = f"{month}-{day}-{year}at{hour}:{minute}.sql"
+                file = f"{int(time.time())}or{month}-{day}-{year}at{hour}:{minute}.sql"
                 database.backUp("/backup", file)
                 writeLog(f"Ran backup on server and saved it to {file}", 12)
         except:
