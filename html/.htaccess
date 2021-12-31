@@ -24,6 +24,10 @@ RewriteRule $ /maintenance.php [L]
    order allow,deny
    deny from all
 </Files>
+<Files backups.json>
+   order allow,deny
+   deny from all
+</Files>
 
 #Used to only allow certain ip addresses. This is a list of cloudflares and internal ip addresses
 <RequireAll>

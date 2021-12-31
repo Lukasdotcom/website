@@ -14,6 +14,7 @@ import traceback
 import os
 import datetime
 import sys
+import glob
 
 
 def error(e):
@@ -169,7 +170,20 @@ try:
                 writeLog(f"Ran backup on server and saved it to {file}", 18)
         except:
             writeLog("Database backup failed", 9)
-        
+        backupLocation = configuration["database"]["backupLocation"]
+        files = glob.glob(f"{backupLocation}/*.sql")
+        for x in range(len(files)):
+            files[x] = files[x][len(backupLocation)+1:]
+        for x in files:
+            try:
+                if int(x[:x.find("or")]) < time.time() - configuration["database"]["backupLength"]:
+                    os.remove(f"{backupLocation}/{x}")
+            except:
+                os.remove(f"{backupLocation}/{x}")
+        files = glob.glob(f"{backupLocation}/*.sql")
+        for x in range(len(files)):
+            files[x] = files[x][len(backupLocation)+1:]
+        writeFile(location + "/backups.json", files)
         # Will repair all databases and update them
         repaired = database.repair()
         for x in repaired:
