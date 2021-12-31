@@ -153,6 +153,21 @@ try:
             )
 
     def dailyMaintenance():  # Will run daily and on boot
+        try:
+            if developmentMachine:
+                writeLog("Doing fake backup", 9)
+            else:
+                timeData = callTime()
+                month = timeData[0]
+                day = timeData[1]
+                year = timeData[2]
+                hour = timeData[3]
+                minute = timeData[4]
+                file = f"{month}-{day}-{year}at{hour}:{minute}.sql"
+                database.backUp("/backup", file)
+                writeLog(f"Ran backup on server and saved it to {file}", 12)
+        except:
+            writeLog("Database backup failed", 9)
         # Will repair all databases and update them
         repaired = database.repair()
         for x in repaired:
@@ -233,19 +248,6 @@ try:
         if lastBackup != callTime()[1]:
             f = open(location + "maintenance-mode", "w")
             f.close()
-            try:
-                if developmentMachine:
-                    writeLog("Doing fake backup", 9)
-                else:
-                    timeData = callTime()
-                    month = timeData[0]
-                    day = timeData[1]
-                    year = timeData[2]
-                    file = f"{month}-{day}-{year}.sql"
-                    writeLog(f"Ran backup on server and saved it to {file}", 12)
-                    database.backUp("/backup", file)
-            except:
-                writeLog("Database backup failed", 9)
             try:
                 # Will run the daily script
                 dailyMaintenance()
