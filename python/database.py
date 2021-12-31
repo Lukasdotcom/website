@@ -106,7 +106,7 @@ def appendValue(table, value, coulumns=""):  # Will add a value to a table
 
 
 # Will backup a database to a certain location with a name of choosing
-def backUp(location, fileName):
+def backUp(fileName):
     websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
         "websiteRoot"
     ]
@@ -114,8 +114,8 @@ def backUp(location, fileName):
     username = dbInfo["database"]["username"]
     password = dbInfo["database"]["password"]
     database = dbInfo["database"]["name"]
+    location = dbInfo["database"]["backupLocation"]
     locationdata = f"{location}/{fileName}"
-    print(locationdata)
     if (not os.path.exists(location)):
         os.system(f"mkdir {location}")
     os.system(f"mysqldump -u {username} --password={password} --result-file={locationdata} {database}")

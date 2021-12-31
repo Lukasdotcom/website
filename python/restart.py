@@ -164,7 +164,7 @@ try:
                 hour = timeData[3]
                 minute = timeData[4]
                 file = f"{int(time.time())}or{month}-{day}-{year}at{hour}:{minute}.sql"
-                database.backUp("/backup", file)
+                database.backUp(file)
                 writeLog(f"Ran backup on server and saved it to {file}", 12)
         except:
             writeLog("Database backup failed", 9)
