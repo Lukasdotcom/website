@@ -47,8 +47,10 @@ try:
         print("Could not find config file")
         raise Exception
     developmentMachine = configuration["developer"]
+    backupLocation = configuration["database"]["backupLocation"]
     # Makes sure that the permissions are not wrong
     os.system("chown -R www-data:www-data " + location)
+    os.system(f"chmod 644 -R {backupLocation}")
     os.system("chmod 750 -R " + location)
     f = open(location + "/maintenance-mode", "w")
     f.close()
