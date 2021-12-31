@@ -88,5 +88,10 @@
         "type": "17",
         "name": "Golf New Round",
         "color": "#006600"
+    },
+    {
+        "type": "18",
+        "name": "Backup",
+        "color": "#009966"
     }
 ]

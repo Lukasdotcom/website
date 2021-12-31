@@ -155,7 +155,7 @@ try:
     def dailyMaintenance():  # Will run daily and on boot
         try:
             if developmentMachine:
-                writeLog("Doing fake backup", 9)
+                writeLog("Doing fake backup", 18)
             else:
                 timeData = callTime()
                 month = timeData[0]
@@ -165,7 +165,7 @@ try:
                 minute = timeData[4]
                 file = f"{int(time.time())}or{month}-{day}-{year}at{hour}:{minute}.sql"
                 database.backUp(file)
-                writeLog(f"Ran backup on server and saved it to {file}", 12)
+                writeLog(f"Ran backup on server and saved it to {file}", 18)
         except:
             writeLog("Database backup failed", 9)
         # Will repair all databases and update them
@@ -228,7 +228,7 @@ try:
     except:
         info = [callTime(), callTime()]
     writeFile(location + "data.json", info)
-    # Makes sure that a backup does not happen on boot
+    # Makes sure that an extra backup does not happen on boot
     lastBackup = callTime()[1]
     try:
         os.remove(location + "maintenance-mode")
