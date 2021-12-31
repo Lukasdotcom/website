@@ -13,6 +13,7 @@ import time
 import traceback
 import os
 import datetime
+import sys
 
 
 def error(e):
@@ -168,6 +169,7 @@ try:
                 writeLog(f"Ran backup on server and saved it to {file}", 18)
         except:
             writeLog("Database backup failed", 9)
+        
         # Will repair all databases and update them
         repaired = database.repair()
         for x in repaired:
@@ -203,16 +205,17 @@ try:
     times = time.time()
     change = 0
     startTime = times
-    while change < 1:
-        totalTime = time.time() - startTime
-        if totalTime > 60:
-            writeLog("Time may be wrong; time check failed", 9)
-            break
-        time.sleep(0.5)
-        change = time.time() - times
-        times = time.time()
-        if (developmentMachine):  # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
-            break
+    if len(sys.argv) == 1:
+        while change < 1:
+            totalTime = time.time() - startTime
+            if totalTime > 60:
+                writeLog("Time may be wrong; time check failed", 9)
+                break
+            time.sleep(0.5)
+            change = time.time() - times
+            times = time.time()
+            if (developmentMachine):  # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
+                break
     # Will turn on the internet to make sure that it is on
     if not developmentMachine:
         internetOn = router.turnOnInternet()
@@ -295,7 +298,7 @@ try:
             if os.path.isfile(location + "restart.json"):
                 writeLog("Server is being restarted", 12)
                 os.remove(location + "restart.json")
-                os.system(f"python3 {__file__}")
+                os.system(f"python3 {__file__} restart")
                 exit()
             if os.path.isfile(location + "update.json"):
                 writeLog("Server is being updated.", 12)
