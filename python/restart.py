@@ -184,10 +184,6 @@ try:
     # Will add to log if the GPIO library exists
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
-    # Will make sure that the internal clock is right for 2 minutes
-    times = time.time()
-    change = 0
-    startTime = times
     while True:  # will wait until connected to internet
         try:
             urllib.request.urlopen("https://google.com")
@@ -203,6 +199,10 @@ try:
                 continue
     # Runs stuff that runs every boot
     dailyMaintenance()
+    # Will make sure that the internal clock is right for 1 minute
+    times = time.time()
+    change = 0
+    startTime = times
     while change < 1:
         totalTime = time.time() - startTime
         if totalTime > 60:
