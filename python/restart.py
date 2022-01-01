@@ -187,13 +187,13 @@ try:
             files[x] = files[x][len(backupLocation)+1:]
         writeFile(location + "/backups.json", files)
         # Will repair all databases and update them
-        repaired = database.repair()
+        repaired, updates = database.repair()
+        for x in updates:
+            writeLog(f"Database updated to version {x}", 19)
         for x in repaired:
             writeLog(f"Database {x} was corrupted/missing and was restored", 9)
         # Will clean the golf games database
-        deleted, updates = database.trueSearch(f"SELECT ID FROM golfGame WHERE turnStartTime<{time.time()-86400}")
-        for x in updates:
-            writeLog(f"Database updated to version {x}", 19)
+        deleted = database.trueSearch(f"SELECT ID FROM golfGame WHERE turnStartTime<{time.time()-86400}")
         for x in deleted:
             writeLog(f"Game #{x[0]} deleted because it is too old", 16)
         database.command(f"DELETE FROM golfGame WHERE turnStartTime<{time.time()-86400}") # Removes games that have not been touched for more than 24 hours
