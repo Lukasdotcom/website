@@ -155,21 +155,19 @@ try:
                 "internet", ["2", "1", "2", "1", str(
                     time.time() + 3600), str(minimum)]
             )
-
+    def backupDatabase(): # Used to backup the database
+        timeData = callTime()
+        month = timeData[0]
+        day = timeData[1]
+        year = timeData[2]
+        hour = timeData[3]
+        minute = timeData[4]
+        file = f"{int(time.time())}or{month}-{day}-{year}at{hour}:{minute}.sql"
+        database.backUp(file)
     def dailyMaintenance():  # Will run daily and on boot
         try:
-            if developmentMachine:
-                writeLog("Doing fake backup", 18)
-            else:
-                timeData = callTime()
-                month = timeData[0]
-                day = timeData[1]
-                year = timeData[2]
-                hour = timeData[3]
-                minute = timeData[4]
-                file = f"{int(time.time())}or{month}-{day}-{year}at{hour}:{minute}.sql"
-                database.backUp(file)
-                writeLog(f"Ran backup on server and saved it to {file}", 18)
+            backupDatabase()
+            writeLog(f"Ran backup on server and saved it to {file}", 18)
         except:
             writeLog("Database backup failed", 9)
         backupLocation = configuration["database"]["backupLocation"]
@@ -326,6 +324,26 @@ try:
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull > {location}updateInfo.log")
                 os.system(f"chown www-data:www-data {location}updateInfo.log")
                 writeLog("Server updated successfully.", 19)
+            if os.path.isfile(location + "restore.json"): # Used to restore a previous version of the database
+                try:
+                    file = readFile(location + "restore.json")
+                    f = open(location + "maintenance-mode", "w")
+                    backups = readFile(location + "backups.json")
+                    if file not in backups:
+                        writeLog(f"Could not find backup", 9)
+                        raise Exception
+                    f.close()
+                    backupDatabase()
+                    database.restore(file)
+                    dailyMaintenance()
+                    writeLog(f"Backup {file} was succesfully restored", 18)
+                    os.remove(location + "restore.json")
+                except:
+                    writeLog(f"Backup for {file} failed", 9)
+                try:
+                    os.remove(location + "maintenance-mode")
+                except:
+                    1
             if not skipGPIO:
                 # Checks if the fans need to turn on or off
                 if temp() > configuration["fanStart"] and not fanOn:

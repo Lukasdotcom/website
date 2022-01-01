@@ -54,7 +54,7 @@
             header("Refresh:1; url=/electricity.php", true);
         } else {
             echo '<form method="post" action="/electricity.php">
-                    <button name="reset" value="True" type="submit<br>">reset outage reporter</button>
+                    <button name="reset" value="True" type="submit">reset outage reporter</button>
                 </form>';
         }
     }

@@ -120,6 +120,15 @@ def backUp(fileName):
         os.system(f"mkdir {location}")
     os.system(f"mysqldump -u {username} --password={password} --result-file={locationdata} {database}")
 
+def restore(fileName):
+    websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
+        "websiteRoot"
+    ]
+    dbInfo = readFile(websiteRoot + "config.json")
+    location = dbInfo["database"]["backupLocation"]
+    database = dbInfo["database"]["name"]
+    locationdata = f"{location}/{fileName}"
+    os.system(f"mysql {database} < {locationdata}")
 
 def search(table, where, search="*"):  # searches for value in table
     db, cursor = connect()

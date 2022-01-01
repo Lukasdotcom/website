@@ -41,6 +41,8 @@ if (array_key_exists("uptime", $_GET)) { # Will return some status info for a se
             echo "No recent update";
             http_response_code(404);
         }
+    } else {
+        missingPrivilege($USERNAME);
     }
 } else {
     http_response_code(400);
