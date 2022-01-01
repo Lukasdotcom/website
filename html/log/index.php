@@ -54,6 +54,7 @@
         }
         if ($PRIVILEGE["updateServer"]) {
             echo "<button onClick='update()' >Update Server</button>";
+            echo "<p id='updateText'>No recent update</p>";
         }
         if ($PRIVILEGE["deleteLog"]) {
             echo "<script>var deleteLog = true</script>";

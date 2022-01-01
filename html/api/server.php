@@ -26,11 +26,21 @@ if (array_key_exists("uptime", $_GET)) { # Will return some status info for a se
     }
 } elseif (array_key_exists("update", $_POST)) { // To delete an entry in log
     if ($PRIVILEGE["updateServer"]) {
+        unlink("../updateInfo.log");
         echo "Updating.";
         $update = fopen("../update.json", "w");
         fclose($update);
     } else {
         missingPrivilege($USERNAME);
+    }
+} elseif (array_key_exists("update", $_GET)) { // Gives the update text info for the previous update(the git response)
+    if ($PRIVILEGE["updateServer"]) {
+        if (file_exists("../updateInfo.log")) {
+            echo file_get_contents("../updateInfo.log");
+        } else {
+            echo "No recent update";
+            http_response_code(404);
+        }
     }
 } else {
     http_response_code(400);

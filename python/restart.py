@@ -311,16 +311,18 @@ try:
         # Will check every 2 seconds if the button is pressed and when it is show it on the led and then wait another second to verify that it is an actual press
         while True:
             time.sleep(2)
-            if os.path.isfile(location + "restart.json"):
+            if os.path.isfile(location + "restart.json"): # Used to restart the server
                 writeLog("Server is being restarted", 12)
                 os.remove(location + "restart.json")
                 os.system(f"python3 {__file__} restart")
                 exit()
-            if os.path.isfile(location + "update.json"):
+            if os.path.isfile(location + "update.json"): # Used to update the server
                 writeLog("Server is being updated.", 12)
                 os.remove(location + "update.json")
+                os.remove(location + "updateInfo.log")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git reset --hard")
-                os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull")
+                os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull > {location}updateInfo.log")
+                os.system(f"chown www-data:www-data {location}updateInfo.log")
                 writeLog("Server updated successfully.", 12)
             if not skipGPIO:
                 # Checks if the fans need to turn on or off

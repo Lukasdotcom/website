@@ -57,12 +57,26 @@ function collapseCategories() {
         localStorage.collapseCategories = "";
     }
 }
+function updateUpdateInfo() { // Used to get the response to the update info.
+    const ajax = new XMLHttpRequest();
+
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            $('#updateText').text(ajax.responseText)
+        } else {
+            updateUpdateInfo();
+        }     
+        }
+    ajax.open("GET", `/api/server.php?update=true&key='${getCookie('user')}'`);
+    ajax.send(); 
+}
 function update() {
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
         if (ajax.status == 200) {
             alert("Updating Server.")
+            updateUpdateInfo();
         } else {
             alert("Error something went wrong.")
         }     
@@ -166,7 +180,7 @@ function updateUptime() {
     ajax.open("GET", `/api/server.php?uptime=true&key='${getCookie('user')}'`);
     ajax.send(); 
 }
-function updateTemp() {
+function updateTemp() { // Updates the temprature indicator
     const ajax2 = new XMLHttpRequest();
     
     ajax2.onload = function() {
