@@ -147,7 +147,9 @@ def repair():  # Repairs all tables
     ]
     dbInfo = readFile(websiteRoot + "config.json")
     db2, cursor2 = connect("INFORMATION_SCHEMA")
+    updatedVersions = []
     databaseDict = {
+        "information" : [["pointer", 0], ["data", 0]],
         "cookies": [["cookie", 0], ["username", 0], ["expire", 1]],
         "internet": [
             ["hour", 1],
@@ -226,5 +228,14 @@ def repair():  # Repairs all tables
                         [dbInfo["database"]["username"], dbInfo["database"]["password"]],
                     )
                 changedTables.append(name)
+        elif name == "information": # Used to check the information table to see if the database can be updated in a better way.
+            version = trueSearch("SELECT data FROM information WHERE pointer='version'")
+            latestVersion = "v1.0"
+            try: # In here you can update the version to a new version
+                versionNumber = version[0][0]
+            except:
+                1
+            command("DELETE FROM information WHERE pointer='version'")
+            command(f"INSERT INTO information VALUES('version', '{latestVersion}')")
     db2.close()
-    return changedTables
+    return changedTables, updatedVersions

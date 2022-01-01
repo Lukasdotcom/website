@@ -93,5 +93,10 @@
         "type": "18",
         "name": "Backup",
         "color": "#009966"
+    },
+    {
+        "type": "19",
+        "name": "Update",
+        "color": "#00ff00"
     }
 ]

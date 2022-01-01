@@ -191,7 +191,9 @@ try:
         for x in repaired:
             writeLog(f"Database {x} was corrupted/missing and was restored", 9)
         # Will clean the golf games database
-        deleted = database.trueSearch(f"SELECT ID FROM golfGame WHERE turnStartTime<{time.time()-86400}")
+        deleted, updates = database.trueSearch(f"SELECT ID FROM golfGame WHERE turnStartTime<{time.time()-86400}")
+        for x in updates:
+            writeLog(f"Database updated to version {x}", 19)
         for x in deleted:
             writeLog(f"Game #{x[0]} deleted because it is too old", 16)
         database.command(f"DELETE FROM golfGame WHERE turnStartTime<{time.time()-86400}") # Removes games that have not been touched for more than 24 hours
@@ -317,12 +319,12 @@ try:
                 os.system(f"python3 {__file__} restart")
                 exit()
             if os.path.isfile(location + "update.json"): # Used to update the server
-                writeLog("Server is being updated.", 12)
+                writeLog("Server is being updated.", 19)
                 os.remove(location + "update.json")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git reset --hard")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull > {location}updateInfo.log")
                 os.system(f"chown www-data:www-data {location}updateInfo.log")
-                writeLog("Server updated successfully.", 12)
+                writeLog("Server updated successfully.", 19)
             if not skipGPIO:
                 # Checks if the fans need to turn on or off
                 if temp() > configuration["fanStart"] and not fanOn:
