@@ -185,6 +185,7 @@ try:
         files = glob.glob(f"{backupLocation}/*.sql")
         for x in range(len(files)):
             files[x] = files[x][len(backupLocation)+1:]
+        files.sort(reverse=True)
         writeFile(location + "/backups.json", files)
         # Will repair all databases and update them
         repaired, updates = database.repair()

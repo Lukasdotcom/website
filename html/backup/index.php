@@ -24,7 +24,16 @@
         header("Refresh:3; url=/index.php", true);
         echo "<h2>Forbidden redirecting...</h2>";
     } else {
-        echo "In progress.";
+        if (file_exists("../backups.json")) {
+            echo "<h1>List of Backups</h1>";
+            $backups = file_get_contents("../backups.json");
+            $backups = json_decode($backups, true);
+            foreach ($backups as $backup) {
+                echo "<p>$backup</p>";
+            }
+        } else {
+            echo "<h2>No backups exist you can restart the server to create one.";
+        }
     }
     ?>
     </div>
