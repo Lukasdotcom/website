@@ -24,7 +24,7 @@ if (array_key_exists("uptime", $_GET)) { # Will return some status info for a se
     } else {
         missingPrivilege($USERNAME);
     }
-} elseif (array_key_exists("update", $_POST)) { // To delete an entry in log
+} elseif (array_key_exists("update", $_POST)) { // To update the server
     if ($PRIVILEGE["updateServer"]) {
         unlink("../updateInfo.log");
         echo "Updating.";
@@ -39,7 +39,6 @@ if (array_key_exists("uptime", $_GET)) { # Will return some status info for a se
             echo file_get_contents("../updateInfo.log");
         } else {
             echo "No recent update";
-            http_response_code(404);
         }
     } else {
         missingPrivilege($USERNAME);

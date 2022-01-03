@@ -63,9 +63,7 @@ function updateUpdateInfo() { // Used to get the response to the update info.
     ajax.onload = function() {
         if (ajax.status == 200) {
             $('#updateText').text(ajax.responseText)
-        } else {
-            updateUpdateInfo();
-        }     
+        }
         }
     ajax.open("GET", `/api/server.php?update=true&key='${getCookie('user')}'`);
     ajax.send(); 
@@ -75,10 +73,10 @@ function update() {
     
     ajax.onload = function() {
         if (ajax.status == 200) {
-            alert("Updating Server.")
+            alert("Updating Server.");
             updateUpdateInfo();
         } else {
-            alert("Error something went wrong.")
+            alert("Error something went wrong.");
         }     
         }
     ajax.open("POST", "/api/server.php");
@@ -138,6 +136,7 @@ $(document).ready(function() {
     updateLog();
     collapseCategories();
     collapseCategories();
+    setInterval(updateUpdateInfo, 10000);
     if (localStorage.log != undefined) {
         $("#searchText").val(localStorage.logSearch)
     }
