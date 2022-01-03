@@ -246,7 +246,8 @@ function root($user)
  */
 function writeLog($type, $message)
 {
-  dbAdd([$type, $message, time()], "log");
+  $time = time();
+  dbCommand("INSERT INTO log VALUES ($type, ?, $time)", [$message]);
 }
 // Creates a way to see uncleaned user input if neccessary
 $OGPOST = $_POST;

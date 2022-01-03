@@ -69,7 +69,7 @@ if (array_key_value("type", $_GET, "view")) { // Will return all privileges the 
         $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
         dbCommand("UPDATE users SET password = '$password' WHERE username='$user';");
         echo "Saved new password for $user.";
-        writeLog(1, "$user's password was changed by $USERNAME or $address");
+        writeLog(3, "$user's password was changed by $USERNAME or $address");
     } else {
         missingPrivilege($USERNAME);
     }
