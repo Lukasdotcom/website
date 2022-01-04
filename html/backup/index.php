@@ -38,10 +38,9 @@
                         echo "Restoring file -> $restore";
                     } else {
                         echo "Backup does not exist";
-                        http_response_code(404);
                     }
                 } else {
-                    missingPrivilege($USERNAME);
+                    echo "<script>alert('You can not restore a backup')";
                 }
             } 
             $backups = file_get_contents("../backups.json");
@@ -49,15 +48,17 @@
             echo "<table><th>File Name</th>";
             foreach ($backups as $backup) { // Lists all the backups on the server
                 echo "<tr>
-                    <td>$backup</td>
-                    <td>
+                    <td>$backup</td>";
+                if ($PRIVILEGE["restore"]) {
+                    echo "<td>
                         <form method='post' action='/backup/'>
                             <button name='restore' value='$backup' type='submit'>
                                 Restore
                             </button>
                         </form>
-                    </td>
-                    </tr>";
+                    </td>";
+                }
+                echo "</tr>";
             }
             echo "</table>";
         } else {
