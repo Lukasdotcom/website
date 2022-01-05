@@ -26,21 +26,24 @@
     } else {
         if (file_exists("../backups.json")) { // Checks if the server can see any backups
             echo "<h1>List of Backups</h1>";
+            if (! array_key_exists("key", $_POST)) {
+                $_POST["key"] = "";
+            }
             if (array_key_exists("restore", $OGPOST)) { // Used to restore a backup for the server
-                if ($PRIVILEGE["restore"]) {
+                if ($PRIVILEGE["restore"] and $_POST["key"] === $_COOKIE["user"]) {
                     $backups = file_get_contents("../updateInfo.log");
                     if (array_search($backups, $OGPOST["restore"])  !== false) { // Makes sure that the file actually exists
-                        $restart = fopen("../restore.json", "w");
+                        //$restart = fopen("../restore.json", "w");
                         $restore = $OGPOST["restore"];
-                        fwrite($restart, json_encode($restore));
-                        fclose($restart);
+                        //fwrite($restart, json_encode($restore));
+                        //fclose($restart);
                         $restore = htmlspecialchars($restore);
                         echo "Restoring file -> $restore";
                     } else {
                         echo "Backup does not exist";
                     }
                 } else {
-                    echo "<script>alert('You can not restore a backup')";
+                    echo "<script>alert('You can not restore a backup')</script>";
                 }
             } 
             $backups = file_get_contents("../backups.json");
@@ -50,8 +53,10 @@
                 echo "<tr>
                     <td>$backup</td>";
                 if ($PRIVILEGE["restore"]) {
+                    $key = $_COOKIE["user"];
                     echo "<td>
                         <form method='post' action='/backup/'>
+                            <input type='hidden' name='key' value='$key'>
                             <button name='restore' value='$backup' type='submit'>
                                 Restore
                             </button>
