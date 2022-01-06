@@ -42,7 +42,23 @@ try:
         location = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
             "websiteRoot"
         ]
-        configuration = readFile(location + "/config.json")
+        if os.path.exists(location + "/config.json"):
+            configuration = readFile(location + "/config.json")
+        else:
+            if os.getenv("WEBSITE_DEVELOPER", "false") == "true":
+                developmentMachine = True
+            else:
+                developmentMachine = False
+            configuration = {
+                "api": os.getenv("WEBSITE_API"),
+                "database": { "username": os.getenv("WEBSITE_USER", "admin"), "name": os.getenv("WEBSITE_DATABASE_TABLE", "website"), "password": os.getenv("WEBSITE_PASSWORD", "password"), "backupLocation": os.getenv("WEBSITE_BACKUP_LOCATION", "/backup"), "backupLength" : int(os.getenv("WEBSITE_BACKUP_LENGTH", "604800")) },
+                "developer": developmentMachine,
+                "throttle": int(os.getenv("WEBSITE_THROTTLE", "5")),
+                "throttleTime": int(os.getenv("WEBSITE_THROTTLE_TIME", '30')),
+                "fanStart" : int(os.getenv("WEBSITE_FAN_START", '43')),
+                "fanStop": int(os.getenv("WEBSITE_FAN_STOP", '35'))}
+            writeFile(f"{location}/config.json", configuration)
+            print("Created config with enviromental variables")
     except:
         print("Could not find config file")
         raise Exception
