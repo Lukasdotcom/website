@@ -6,7 +6,6 @@ python/__pycache__/
 *.pyc
 maintenance-mode
 !logTypes.json
-!python/config.json
 error.log
 /html/space3/pwa
 /html/space3/macos.zip
