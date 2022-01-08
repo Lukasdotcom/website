@@ -25,10 +25,11 @@ def temp(): # Returns the temprature of the RPI
     return readFile("/sys/class/thermal/thermal_zone0/temp") / 1000
 
 
-def writeFile(location, info):  # Will write info in json format to a file
+def writeFile(location, info, permission=True):  # Will write info in json format to a file
     with open(location, "w") as f:
         json.dump(info, f)
-        os.system("chown -R www-data:www-data " + location)
+        if permission:
+            os.system("chown -R www-data:www-data " + location)
 
 
 # Loads the location of a certain file and returns that file if it is json
@@ -39,13 +40,17 @@ def readFile(location):
 try:
     # Looks at the configuration at understands the config
     try:
-        configFilePath = __file__[: __file__.rindex("/") + 1] + "config.json"
+        configFilePath = __file__[: __file__.rindex("/") + 1]
+        # Makes sure the python file area is owned by root and not accessable by www-data
+        os.system("chmod 750 -R " + configFilePath)
+        os.system("chown -R root:root " + configFilePath)
+        configFilePath = configFilePath + "config.json"
         # Will check if the config exists otherwise will find what should be in the config anyway.
         if os.path.exists(configFilePath):
             location = readFile(configFilePath)["websiteRoot"]
         else:
             location = __file__[: __file__.rindex("/python/restart.py") + 1] + "html/"
-            writeFile(configFilePath, {"websiteRoot":location})
+            writeFile(configFilePath, {"websiteRoot":location}, permission=False)
         if os.path.exists(location + "/config.json"):
             configuration = readFile(location + "/config.json")
         else:
