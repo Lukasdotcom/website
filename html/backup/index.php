@@ -51,18 +51,20 @@
                     echo "<script>alert('You can not restore a backup')</script>";
                 }
             } 
-            $backups = file_get_contents("../backups.json");
+            $backups = file_get_contents("../backups.json"); // Gets list of backups
             $backups = json_decode($backups, true);
             $key = $_COOKIE["user"];
-            # Used to restore the latest backup
-            echo "
-            <form method='post' action='/backup/'>
-                <input type='hidden' name='key' value='$key'>
-                <button name='restore' value='latest' type='submit'>
-                    Restore Newest Backup
-                </button>
-            </form>";
-            echo "<table><th>File Name</th>";
+            if ($PRIVILEGE["restore"]) {
+                # Used to restore the latest backup
+                echo "
+                <form method='post' action='/backup/'>
+                    <input type='hidden' name='key' value='$key'>
+                    <button name='restore' value='latest' type='submit'>
+                        Restore Newest Backup
+                    </button>
+                </form>";
+                echo "<table><th>File Name</th>";
+            }
             foreach ($backups as $backup) { // Lists all the backups on the server
                 echo "<tr>
                     <td>$backup</td>";
