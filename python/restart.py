@@ -189,9 +189,10 @@ try:
         minute = timeData[4]
         file = f"{int(time.time())}or{month}-{day}-{year}at{hour}:{minute}.sql"
         database.backUp(file)
+        return file
     def dailyMaintenance():  # Will run daily and on boot
         try:
-            backupDatabase()
+            file = backupDatabase()
             writeLog(f"Ran backup on server and saved it to {file}", 18)
         except:
             writeLog("Database backup failed", 9)
