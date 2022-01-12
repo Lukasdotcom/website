@@ -31,16 +31,21 @@
             }
             if (array_key_exists("restore", $OGPOST)) { // Used to restore a backup for the server
                 if ($PRIVILEGE["restore"] and $_POST["key"] === $_COOKIE["user"]) {
-                    $backups = file_get_contents("../updateInfo.log");
-                    if (array_search($backups, $OGPOST["restore"])  !== false) { // Makes sure that the file actually exists
-                        //$restart = fopen("../restore.json", "w");
+                    $backups = json_decode(file_get_contents("../backups.json"));
+                    if (array_search($OGPOST["restore"], $backups)  !== false) { // Makes sure that the file actually exists
+                        $restart = fopen("../restore.json", "w");
                         $restore = $OGPOST["restore"];
-                        //fwrite($restart, json_encode($restore));
-                        //fclose($restart);
+                        fwrite($restart, json_encode($restore));
+                        fclose($restart);
                         $restore = htmlspecialchars($restore);
-                        echo "Restoring file -> $restore";
+                        echo "<p>Restoring backup -> $restore</p>";
+                    } elseif ($OGPOST["restore"] === "latest") { // Checks if it is just the latest
+                        $restart = fopen("../restore.json", "w");
+                        fwrite($restart, '"latest"');
+                        fclose($restart);
+                        echo "<p>Restoring latest backup</p>";
                     } else {
-                        echo "Backup does not exist";
+                        echo "<p>Backup does not exist</p>";
                     }
                 } else {
                     echo "<script>alert('You can not restore a backup')</script>";
@@ -48,12 +53,20 @@
             } 
             $backups = file_get_contents("../backups.json");
             $backups = json_decode($backups, true);
+            $key = $_COOKIE["user"];
+            # Used to restore the latest backup
+            echo "
+            <form method='post' action='/backup/'>
+                <input type='hidden' name='key' value='$key'>
+                <button name='restore' value='latest' type='submit'>
+                    Restore Newest Backup
+                </button>
+            </form>";
             echo "<table><th>File Name</th>";
             foreach ($backups as $backup) { // Lists all the backups on the server
                 echo "<tr>
                     <td>$backup</td>";
                 if ($PRIVILEGE["restore"]) {
-                    $key = $_COOKIE["user"];
                     echo "<td>
                         <form method='post' action='/backup/'>
                             <input type='hidden' name='key' value='$key'>

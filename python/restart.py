@@ -355,6 +355,17 @@ try:
                     file = readFile(location + "restore.json")
                     f = open(location + "maintenance-mode", "w")
                     backups = readFile(location + "backups.json")
+                    # Finds the latest backup if latest is specified
+                    if file == "latest":
+                        biggest = 0
+                        for x in backups:
+                            try:
+                                check = int(x[:x.find("or")])
+                                if check > biggest:
+                                    biggest = check
+                                    file = x
+                            except:
+                                1
                     if file not in backups:
                         writeLog(f"Could not find backup", 9)
                         raise Exception
@@ -365,7 +376,7 @@ try:
                     writeLog(f"Backup {file} was succesfully restored", 18)
                     os.remove(location + "restore.json")
                 except:
-                    writeLog(f"Backup for {file} failed", 9)
+                    writeLog(f"Restore for {file} failed", 9)
                 try:
                     os.remove(location + "maintenance-mode")
                 except:
