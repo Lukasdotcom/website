@@ -63,8 +63,8 @@
                         Restore Newest Backup
                     </button>
                 </form>";
-                echo "<table><th>File Name</th>";
             }
+            echo "<table><th>File Name</th>";
             foreach ($backups as $backup) { // Lists all the backups on the server
                 echo "<tr>
                     <td>$backup</td>";
