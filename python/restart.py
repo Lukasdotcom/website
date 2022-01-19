@@ -192,8 +192,11 @@ try:
         return file
     def dailyMaintenance():  # Will run daily and on boot
         try:
-            file = backupDatabase()
-            writeLog(f"Ran backup on server and saved it to {file}", 18)
+            if not os.path.isfile(location + "restore.json"): # Makes sure that it does not disrupt a restore
+                file = backupDatabase()
+                writeLog(f"Ran backup on server and saved it to {file}", 18)
+            else:
+                writeLog("Skipped backup due to a restore command", 18)
         except:
             writeLog("Database backup failed", 9)
         backupLocation = configuration["database"]["backupLocation"]
