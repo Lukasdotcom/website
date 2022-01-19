@@ -91,7 +91,12 @@
     },
     {
         "type": "18",
-        "name": "Backup",
+        "name": "Backup created",
+        "color": "#009966"
+    },
+    {
+        "type": "20",
+        "name": "Backup deleted",
         "color": "#009966"
     },
     {

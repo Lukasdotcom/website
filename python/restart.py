@@ -207,6 +207,7 @@ try:
             try:
                 if int(x[:x.find("or")]) < time.time() - configuration["database"]["backupLength"]:
                     os.remove(f"{backupLocation}/{x}")
+                    writeLog(f"Removed old backup due to age, named {x}", 20)
             except:
                 os.remove(f"{backupLocation}/{x}")
         files = glob.glob(f"{backupLocation}/*.sql")
