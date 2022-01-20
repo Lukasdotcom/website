@@ -20,7 +20,6 @@
         echo "<h2>You are not logged in redirecting...</h2>";
     } else {
         echo "<script type='text/javascript' src='index.js'></script>
-        <script type='text/javascript' src='/javascript/functions.js'></script>
         <script>var username='$USERNAME'</script>";
         echo "<h1>Edit User(s) Here</h1>";
         echo '<label for="user">Choose a user:</label>

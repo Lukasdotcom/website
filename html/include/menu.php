@@ -1,5 +1,5 @@
 <?php
-$MENUITEMS = [["Main Page", "/index.php"], ["Internet", "/internet/index.php"], ["Dice Game", "/diceGame/index.php"], ["Space 3", "/space3/index.php"], ["Electricity Log", "/electricity.php"], ["Floppy", "/floppy.php"], ["Soccer", "/soccer.php"], ["Golf", "/golf/index.php"], ["privilege", "viewLog", "/log/index.php", "Server Log"], ["privilege", "viewBackup", "/backup/index.php", "Backups"], ["Cookie Clicker Addon", "/cookieClicker/index.php"], ["user", "/usermenu/index.php", "User Menu"], ["notUser", "/login.php", "Login/Signup"], ["user", "/login.php", "Logout"]];
+$MENUITEMS = [["Main Page", "/index.php"], ["Internet", "/internet/index.php"], ["Dice Game", "/diceGame/index.php"], ["Space 3", "/space3/index.php"], ["Electricity Log", "/electricity.php"], ["Floppy", "/floppy.php"], ["Soccer", "/soccer.php"], ["Golf", "/golf/index.php"], ["privilege", "viewLog", "/log/index.php", "Server Log"], ["privilege", "viewBackup", "/backup/index.php", "Backups"], ["Cookie Clicker Addon", "/cookieClicker/index.php"], ["user", "/usermenu/index.php", "User Menu"], ["user", "/usermenu/key.php", "Session Manager"], ["notUser", "/login.php", "Login/Signup"], ["user", "/login.php", "Logout"]];
 echo "<div class='vertical-menu'>";
 function menuItem($link, $name)
 {
