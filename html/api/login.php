@@ -44,9 +44,9 @@ if (array_key_exists("username", $_POST) and array_key_exists("type", $_POST) an
             writeLog(0, "$USERNAME was logged in by $address");
             $Time = time() + 3600*12;
             $Cookie = $USERNAME;
-            $Cookie .= microtime();
+            $Cookie .= rand();
             $Cookie = sanitize(substr(sha1($Cookie), 5));
-            $CookieForDB = [$Cookie, $USERNAME, $Time];
+            $CookieForDB = [$Cookie, $USERNAME, $Time, $address];
             dbAdd($CookieForDB, "cookies");
             setcookie("user", $Cookie, time() + 600, "/");
             echo json_encode($Cookie);

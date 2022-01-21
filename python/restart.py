@@ -331,8 +331,7 @@ try:
             skip = True
         try:
             if not skip:
-                internetOn = internetAction(
-                    callTime(), minimum[0:4], internetOn)
+                internetOn = internetAction(callTime(), minimum[0:4], internetOn)
         except:
             writeLog("Internet check failed", 9)
             if not developmentMachine:

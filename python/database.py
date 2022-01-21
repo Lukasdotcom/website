@@ -159,7 +159,7 @@ def repair():  # Repairs all tables
     updatedVersions = []
     databaseDict = {
         "information" : [["pointer", 0], ["data", 0]],
-        "cookies": [["cookie", 0], ["username", 0], ["expire", 1]],
+        "cookies": [["cookie", 0], ["username", 0], ["expire", 1], ["lastIP", 0]],
         "internet": [
             ["hour", 1],
             ["minute", 1],
@@ -239,12 +239,18 @@ def repair():  # Repairs all tables
                 changedTables.append(name)
         elif name == "information": # Used to check the information table to see if the database can be updated in a better way.
             version = trueSearch("SELECT data FROM information WHERE pointer='version'")
-            latestVersion = "v1.0"
             try: # In here you can update the version to a new version
                 versionNumber = version[0][0]
+                if versionNumber == "v1.0":
+                    command("ALTER TABLE cookies ADD lastIP varchar(255) NULL")
+                    version = "v1.1"
+                    updatedVersions.append("v1.1")
+                # Fixes the version if it is invalid to the latest version
+                if version != "v1.1":
+                    version = "v1.1"
             except:
                 1
             command("DELETE FROM information WHERE pointer='version'")
-            command(f"INSERT INTO information VALUES('version', '{latestVersion}')")
+            command(f"INSERT INTO information VALUES('version', '{version}')")
     db2.close()
     return changedTables, updatedVersions

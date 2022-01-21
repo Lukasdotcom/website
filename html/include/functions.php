@@ -265,7 +265,7 @@ foreach ($_COOKIE as $pointer => $value) {
 }
 // Removes all expired cookies from the database
 $Time = time();
-dbRemove("cookies", "expire", $Time, 1);
+dbCommand("DELETE FROM cookies WHERE expire < $Time and expire != 0");
 $PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity", "deleteError", "restartServer", "updateServer", "serverStatus", "viewBackup", "restore"]; // A List of all possible privileges
 function noUser() { # Used to set everything up as if no yser is logged in
   global $USERNAME, $PRIVILEGE, $PRIVILEGELIST;
@@ -279,6 +279,8 @@ if (array_key_exists("user", $_COOKIE)) {
   $COOKIEID = $_COOKIE["user"];
   $USERNAME = dbRequest("username", "cookies", "cookie", $COOKIEID, 0);
   if ($USERNAME) {
+    // Makes sure that the database knows who last accessed that session
+    dbCommand("UPDATE cookies SET lastIP='$address' WHERE cookie='$COOKIEID'");
     setcookie("user", $COOKIEID, time() + 600, "/");
     $USERNAME = $USERNAME[0];
     $PRIVILEGES = dbRequest("privilege", "privileges", "username", $USERNAME, 0);

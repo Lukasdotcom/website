@@ -5,7 +5,8 @@ body {
 }
 
 .main {
-    margin-left: 200px;
+    margin-left: clamp(150px, 25%, 250px);
+    margin-right: 10px;
 }
 
 a {
@@ -23,7 +24,7 @@ h2 {
 .vertical-menu {
     background-color: green;
     padding-top: 50px;
-    width: 200px;
+    width: clamp(150px, 25%, 240px);
     height: 100%;
     font-size: 20px;
     z-index: 1;
