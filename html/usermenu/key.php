@@ -26,7 +26,7 @@
         <table>
             <tbody id='keys'>
                 <tr>
-                    <th>Key</th><th>Expiration</th>
+                    <th>Key</th><th>Previous IP</th><th>Expiration</th>
                 </tr>
             </tbody>
         </table>

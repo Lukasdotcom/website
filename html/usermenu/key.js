@@ -3,7 +3,7 @@ function updateKey() { // Used to update the keys and session data
     
     ajax.onload = function() {
         if (ajax.status == 200) {
-            let text = "<tr><th>Key</th><th>Expiration</th></tr>";
+            let text = "<tr><th>Key</th><th>Previous IP</th><th>Expiration</th></tr>";
             Object.values(JSON.parse(this.responseText)).forEach(element => {
                 if (element["expire"] == 0) {
                     expireText = "never"
@@ -11,7 +11,7 @@ function updateKey() { // Used to update the keys and session data
                     let date = new Date(element["expire"]*1000);
                     expireText = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} at ${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}`;
                 }
-                text += `<tr id='${element["cookie"]}' ><td>${element["cookie"]}</td><td>${expireText}</td><td><button onclick='revoke("${element["cookie"]}")'>Revoke</button></td></tr>`;
+                text += `<tr id='${element["cookie"]}' ><td>${element["cookie"]}</td><td>${element["lastIP"]}</td><td>${expireText}</td><td><button onclick='revoke("${element["cookie"]}")'>Revoke</button></td></tr>`;
             });
             $("#keys").html(text);
         } else {

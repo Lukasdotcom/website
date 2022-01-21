@@ -95,13 +95,13 @@
         "color": "#009966"
     },
     {
-        "type": "20",
-        "name": "Backup deleted",
-        "color": "#009966"
-    },
-    {
         "type": "19",
         "name": "Update",
         "color": "#00ff00"
+    },
+    {
+        "type": "20",
+        "name": "Backup deleted",
+        "color": "#009966"
     }
 ]

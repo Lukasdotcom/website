@@ -12,7 +12,7 @@ if (array_key_exists("get", $_GET)) {
     $cookie = $USERNAME;
     $cookie .= rand();
     $cookie = sanitize(substr(sha1($cookie), 5));
-    dbCommand("INSERT INTO cookies VALUES ('$cookie', '$USERNAME', $expire)");
+    dbCommand("INSERT INTO cookies VALUES ('$cookie', '$USERNAME', $expire, '$address')");
     echo "Created new session";
 } else {
     http_response_code(400);
