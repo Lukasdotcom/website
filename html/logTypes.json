@@ -103,5 +103,15 @@
         "type": "20",
         "name": "Backup deleted",
         "color": "#009966"
+    },
+    {
+        "type": "21",
+        "name": "Session revoked",
+        "color": "#00ccff"
+    },
+    {
+        "type": "22",
+        "name": "Session created",
+        "color": "#00ccff"
     }
 ]
