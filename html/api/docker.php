@@ -5,7 +5,11 @@ if (! $PRIVILEGE["docker"] and ! $PRIVILEGE["dockerAdmin"]) { // Makes sure that
     exit();
 }
 if (array_key_exists("containers", $_GET)) { // Will list all avaliable containers
-    echo json_encode(dbRequest2("SELECT * FROM docker WHERE owner='$USERNAME' or action='stopped'"));
+    if ($PRIVILEGE["dockerAdmin"] and $_POST["all"]) { // Allows for all containers to be returned if that is requested
+        echo json_encode(dbRequest2("SELECT * FROM docker"));
+    } else {
+        echo json_encode(dbRequest2("SELECT * FROM docker WHERE owner='$USERNAME' or action='stopped'")); 
+    }
 } else if (array_key_exists("start", $_POST) and array_key_exists("image", $_POST)) { // Used to start a container and will return the password
     $id = $_POST["start"];
     $image = $OGPOST["image"];
@@ -25,6 +29,34 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
     }
 } else if (array_key_exists("images", $_GET)) {
     echo json_encode(dbRequest2("SELECT * FROM dockerImages")); // Will list all available images
+} else if (array_key_exists("deleteContainer", $_POST)) { // Used to delete a container
+    $id = $_POST["deleteContainer"];
+    if ($PRIVILEGE["dockerAdmin"]) {
+        if (dbRequest2("SELECT * FROM docker WHERE ID='$id'")) {
+            dbCommand("DELETE FROM docker WHERE ID='$id'");
+            writeLog(28, "$USERNAME deleted container with id $id and with ip $address");
+            echo "Deleted container";
+        } else {
+            http_response_code(404);
+            echo "Could not find container";
+        }
+    } else {
+        missingPrivilege($USERNAME);
+    }
+} else if (array_key_exists("createContainer", $_POST) and array_key_exists("link", $_POST) and array_key_exists("port", $_POST)) {
+    if ($PRIVILEGE["dockerAdmin"]) {
+        $id = $USERNAME;
+        $id .= rand();
+        $id = sanitize(substr(sha1($password), 5));
+        $port = intval($_POST["port"]);
+        dbCommand("DELETE FROM docker WHERE ID='$id'");
+        dbCommand("INSERT INTO docker VALUES (?, 'stopped', '', 'ubuntu', '$USERNAME', '$port', '$id')", [htmlspecialchars($OGPOST["link"])]);
+        writeLog(28, "$USERNAME created container with id $id and with ip $address");
+        echo "Created container with id $id";
+        
+    } else {
+        missingPrivilege($USERNAME);
+    }
 } else {
     http_response_code(400);
     echo "Invalid command";
