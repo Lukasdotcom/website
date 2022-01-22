@@ -113,5 +113,35 @@
         "type": "22",
         "name": "Session created",
         "color": "#00ccff"
+    },
+    {
+        "type": "23",
+        "name": "Started Container",
+        "color": "#660099"
+    },
+    {
+        "type": "24",
+        "name": "Stopped Container",
+        "color": "#660099"
+    },
+    {
+        "type": "25",
+        "name": "Created Image",
+        "color": "#660099"
+    },
+    {
+        "type": "26",
+        "name": "Deleted Image",
+        "color": "#660099"
+    },
+    {
+        "type": "27",
+        "name": "Created Container",
+        "color": "#660099"
+    },
+    {
+        "type": "28",
+        "name": "Deleted Container",
+        "color": "#660099"
     }
 ]

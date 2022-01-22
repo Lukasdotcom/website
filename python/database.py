@@ -179,7 +179,9 @@ def repair():  # Repairs all tables
         "space3likes" : [["id", 1], ["account", 0]],
         "golfGamePlayers" : [["gameID", 1], ["multiplier", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0], ["upToDate", 6]],
         "golfGameCards" : [["gameID", 1], ["user", 0], ["card", 1], ["cardPlacement", 1], ["faceUp", 6]],
-        "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6]]
+        "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6]],
+        "docker" : [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]],
+        "dockerImages" : [["realName", 0], ["shortName", 0], ["description", 0]]
     }
     changedTables = []
     for x in databaseDict:
@@ -245,9 +247,14 @@ def repair():  # Repairs all tables
                     command("ALTER TABLE cookies ADD lastIP varchar(255) NULL")
                     version = "v1.1"
                     updatedVersions.append("v1.1")
+                if versionNumber == "v1.1":
+                    createTable("docker", [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]])
+                    createTable("dockerImage", [["realName", 0], ["shortName", 0], ["description", 0]])
+                    version = "v2.0"
+                    updatedVersions.append("v2.0")
                 # Fixes the version if it is invalid to the latest version
-                if version != "v1.1":
-                    version = "v1.1"
+                if version != "v2.0":
+                    version = "v2.0"
             except:
                 1
             command("DELETE FROM information WHERE pointer='version'")
