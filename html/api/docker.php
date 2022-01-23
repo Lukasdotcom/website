@@ -23,7 +23,7 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
         $password = $USERNAME;
         $password .= rand();
         $password = sanitize(substr(sha1($password), 5, 8));
-        dbCommand("UPDATE docker SET action='starting', image='$image', password='$password' WHERE ID='$id'");
+        dbCommand("UPDATE docker SET action='starting', image='$image', password='$password', owner='$USERNAME' WHERE ID='$id'");
         writeLog(23, "$USERNAME is starting container with $image image and id $id and an IP of $address");
         echo $password;
     }
