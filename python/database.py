@@ -244,10 +244,17 @@ def repair():  # Repairs all tables
             try: # In here you can update the version to a new version
                 versionNumber = version[0][0]
                 if versionNumber == "v1.0":
-                    command("ALTER TABLE cookies ADD lastIP varchar(255) NULL")
+                    try:
+                        command("ALTER TABLE cookies ADD lastIP varchar(255) NULL")
+                    except Exception:
+                        1
                     version = "v1.1"
                     updatedVersions.append("v1.1")
                 if versionNumber == "v1.1":
+                    try:
+                        command("ALTER TABLE cookies ADD lastIP varchar(255) NULL")
+                    except Exception:
+                        1
                     createTable("docker", [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]])
                     createTable("dockerImage", [["realName", 0], ["shortName", 0]])
                     version = "v2.0"
