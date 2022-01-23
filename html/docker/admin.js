@@ -70,6 +70,7 @@ function updateImage() { // Used to update the table
 
 $(document).ready(function() {
     updateContainer();
+    updateImage();
     $("#createContainer").click(function() { // Used to create a container.
         const ajax = new XMLHttpRequest();
     
