@@ -15,7 +15,12 @@ import os
 import datetime
 import sys
 import glob
-
+try:
+    import docker
+    dockerClient = docker.from_env()
+    skipDocker = False
+except:
+    skipDocker = True
 
 def error(e):
     return "".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))
@@ -230,9 +235,11 @@ try:
         database.command("DELETE FROM golfGameCards WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGameCards.gameID = golfGame.ID)") # Removes players from games that do not exist
         writeLog("Server maintenance ran succesfully.", 12)
 
-    # Will add to log if the GPIO library exists
+    # Will add to log if a library could not be connected to
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
+    if skipDocker:
+        writeLog("Could not connect to docker", 9)
     while True:  # will wait until connected to internet
         try:
             urllib.request.urlopen("https://google.com")
@@ -341,6 +348,28 @@ try:
         # Will check every 2 seconds if the button is pressed and when it is show it on the led and then wait another second to verify that it is an actual press
         while True:
             time.sleep(2)
+            # Will check if a docker container should be started or stopped.
+            if not skipDocker:
+                dockerList = database.trueSearch("SELECT * FROM docker")
+                for x in dockerList:
+                    print(x)
+                    # Will check if the container has already been stopped
+                    id = x[6]
+                    if x[1] == "started":
+                        try:
+                            dockerClient.containers.get(id)
+                        except Exception:
+                            database.command(f"UPDATE docker SET action='stopped' WHERE ID='{id}'")
+                            writeLog(f"Container with id of {id} was stopped", 24)
+                    elif x[1] == "starting": # Will start all containers that are neccessary
+                        password = x[3]
+                        newID = dockerClient.containers.run(x[2], detach=True, ports={'80/tcp':x[5]}, remove=True, environment=[f"VNC_PASSWD={password}"]).attrs["Id"]
+                        database.command(f"UPDATE docker SET action='started', id='{newID}' WHERE ID='{id}'")
+                        writeLog(f"Container with id of {id} which changed to {newID} was started", 23)
+                    elif x[1] == "stopping": # Stops all containers that need to be stopped.
+                        dockerClient.containers.get(id).stop()
+                        database.command(f"UPDATE docker SET action='stopped' WHERE ID='{id}'")
+                        writeLog(f"Container with id of {id} was stopped", 24)
             if os.path.isfile(location + "restart.json"): # Used to restart the server
                 writeLog("Server is being restarted", 12)
                 os.remove(location + "restart.json")
