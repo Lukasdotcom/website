@@ -45,6 +45,20 @@
         <label for="port">The port to be used: </label><input type='number' id='port'>
         <br>
         <button id='createContainer'>Create</button>
+        <h1>Images</h1>
+        <table>
+            <tbody id='image'>
+                <tr>
+                    <th>Docker Image</th><th>Name</th>
+                </tr>
+            </tbody>
+        </table> 
+        <br>
+        <label for="imageName">Image: </label><input id='imageName'>
+        <br>
+        <label for="name">Easy name: </label><input id='name'>
+        <br>
+        <button id='createImage'>Create</button>
         <?php
     }
     ?>

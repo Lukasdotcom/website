@@ -181,7 +181,7 @@ def repair():  # Repairs all tables
         "golfGameCards" : [["gameID", 1], ["user", 0], ["card", 1], ["cardPlacement", 1], ["faceUp", 6]],
         "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6]],
         "docker" : [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]],
-        "dockerImages" : [["realName", 0], ["shortName", 0], ["description", 0]]
+        "dockerImages" : [["realName", 0], ["shortName", 0]]
     }
     changedTables = []
     for x in databaseDict:
@@ -249,7 +249,7 @@ def repair():  # Repairs all tables
                     updatedVersions.append("v1.1")
                 if versionNumber == "v1.1":
                     createTable("docker", [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]])
-                    createTable("dockerImage", [["realName", 0], ["shortName", 0], ["description", 0]])
+                    createTable("dockerImage", [["realName", 0], ["shortName", 0]])
                     version = "v2.0"
                     updatedVersions.append("v2.0")
                 # Fixes the version if it is invalid to the latest version

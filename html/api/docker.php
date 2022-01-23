@@ -43,7 +43,7 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
     } else {
         missingPrivilege($USERNAME);
     }
-} else if (array_key_exists("createContainer", $_POST) and array_key_exists("link", $_POST) and array_key_exists("port", $_POST)) {
+} else if (array_key_exists("createContainer", $_POST) and array_key_exists("link", $_POST) and array_key_exists("port", $_POST)) { // Will create a container
     if ($PRIVILEGE["dockerAdmin"]) {
         $id = $USERNAME;
         $id .= rand();
@@ -53,6 +53,35 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
         dbCommand("INSERT INTO docker VALUES (?, 'stopped', '', 'ubuntu', '$USERNAME', '$port', '$id')", [htmlspecialchars($OGPOST["link"])]);
         writeLog(28, "$USERNAME created container with id $id and with ip $address");
         echo "Created container with id $id";
+        
+    } else {
+        missingPrivilege($USERNAME);
+    }
+}  else if (array_key_exists("deleteImage", $_POST)) { // Used to delete a container
+    $name = $OGPOST["deleteImage"];
+    $name2 = $_POST["deleteImage"];
+    if ($PRIVILEGE["dockerAdmin"]) {
+        if (dbRequest2("SELECT * FROM dockerImages WHERE realName=?", "*", [$name])) {
+            dbCommand("DELETE FROM dockerImages WHERE realName=?", [$name]);
+            writeLog(28, "$USERNAME deleted image with name $name2 and with ip $address");
+            echo "Deleted image";
+        } else {
+            http_response_code(404);
+            echo "Could not find image";
+        }
+    } else {
+        missingPrivilege($USERNAME);
+    }
+} else if (array_key_exists("createImage", $_POST) and array_key_exists("name", $_POST)) { // Will create a container
+    if ($PRIVILEGE["dockerAdmin"]) {
+        $name = $_POST["name"];
+        $realName2 = $_POST["createImage"];
+        $realName = htmlspecialchars($OGPOST["createImage"]);
+        dbCommand("DELETE FROM dockerImages WHERE realName=?", [$realName]);
+        echo $realName;
+        dbCommand("INSERT INTO dockerImages VALUES (?, '$name')", [$realName]);
+        writeLog(28, "$USERNAME created image with name $realName2 and with ip $address");
+        echo "Created image with name $realName2";
         
     } else {
         missingPrivilege($USERNAME);
