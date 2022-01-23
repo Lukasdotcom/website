@@ -32,9 +32,13 @@ function update() { // Used to update the table
                         }
                     });
                 } else if (element["action"] == "stopped") {
-                    image = "<select>"
+                    image = `<select  id='${element["ID"]}image'>`;
                     Object.values(images).forEach(element2 => {
-                        image += `<option id='${element["ID"]}image' value='${element2["realName"]}'>${element2["shortName"]}</option>`;
+                        let selected = "";
+                        if ($(`#${element["ID"]}image`).val() == element2["realName"]) {
+                            selected = 'selected="selected"';
+                        }
+                        image += `<option value='${element2["realName"]}' ${selected}>${element2["shortName"]}</option>`;
                     });
                     image += "</select>";
                 }
