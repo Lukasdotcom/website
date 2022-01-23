@@ -47,7 +47,7 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
     if ($PRIVILEGE["dockerAdmin"]) {
         $id = $USERNAME;
         $id .= rand();
-        $id = sanitize(substr(sha1($password), 5));
+        $id = sanitize(substr(sha1($id), 5));
         $port = intval($_POST["port"]);
         dbCommand("DELETE FROM docker WHERE ID='$id'");
         dbCommand("INSERT INTO docker VALUES (?, 'stopped', '', 'ubuntu', '$USERNAME', '$port', '$id')", [htmlspecialchars($OGPOST["link"])]);
