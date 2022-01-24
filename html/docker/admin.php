@@ -59,6 +59,8 @@
         <label for="name">Easy name: </label><input id='name'>
         <br>
         <button id='createImage'>Create</button>
+        <h3>How to create Image?</h3>
+        <p>All you have to do to create a valid image for this is have a docker image that accepts an enviromental variable called VNC_PASSWD that is the password for the web interface and that exposes port 80 as a way to access the web interface. Then just publish it on dockerhub and pull it onto the device you are running this on.</p>
         <?php
     }
     ?>
