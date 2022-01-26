@@ -1,4 +1,12 @@
 <?php
+$jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
+$jsonData = json_decode($jsonInfo, true);
+$developer = $jsonData["developer"];
+if ($developer) {
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL); 
+}
 require_once("ip.php");
 function delete_folder($path){ #Used to delete a folder
     if (is_dir($path) === true){
