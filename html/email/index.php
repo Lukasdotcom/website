@@ -30,6 +30,8 @@
         <h1>Send Emails</h1>
         <label for="sender">Sending Email: </label>
         <input name="sender" id="sender">
+        <label for="senderName">Short Name: </label>
+        <input name="senderName" id="senderName">
         <br>
         <label for="reciever">Recipient's Email: </label>
         <input name="reciever" id="reciever">

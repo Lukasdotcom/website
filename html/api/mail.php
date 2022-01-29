@@ -26,7 +26,11 @@ if (array_key_exists("mail", $OGPOST) and array_key_exists("sender", $OGPOST) an
     $mail->Body = $OGPOST["body"]; // The body of the email
 
     // Recipients
-    $mail->setFrom($OGPOST["sender"]); // Who to send it from
+    if (array_key_exists("senderName", $OGPOST)) { // Who to send it from. This will check if a short name was given
+        $mail->setFrom($OGPOST["sender"], $OGPOST["senderName"]);
+    } else {
+        $mail->setFrom($OGPOST["sender"]);
+    }
     $mail->addAddress($OGPOST["mail"]); // Add a recipient
     $mail->send();
 } else {
