@@ -1,4 +1,6 @@
 <?php
+require __DIR__ . '/../vendor/autoload.php'; # Loads all composer files
+
 $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
 $jsonData = json_decode($jsonInfo, true);
 $developer = $jsonData["developer"];
@@ -275,7 +277,7 @@ foreach ($_COOKIE as $pointer => $value) {
 // Removes all expired cookies from the database
 $Time = time();
 dbCommand("DELETE FROM cookies WHERE expire < $Time and expire != 0");
-$PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity", "deleteError", "restartServer", "updateServer", "serverStatus", "viewBackup", "restore", "docker", "dockerAdmin"]; // A List of all possible privileges
+$PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity", "deleteError", "restartServer", "updateServer", "serverStatus", "viewBackup", "restore", "docker", "dockerAdmin", "mail"]; // A List of all possible privileges
 function noUser() { # Used to set everything up as if no yser is logged in
   global $USERNAME, $PRIVILEGE, $PRIVILEGELIST;
   $USERNAME = "";
