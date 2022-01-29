@@ -65,7 +65,7 @@ try:
                 developmentMachine = False
             configuration = {
                 "api": os.getenv("WEBSITE_API"),
-                "mail": os.getenv("MAIL_PASSWORD"),
+                "mail": { "server": os.getenv("MAIL_SMTP_SERVER", "smtp.sendgrid.net"), "username": os.getenv("MAIL_USERNAME", "apikey"), "passsword": os.getenv("MAIL_PASSWORD", "none"), "port": int(os.getenv("MAIL_SMTP_PORT", "587")) },
                 "database": { "username": os.getenv("WEBSITE_USER", "admin"), "name": os.getenv("WEBSITE_DATABASE_TABLE", "website"), "password": os.getenv("WEBSITE_PASSWORD", "password"), "backupLocation": os.getenv("WEBSITE_BACKUP_LOCATION", "/backup"), "backupLength" : int(os.getenv("WEBSITE_BACKUP_LENGTH", "604800")) },
                 "developer": developmentMachine,
                 "throttle": int(os.getenv("WEBSITE_THROTTLE", "5")),

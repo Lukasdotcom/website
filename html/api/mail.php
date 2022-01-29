@@ -10,16 +10,15 @@ if (array_key_exists("mail", $OGPOST) and array_key_exists("sender", $OGPOST) an
     // Server Settings
     $mail->SMTPDebug = 0; // Prevents debugging
     $mail->isSMTP(); // Enables SMTP
-    $mail->Host = 'smtp.sendgrid.net'; // Specify SMTP server
-    $mail->SMTPAuth = true; // Enable SMTP authentication
-    // Gets the neccessary password for the credentials
+    // Gets the smtp server data
     $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
     $jsonData = json_decode($jsonInfo, true);
-    $password = $jsonData["mail"];
-    $mail->Username = 'apikey'; // SMTP username
-    $mail->Password = $password; // SMTP password
+    $mail->Host = $jsonData["mail"]["server"]; // Specify SMTP server
+    $mail->SMTPAuth = true; // Enable SMTP authentication
+    $mail->Username = $jsonData["mail"]["username"]; // SMTP username
+    $mail->Password = $jsonData["mail"]["password"]; // SMTP password
     $mail->SMTPSecure = 'tls';//PHPMailer::ENCRYPTION_STARTTLS; Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
-    $mail->Port = 587; // TCP port to connect to
+    $mail->Port = $jsonData["mail"]["port"]; // TCP port to connect to
     // Message content
     $mail->isHTML(true); // Set email format to HTML
     $mail->Subject = $OGPOST["subject"]; // The subject
