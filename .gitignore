@@ -14,3 +14,6 @@ error.log
 /html/updateInfo.log
 /html/restore.json
 /python/update.sh
+!/html/composer.json
+/html/composer.lock
+/html/vendor/

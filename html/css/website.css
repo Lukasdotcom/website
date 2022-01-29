@@ -143,5 +143,11 @@ input[type="number"] {
 
 .center {
     display:flex;
-   justify-content:center;
+    justify-content:center;
+}
+
+textarea {
+    background-color: black;
+    color: white;
+    border-radius: 4px;
 }
