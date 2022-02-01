@@ -1,11 +1,30 @@
 function render() {
-    $("#render").html($("#body").val());
+    // Explanation of how this securly renders the untrusted html input.
+    // https://making.close.com/posts/rendering-untrusted-html-email-safely
+
+    $("#render").attr("srcdoc", `
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta http-equiv="Content-Security-Policy" content="script-src 'none'">
+            <base target="_blank">
+            <style>
+                body {
+                    background-color: black;
+                    color: white;
+                    font-family: 'Calibri';
+                }
+            </style>
+        </head>
+        <body>${$("#body").val()}</body>
+    </html>`);
 }
 
 $(document).ready(function() {
     $("#send").button()
-    setInterval(render, 500);
-    $("#send").click(function() {
+    render();
+    $("#renderButton").click(render);
+    $("#send").click(function() { // Used to send an email.
         const ajax = new XMLHttpRequest;
         $("#send").text("Sending");
         $("#send").button("disable");
