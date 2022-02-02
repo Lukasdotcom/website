@@ -7,7 +7,7 @@
         Schaefer Family
     </title>
     <?php
-    $DESCRIPTION = "A way to easily send emails through sendgrid.";
+    $DESCRIPTION = "A way to easily send emails through an SMTP server.";
     require_once '../include/all.php';
     ?>
 </head>
@@ -45,7 +45,7 @@
         <textarea name="body" id="body" style="width: 100%;" rows="10"></textarea>
         <button id="renderButton">Render Preview</button>
         <h3>HTML Render of Email</h3>
-        <iframe id="render" width="100%" height="300px" srcdoc="" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin">
+        <iframe id="render" width="100%" height="300px" srcdoc="" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin"></iframe>
         <br>
         <button id="send">Send</button>
         <?php
