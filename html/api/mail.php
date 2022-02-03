@@ -33,7 +33,10 @@ if (array_key_exists("mail", $OGPOST) and array_key_exists("sender", $OGPOST) an
         }
         $mail->addAddress($OGPOST["mail"]); // Add a recipient
         $mail->send();
-        echo "sucess";
+        echo "sent email";
+        $sender = $_POST["sender"];
+        $reciever = $_POST["mail"];
+        writeLog(29, "Sent email from $sender to $reciever with user $USERNAME and ip $address");
     } catch (Exception $e) { // Used to make sure errors are reported
         http_response_code(500);
         echo $e->errorMessage();

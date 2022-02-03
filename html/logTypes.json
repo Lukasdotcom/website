@@ -143,5 +143,10 @@
         "type": "28",
         "name": "Deleted Container",
         "color": "#660099"
+    },
+    {
+        "type": "29",
+        "name": "Sent Email",
+        "color": "#003333"
     }
 ]

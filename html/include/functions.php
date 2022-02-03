@@ -44,7 +44,7 @@ function array_key_value(string $key, array $array, string $compare) {
 }
 function sanitize($value) # Used to sanitize a value very strictly
 {
-  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-#:. ";
+  $validChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-#:.@ ";
   $validChars = str_split($validChars);
   $valueSplit = str_split($value);
   $value = "";
