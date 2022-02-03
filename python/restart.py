@@ -235,6 +235,14 @@ try:
         database.command("DELETE FROM golfGamePlayers WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGamePlayers.gameID = golfGame.ID)") # Removes players from games that do not exist
         database.command("DELETE FROM golfGameCards WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGameCards.gameID = golfGame.ID)") # Removes players from games that do not exist
         writeLog("Server maintenance ran succesfully.", 12)
+        # Makes sure that the vendor folder is blocked
+        try:
+            os.remove(location + "vendor/.htaccess")
+        except:
+            1
+        with open(location + "vendor/.htaccess", "w") as f:
+            f.write("""Order allow,deny
+Deny from all""")
 
     # Will add to log if a library could not be connected to
     if skipGPIO:
