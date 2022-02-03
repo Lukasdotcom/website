@@ -20,7 +20,7 @@
     <h3>How To Play</h3>
     <p>A very simple idle game where a ball bounces around and you try to hit the sqaures on the edges to get coins and the circle in the middle to double your coins but avoid the red squares circling around the circle which remove your points. You can also press space to reset the location of your ball and to turn coins into money with which you can buy upgrades.</p>
     <h3>What is this Game?</h3>
-    <p>For a link to an expanded version <a href="../gameData/pwa/pwa/Space3.html">click here</a>.</p>
+    <p>For a link to an expanded version <a href="../gameData/idleBouncer/Idle Bouncer.html">click here</a>.</p>
     <p>For a link to the souce code <a href="https://github.com/Lukasdotcom/Idle-Bouncer" target="_blank" rel="noopener noreferrer">click here</a>.</p>
     <?php
     if (file_exists("Idle-Bouncer.json")) {
