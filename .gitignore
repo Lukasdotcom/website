@@ -7,9 +7,7 @@ python/__pycache__/
 maintenance-mode
 !logTypes.json
 error.log
-/html/space3/pwa
-/html/space3/macos.zip
-/html/space3/windows.zip
+/html/gameData
 /python/fix2.sql
 /html/updateInfo.log
 /html/restore.json
