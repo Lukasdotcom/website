@@ -18,7 +18,7 @@
     <h1>Idle Bouncer</h1>
     <iframe src='../gameData/idleBouncer/Idle Bouncer.html' height='600', width='1024'></iframe>
     <h3>How To Play</h3>
-    <p>A very simple idle game where a ball bounces around and you try to hit the sqaures on the edges to get money and the circle in the middle gives you another ball for 5 seconds. You can also press space to earn 1 money per ball that is currently in play.</p>
+    <p>A very simple idle game where a ball bounces around and you try to hit the sqaures on the edges to get money and the circle in the middle gives you another ball for 15 seconds.</p>
     <h3>What is this Game?</h3>
     <p>For a link to an expanded version <a href="../gameData/idleBouncer/Idle Bouncer.html">click here</a>.</p>
     <p>For a link to the souce code <a href="https://github.com/Lukasdotcom/Idle-Bouncer" target="_blank" rel="noopener noreferrer">click here</a>.</p>
