@@ -416,9 +416,13 @@ Deny from all""")
                     database.restore(file)
                     dailyMaintenance()
                     writeLog(f"Backup {file} was succesfully restored", 18)
-                    os.remove(location + "restore.json")
                 except:
                     writeLog(f"Restore for {file} failed", 9)
+                #Makes sure to clean up after it is done
+                try:
+                    os.remove(location + "restore.json")
+                except:
+                    1
                 try:
                     os.remove(location + "maintenance-mode")
                 except:
