@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html dir="ltr" lang="en">
 <?php 
 if (! file_exists("config.json")) {
     echo '<link rel="stylesheet" type="text/css" href="/css/website.css" />';

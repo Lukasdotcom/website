@@ -4,7 +4,7 @@ function render() {
 
     $("#render").attr("srcdoc", `
     <!DOCTYPE html>
-    <html>
+    <html dir="ltr" lang="en">
         <head>
             <meta http-equiv="Content-Security-Policy" content="script-src 'none'">
             <base target="_blank">

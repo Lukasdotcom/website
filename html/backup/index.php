@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html dir="ltr" lang="en">
 
 <head>
     <title>

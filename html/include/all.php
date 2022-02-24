@@ -1,7 +1,9 @@
 <?php
 include 'functions.php';
 // Contains the favicon, the css stylesheet, meta tags, and js
-echo '<meta http-equiv="content-language" content="en-us">
+echo '<meta charset="utf=8" />
+    <meta property="og:site_name" content="lschaefer" />
+    <meta http-equiv="content-language" content="en-us">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
