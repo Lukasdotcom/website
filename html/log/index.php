@@ -83,9 +83,12 @@
                 
             }
         }
-        echo "<table id='log'>";
-        echo "<tr id='tableHeader'><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>";
-        echo "</table>";
+        ?>
+        <table id='log'>
+            <tr id='tableHeader'><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>
+        </table>
+        <button id='loadMore'>Load More</button>
+        <?php
     }
     ?>
     </div>
