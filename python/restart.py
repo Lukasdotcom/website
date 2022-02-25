@@ -46,16 +46,12 @@ try:
     # Looks at the configuration at understands the config
     try:
         configFilePath = __file__[: __file__.rindex("/") + 1]
-        # Makes sure the python file area is owned by root and not accessable by www-data
+        # Makes sure the python file area is owned by root and not accessable by www-data for security reasons
         os.system("chmod 750 -R " + configFilePath)
         os.system("chown -R root:root " + configFilePath)
         configFilePath = configFilePath + "config.json"
-        # Will check if the config exists otherwise will find what should be in the config anyway.
-        if os.path.exists(configFilePath):
-            location = readFile(configFilePath)["websiteRoot"]
-        else:
-            location = __file__[: __file__.rindex("/python/restart.py") + 1] + "html/"
-            writeFile(configFilePath, {"websiteRoot":location}, permission=False)
+        # Will find the location where the config should be located.
+        location = __file__[: __file__.rindex("/python/restart.py") + 1] + "html/"
         if os.path.exists(location + "/config.json"):
             configuration = readFile(location + "/config.json")
         else:

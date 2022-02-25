@@ -23,10 +23,7 @@ def trueSearch(command): # Will just execute sql command and return result
 
 
 def connect(database=""):
-    websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
-        "websiteRoot"
-    ]
-    dbInfo = readFile(websiteRoot + "config.json")
+    dbInfo = readFile(__file__[: __file__.rindex("/python/database.py") + 1] + "html/config.json")
     if not database:
         database = dbInfo["database"]["name"]
     try:
@@ -107,10 +104,7 @@ def appendValue(table, value, coulumns=""):  # Will add a value to a table
 
 # Will backup a database to a certain location with a name of choosing
 def backUp(fileName):
-    websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
-        "websiteRoot"
-    ]
-    dbInfo = readFile(websiteRoot + "config.json")
+    dbInfo = readFile(__file__[: __file__.rindex("/python/database.py") + 1] + "html/config.json")
     username = dbInfo["database"]["username"]
     password = dbInfo["database"]["password"]
     database = dbInfo["database"]["name"]
@@ -121,10 +115,7 @@ def backUp(fileName):
     os.system(f"mysqldump -u {username} --password={password} --result-file={locationdata} {database}")
 
 def restore(fileName):
-    websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
-        "websiteRoot"
-    ]
-    dbInfo = readFile(websiteRoot + "config.json")
+    dbInfo = readFile(__file__[: __file__.rindex("/python/database.py") + 1] + "html/config.json")
     location = dbInfo["database"]["backupLocation"]
     database = dbInfo["database"]["name"]
     locationdata = f"{location}/{fileName}"
@@ -149,12 +140,9 @@ def delete(table, where):  # deletes values in table
     db.close()
 
 
-def repair():  # Repairs all tables
+def repair():  # Repairs all tables or updates them if needed
     # Gets Infomation schema database
-    websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
-        "websiteRoot"
-    ]
-    dbInfo = readFile(websiteRoot + "config.json")
+    dbInfo = readFile(__file__[: __file__.rindex("/python/database.py") + 1] + "html/config.json")
     db2, cursor2 = connect("INFORMATION_SCHEMA")
     updatedVersions = []
     databaseDict = {
@@ -224,10 +212,7 @@ def repair():  # Repairs all tables
                 1
             createTable(name, trueValues)
             if name == "logType":
-                websiteRoot = readFile(__file__[: __file__.rindex("/") + 1] + "config.json")[
-                    "websiteRoot"
-                ]
-                logTypes = readFile(websiteRoot + "logTypes.json")
+                logTypes = readFile(__file__[: __file__.rindex("/python/database.py") + 1] + "html/logTypes.json")
                 for x in logTypes:
                     appendValue(name, [x["type"], x["name"], x["color"]])
             else:
