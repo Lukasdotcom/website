@@ -5,7 +5,7 @@ if (! $PRIVILEGE["docker"] and ! $PRIVILEGE["dockerAdmin"]) { // Makes sure that
     exit();
 }
 if (array_key_exists("containers", $_GET)) { // Will list all avaliable containers
-    if ($PRIVILEGE["dockerAdmin"] and $_POST["all"]) { // Allows for all containers to be returned if that is requested
+    if ($PRIVILEGE["dockerAdmin"] and array_key_exists("all", $_GET)) { // Allows for all containers to be returned if that is requested
         echo json_encode(dbRequest2("SELECT * FROM docker"));
     } else {
         echo json_encode(dbRequest2("SELECT * FROM docker WHERE owner='$USERNAME' or action='stopped'")); 
