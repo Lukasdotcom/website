@@ -87,7 +87,12 @@
         <table id='log'>
             <tr id='tableHeader'><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>
         </table>
-        <button id='loadMore'>Load More</button>
+        <div id="load">
+            <button id='loadMore'>Load More</button>
+            <label for="days">Days to load more: </label><input type='number' id="days" value="7">
+            <br>
+            <button id='loadAll'>Load All</button>
+        </div>
         <?php
     }
     ?>

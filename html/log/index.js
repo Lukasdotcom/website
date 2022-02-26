@@ -97,17 +97,18 @@ function restart() { // Sends a request to the server to tell it to restart
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`restart=true&key='${getCookie('user')}'`); 
 }
-function updateLog(previous=false) { // Used to update the log with new entries that came. either before or after the log.
+function updateLog(previous=false, all=false) { // Used to update the log with new entries that came. either before or after the log(previous). All indicates if it should load everything before a certain point
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
         if (ajax.status == 200) {
             let response = JSON.parse(ajax.response);
+            if (previous) {
+                response.reverse(); // Makes sure to reverse the array so the elements are in the right order.
+                earliestTime = earliestTime - 3600 * 24 * $("#days").val();
+            } 
             if (response.length) {
-                if (previous) {
-                    response.reverse(); // Makes sure to reverse the array so the elements are in the right order.
-                    earliestTime -= 3600 * 24 * 7;
-                } else {
+                if (! previous) {
                     latestTime = lastElement(response)["time"]
                 }
                 response.forEach(function(item) {
@@ -128,7 +129,7 @@ function updateLog(previous=false) { // Used to update the log with new entries 
         }
     if (previous) {
         $("#loadMore").button("disable");
-        ajax.open("GET", `/api/log.php?log=true&key='${getCookie('user')}'&startTime=${earliestTime - 3600 * 24 * 7}&endTime=${earliestTime}`);
+        ajax.open("GET", `/api/log.php?log=true&key='${getCookie('user')}'&startTime=${(all) ? 0 : earliestTime - 3600 * 24 * $("#days").val() }&endTime=${earliestTime}`);
     } else {
         ajax.open("GET", `/api/log.php?log=true&key='${getCookie('user')}'&startTime=${latestTime}`);
     }
@@ -143,14 +144,13 @@ function appendLogData(item, bottom=false) { // Used to add a log entry to the u
     information += "</tr>";
     if (bottom) {
         $("#log").append(information);
-        console.log(item);
     } else {
         $(information).insertAfter("#tableHeader");
     }
     logLength ++;
 }
 var logLength = 0;
-var latestTime = Date.now() / 1000 - 3600 * 24 * 7; // Stores the latest log time which starts at 1 week before the visit
+var latestTime = Date.now() / 1000 - 3600 * 24 * 1; // Stores the latest log time which starts at 1 week before the visit
 var earliestTime = latestTime; // Stores the earliest time which the log has
 $(document).ready(function() {
     updateLog(); // Updates the log to preload it.
@@ -179,8 +179,13 @@ $(document).ready(function() {
         updateTemp();
     }
     $("#loadMore").button()
+    $("#loadAll").button()
     $("#loadMore").click(function() {
-        updateLog(true)
+        updateLog(true);
+    });
+    $("#loadAll").click(function() { // Used to load all data
+        updateLog(true, all=true)
+        $("#load").remove();
     });
 });
 var offline = false; // Stores if the user is offline
