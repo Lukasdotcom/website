@@ -150,7 +150,7 @@ function appendLogData(item, bottom=false) { // Used to add a log entry to the u
     logLength ++;
 }
 var logLength = 0;
-var latestTime = Date.now() / 1000 - 3600 * 24 * 1; // Stores the latest log time which starts at 1 week before the visit
+var latestTime = Date.now() / 1000 - 3600 * 24 * 7; // Stores the latest log time which starts at 1 week before the visit
 var earliestTime = latestTime; // Stores the earliest time which the log has
 $(document).ready(function() {
     updateLog(); // Updates the log to preload it.
