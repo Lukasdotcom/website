@@ -12,6 +12,20 @@ function start(id) { // Used to start a container
     ajax.send(`start=${id}&image=${$(`#${id}image`).val()}&key='${getCookie('user')}'`); 
 }
 
+function stop(id) { // Used to stop a container
+    const ajax = new XMLHttpRequest();
+    
+    ajax.onload = function() {
+        if (ajax.status != 200) {
+            JQerror(this.responseText);
+        }
+        update();
+    }
+    ajax.open("POST", `/api/docker.php`);
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajax.send(`stop=${id}&key='${getCookie('user')}'`); 
+}
+
 function update() { // Used to update the table
     const ajax = new XMLHttpRequest();
     
@@ -45,6 +59,8 @@ function update() { // Used to update the table
                 text += `<tr><td>${element["ID"]}</td><td>${element["action"]}</td><td>${image}</td><td>${password}</td><td>${element["link"]}</td>`;
                 if (element["action"] == "stopped") { // Used to add button to start container
                     text += `<td><button onclick='start("${element["ID"]}")'>Start</button></td>`;
+                } else if (element["action"] == "started") {
+                    text += `<td><button onclick='stop("${element["ID"]}")'>Stop</button></td>`;
                 }
                 text += "</tr>"
             });

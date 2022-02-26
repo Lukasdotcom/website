@@ -19,13 +19,26 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
     } elseif (! dbRequest2("SELECT * FROM dockerImages WHERE realName=?", "*", [$image])) { // Will cheeck if the image exists
         echo "Image does not exist";
         http_response_code(404);
-    } else { // Will start the image
+    } else { // Will start the container
         $password = $USERNAME;
         $password .= rand();
         $password = sanitize(substr(sha1($password), 5, 8));
         dbCommand("UPDATE docker SET action='starting', image='$image', password='$password', owner='$USERNAME' WHERE ID='$id'");
         writeLog(23, "$USERNAME is starting container with $image image and id $id and an IP of $address");
         echo $password;
+    }
+} else if (array_key_exists("stop", $_POST)) { // Used to stop a container
+    $id = $_POST["stop"];
+    if (! dbRequest2("SELECT * FROM docker WHERE action='started' and ID='$id'")) { // Will check if the container is running
+        echo "Container is not used";
+        http_response_code(404);
+    } else if (!$PRIVILEGE["dockerAdmin"] and ! dbRequest2("SELECT * FROM docker WHERE action='started' and ID='$id' and owner='$USERNAME'")) { // Checks if this is actually the owner or an admin if not gives forbidden result
+        echo "Container is not yours";
+        http_response_code(403);
+    } else { // Will stop the container
+        dbCommand("UPDATE docker SET action='stopping' WHERE ID='$id'");
+        writeLog(23, "$USERNAME is stopping container with $image image and id $id and an IP of $address");
+        echo "stopping";
     }
 } else if (array_key_exists("images", $_GET)) {
     echo json_encode(dbRequest2("SELECT * FROM dockerImages")); // Will list all available images
