@@ -97,7 +97,7 @@ function restart() { // Sends a request to the server to tell it to restart
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`restart=true&key='${getCookie('user')}'`); 
 }
-function updateLog(previous=false, all=false) { // Used to update the log with new entries that came. either before or after the log(previous). All indicates if it should load everything before a certain point
+function updateLog(previous=false, all=false) { // Used to update the log with new entries that came. either before or after the log(previous). All indicates if it should load everything before a certain point.
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
