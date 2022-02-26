@@ -7,7 +7,7 @@ function findCategory(category) {
     }
     return false
 }
-function search(term) {
+function search(term) { // Used to search the log
     rows = document.getElementById('log').rows
     colors = []
     for(var i=0;i<typeLength;i++) {
@@ -25,11 +25,11 @@ function search(term) {
         document.getElementById(i).style.color = colors[findCategory(document.getElementById(`${String(i)}.category`).innerHTML)][1]
       }
 }
-function resetColor(searchTerm, term, id) {
+function resetColor(searchTerm, term, id) { // Used to reset the log color of a certain type
     document.getElementById(`${term}.color`).value = types[id]["color"];
     search(searchTerm);
 }
-function remove(message, time, id) {
+function remove(message, time, id) { // Used to remove a log entry from the log.
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
@@ -42,7 +42,7 @@ function remove(message, time, id) {
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`remove=true&message=${message}&time=${time}&key='${getCookie('user')}'`); 
 }
-function collapseCategories() {
+function collapseCategories() { // Collapses or uncollapses the categories to make the webpage cleaner or more detailed.
     if (! localStorage.collapseCategories) {
         document.getElementById(`collapseCategories`).innerHTML = "Uncollapse Categories";
         for(var i=0;i<typeLength;i++) {
@@ -68,7 +68,7 @@ function updateUpdateInfo() { // Used to get the response to the update info.
     ajax.open("GET", `/api/server.php?update=true&key='${getCookie('user')}'`);
     ajax.send(); 
 }
-function update() {
+function update() { // Sends a request to the server for the server to update
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
@@ -83,7 +83,7 @@ function update() {
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`update=true&key='${getCookie('user')}'`); 
 }
-function restart() {
+function restart() { // Sends a request to the server to tell it to restart
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
@@ -97,50 +97,70 @@ function restart() {
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(`restart=true&key='${getCookie('user')}'`); 
 }
-function updateLog() { // Used to update the log.
+function updateLog(previous=false, all=false) { // Used to update the log with new entries that came. either before or after the log(previous). All indicates if it should load everything before a certain point.
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
         if (ajax.status == 200) {
             let response = JSON.parse(ajax.response);
+            if (previous) {
+                response.reverse(); // Makes sure to reverse the array so the elements are in the right order.
+                earliestTime = earliestTime - 3600 * 24 * $("#days").val();
+            } 
             if (response.length) {
-                response.forEach(appendLogData);
-                search($("#searchText").val());
-                latestTime = lastElement(response)["time"]
+                if (! previous) {
+                    latestTime = lastElement(response)["time"]
+                }
+                response.forEach(function(item) {
+                    appendLogData(item, previous)
+                });
             }
+            $("#loadMore").button("enable");
         } else {
             if (!offline) {
                 offline = true;
                 $(".offline").show();
             }
         }
-        setTimeout(updateLog, 4000)
+        if (! previous) {
+            setTimeout(updateLog, 4000)
+        }
         search($("#searchText").val());
         }
-    ajax.open("GET", `/api/log.php?log=true&key='${getCookie('user')}'&startTime=${latestTime}`);
+    if (previous) {
+        $("#loadMore").button("disable");
+        ajax.open("GET", `/api/log.php?log=true&key='${getCookie('user')}'&startTime=${(all) ? 0 : earliestTime - 3600 * 24 * $("#days").val() }&endTime=${earliestTime}`);
+    } else {
+        ajax.open("GET", `/api/log.php?log=true&key='${getCookie('user')}'&startTime=${latestTime}`);
+    }
     ajax.send(); 
 }
-function appendLogData(item, index, array) { // Used to add a log to the users screen
+function appendLogData(item, bottom=false) { // Used to add a log entry to the users screen at the top or bottom.
     let date = new Date(item["time"]*1000);
     let information = `<tr id='${logLength}' style='color:${types[item["type"]]["color"]}'><td id='${logLength}.category'>${types[item["type"]]["name"]}</td><td id='${logLength}.message'>${item["message"]}</td><td id='${logLength}.time'>${item["time"]}</td><td id='${logLength}.clockTime'>${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} at ${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}</td>`;
     if (deleteLog) {
         information += `<td id='${logLength}.button' style='color: white'><button type='button' onClick="remove('${item["message"]}', '${item["time"]}', '${logLength}')">Delete</button><br></td>`;
     } 
     information += "</tr>";
-    $(information).insertAfter("#tableHeader")
+    if (bottom) {
+        $("#log").append(information);
+    } else {
+        $(information).insertAfter("#tableHeader");
+    }
     logLength ++;
 }
 var logLength = 0;
-var latestTime = 0; // Stores the latest log time
+var latestTime = Date.now() / 1000 - 3600 * 24 * 1; // Stores the latest log time which starts at 1 week before the visit
+var earliestTime = latestTime; // Stores the earliest time which the log has
 $(document).ready(function() {
-    updateLog();
+    updateLog(); // Updates the log to preload it.
+    // Makes sure that the categories are collapsed in the right way
     collapseCategories();
     collapseCategories();
-    setInterval(updateUpdateInfo, 10000);
-    if (localStorage.log != undefined) {
-        $("#searchText").val(localStorage.logSearch)
-    }
-    if (localStorage.log != undefined) {
+
+    setInterval(updateUpdateInfo, 10000); // Makes sure to update the information about updates every 10 seconds
+    if (localStorage.log != undefined) { // Sets the correct color and visibilty for each log category.
+    
         colors = JSON.parse(localStorage.log);
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.color = colors[i][1];
@@ -148,17 +168,28 @@ $(document).ready(function() {
             document.getElementById(`${types[i]["name"]}`).checked = colors[i][0];
         }
     }
-    if (localStorage.logSearch == undefined) {
-        localStorage.logSearch = "";
+    if (localStorage.logSearch != undefined) { // Makes sure to prefill the previous search
+        $("#searchText").val(localStorage.logSearch)
     }
     search(localStorage.logSearch);
+    
+    // Shows server status like temprature and uptime
     if (serverStatus) {
         updateUptime();
         updateTemp();
     }
+    $("#loadMore").button()
+    $("#loadAll").button()
+    $("#loadMore").click(function() {
+        updateLog(true);
+    });
+    $("#loadAll").click(function() { // Used to load all data
+        updateLog(true, all=true)
+        $("#load").remove();
+    });
 });
 var offline = false; // Stores if the user is offline
-function updateUptime() {
+function updateUptime() { // Updates the uptime and server load indicator
     const ajax = new XMLHttpRequest();
     
     ajax.onload = function() {
