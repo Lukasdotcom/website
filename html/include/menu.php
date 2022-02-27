@@ -34,4 +34,5 @@ foreach ($MENUITEMS as $menu) {
             break;
     }
 }
+echo '<div style="height: 50px;display: inline-block;"></div>'; // Used to make sure the scrollbar scrolls correctly
 echo "</div>";
