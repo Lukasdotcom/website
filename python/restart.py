@@ -357,7 +357,6 @@ Deny from all""")
             if not skipDocker:
                 dockerList = database.trueSearch("SELECT * FROM docker")
                 for x in dockerList:
-                    print(x)
                     # Will check if the container has already been stopped
                     id = x[6]
                     if x[1] == "started":
