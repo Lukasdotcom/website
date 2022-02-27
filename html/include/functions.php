@@ -9,6 +9,10 @@ if ($developer) {
   ini_set('display_startup_errors', 1);
   error_reporting(E_ALL); 
 }
+// Checks if the user is a mobile user
+$ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
+$MOBILE = is_numeric(strpos($ua, "mobile"));
+
 require_once("ip.php");
 function delete_folder($path){ #Used to delete a folder
     if (is_dir($path) === true){

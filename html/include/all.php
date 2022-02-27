@@ -14,31 +14,25 @@ echo '<meta charset="utf=8" />
     <link rel="stylesheet" href="/css/jquery-ui.min.css">
     <script type="text/javascript" src="/javascript/functions.js"></script>
     <script type="text/javascript" src="/javascript/cookie.js"></script>';
-if (false) {
-  echo '<script type="text/javascript">
-      (function(c,l,a,r,i,t,y){
-          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "6nguibuvtp");
-    </script>';
+if ($MOBILE) { // Tells javascript if this is a mobile user
+  echo "<script type='text/javascript'>var mobile = true</script>";
+} else {
+  echo "<script type='text/javascript'>var mobile = false</script>";
 }
-
 if (isset($DESCRIPTION)) {
   echo "<meta name='Description' content='$DESCRIPTION'>";
 } else {
   echo "<meta name='Description' content='No Description Available'>";
-}
-if (false) {
-  // Adds google analytics
-  echo "<!-- Global site tag (gtag.js) - Google Analytics --> <script async src='https://www.googletagmanager.com/gtag/js?id=G-LDTH4Z14QQ'></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-LDTH4Z14QQ'); </script>";
 }
 /**
  * Creates an image that loads a simple image before loading the entire image.
  * @param string $img used as the name of the image
  */
 function createImage($img, $alt, $style="width:100%;") {
+  global $MOBILE;
   echo "<img id='first$img' onload='imageLoad(`$img`, `first`)' src='/img/$img.first.jpg' alt='$alt' style='$style'>";
   echo "<img id='min$img' src='' alt='$alt' style='$style display: none;'>";
-  echo "<img id='$img' src='' alt='$alt' style='$style display: none;'>";
+  if (! $MOBILE) {
+    echo "<img id='$img' src='' alt='$alt' style='$style display: none;'>";
+  }
 }

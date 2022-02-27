@@ -46,8 +46,10 @@ function imageLoad(name, quality) { // used for better loading of image
     }else if (quality == "medium") {
         $(`#first${name}`).hide();
         $(`#min${name}`).show();
-        $(`#${name}`).attr("src", `/img/${name}.jpg`);
-        $(`#${name}`).attr("onload", `imageLoad('${name}', false)`);
+        if (! mobile) {
+            $(`#${name}`).attr("src", `/img/${name}.jpg`);
+            $(`#${name}`).attr("onload", `imageLoad('${name}', false)`);
+        }
     } else {
         $(`#min${name}`).hide();
         $(`#${name}`).show()
