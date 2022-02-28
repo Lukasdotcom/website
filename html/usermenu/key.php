@@ -32,7 +32,7 @@
         </table>
         <h3>Create Session or api key below here:</h3>
         <div>
-            <label for="expire">Expiration: </label><input type='datetime-local' id="expire"><br>
+            <label for="expire">Expiration: </label><input step="1" type='datetime-local' id="expire"><br>
             <button id='create'>Create</button>
         </div>
         <?php

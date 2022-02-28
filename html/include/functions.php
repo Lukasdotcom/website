@@ -10,7 +10,11 @@ if ($developer) {
   error_reporting(E_ALL); 
 }
 // Checks if the user is a mobile user
-$ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
+if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
+  $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
+} else {
+  $ua = "";
+}
 $MOBILE = is_numeric(strpos($ua, "mobile"));
 
 require_once("ip.php");

@@ -33,7 +33,7 @@ function save(id) {
         }
     ajax.open("POST", "/api/internet.php");
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajax.send(`edit='${id}'&startHour='${document.getElementById(id + '.startHour').value}'&startMinute='${document.getElementById(id + '.startMinute').value}'&endHour='${document.getElementById(id + '.endHour').value}'&endMinute='${document.getElementById(id + '.endMinute').value}'&expire='${document.getElementById(id + '.expire').value}'&key='${getCookie('user')}'`); 
+    ajax.send(`edit='${id}'&startHour='${document.getElementById(id + '.startHour').value}'&startMinute='${document.getElementById(id + '.startMinute').value}'&endHour='${document.getElementById(id + '.endHour').value}'&endMinute='${document.getElementById(id + '.endMinute').value}'&expire='${Date.parse(document.getElementById(id + '.expire').value)/1000}'&key='${getCookie('user')}'`); 
 }
 function addRow() {
     topPriority ++;
@@ -48,6 +48,6 @@ function addRow() {
     priority.innerHTML = topPriority;
     startTime.innerHTML = `<input type='number' id='${topPriority}.startHour' value='0'>:<input type='number' id='${topPriority}.startMinute' value='0'>`;
     endTime.innerHTML = `<input type='number' id='${topPriority}.endHour' value='0'>:<input type='number' id='${topPriority}.endMinute' value='0'>`;
-    expiration.innerHTML = `<input style='width: 120px' type='number' id='${topPriority}.expire' value='0'>`;
+    expiration.innerHTML = `<input step="1" type='datetime-local' id='${topPriority}.expire'>`;
     buttons.innerHTML = `<button type='button' onClick='save("${topPriority}")'>✓</button><div class='red'><button type='button' onClick='remove("${topPriority}")'>✗</button>`;
 }

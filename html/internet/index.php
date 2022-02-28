@@ -45,7 +45,7 @@
             $endTimeText = "$endHour:$endMinute";
         }
         if($PRIVILEGE["internet"]) {
-            $expireText = "<input style='width: 120px' type='number' id='$priority.expire' value='$expire'>";
+            $expireText = "<input step='1' type='datetime-local' id='$priority.expire'><script>date = new Date($expire*1000); document.getElementById('$priority.expire').value = date.toISOString().split('.')[0];</script>";
         } else {
             $expireText = "$expire";
         }
