@@ -49,6 +49,6 @@ $(document).ready(function() {
         }
         ajax.open("POST", `/api/key.php`);
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`create=${$("#expire").val()}&key='${getCookie('user')}'`); 
+        ajax.send(`create=${Date.parse($("#expire").val())/1000}&key='${getCookie('user')}'`); 
     });
 });
