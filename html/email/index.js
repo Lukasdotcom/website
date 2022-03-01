@@ -6,13 +6,16 @@ function render() {
     <!DOCTYPE html>
     <html dir="ltr" lang="en">
         <head>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
             <meta http-equiv="Content-Security-Policy" content="script-src 'none'">
             <base target="_blank">
             <style>
                 body {
                     background-color: black;
                     color: white;
-                    font-family: 'Calibri';
+                    font-family:'Roboto', sans-serif;
                 }
             </style>
         </head>

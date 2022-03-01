@@ -13,7 +13,10 @@ echo '<meta charset="utf=8" />
     <script type="text/javascript" src="/javascript/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="/css/jquery-ui.min.css">
     <script type="text/javascript" src="/javascript/functions.js"></script>
-    <script type="text/javascript" src="/javascript/cookie.js"></script>';
+    <script type="text/javascript" src="/javascript/cookie.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> ';
 if ($MOBILE) { // Tells javascript if this is a mobile user
   echo "<script type='text/javascript'>var mobile = true</script>";
 } else {
