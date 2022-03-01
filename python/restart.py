@@ -367,9 +367,14 @@ Deny from all""")
                             writeLog(f"Container with id of {id} was stopped", 24)
                     elif x[1] == "starting": # Will start all containers that are neccessary
                         password = x[3]
-                        if x[2] == "lscr.io/linuxserver/code-server":
-                            newID = dockerClient.containers.run(x[2], detach=True, ports={'8443/tcp':x[5]}, remove=True, environment=["PUID=1000", "GUID=1000", "TZ=America/Detroit", f"PASSWORD={password}", f"SUDO_PASSWORD={password}", "DEFAULT_WORKSPACE=/config/workspace"]).attrs["Id"]
-                        else:
+                        if x[2] == "lscr.io/linuxserver/code-server": # Special case for code server.
+                            newID = dockerClient.containers.run(x[2], detach=True, ports={'8443/tcp':x[5]}, remove=True, environment=["PUID=1000", "PGID=1000", "TZ=America/Detroit", f"PASSWORD={password}", f"SUDO_PASSWORD={password}", "DEFAULT_WORKSPACE=/config/workspace"]).attrs["Id"]
+                        elif x[2][0:8] == "lscr.io/": # IS the default code for all linuxserver images.
+                            newID = dockerClient.containers.run(x[2], detach=True, ports={'3000/tcp':x[5]}, remove=True, environment=["PUID=1000", "PGID=1000", "TZ=America/Detroit", "AUTO_LOGIN=false"], shm_size="1gb").attrs["Id"]
+                            # Makes sure that the container has the right password
+                            execID = dockerClient.api.exec_create(newID, f'bash -c "echo \"abc:{password}\" | chpasswd"', user="root")["Id"]
+                            dockerClient.api.exec_start(execID)
+                        else: # Default case
                             newID = dockerClient.containers.run(x[2], detach=True, ports={'80/tcp':x[5]}, remove=True, environment=[f"VNC_PASSWD={password}"]).attrs["Id"]
                         database.command(f"UPDATE docker SET action='started', id='{newID}' WHERE ID='{id}'")
                         writeLog(f"Container with id of {id} which changed to {newID} was started", 23)

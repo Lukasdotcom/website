@@ -32,6 +32,7 @@
         ?>
         <script type='text/javascript' src='index.js'></script>
         <h1>Run Containers</h1>
+        <p>If a username is needed it will always be abc</p>
         <table>
             <tbody id='docker'>
                 <tr>

@@ -60,10 +60,13 @@
         <br>
         <button id='createImage'>Create</button>
         <h3>List of official images</h3>
+        <p>Before adding them to the list of correct images you must pull the image.</p>
         <ul>
             <li>Simple Desktop - lukasdotcom/docker-desktop</li>
             <li>Firefox - lukasdotcom/firefox</li>
             <li>VScode - lscr.io/linuxserver/code-server</li>
+            <li>Dekstop v2 - lscr.io/linuxserver/webtop</li>
+            <li>Firefox v2 - lscr.io/linuxserver/firefox</li>
         </ul>
         <h3>How to create Image?</h3>
         <p>All you have to do to create a valid image for this is have a docker image that accepts an enviromental variable called VNC_PASSWD that is the password for the web interface and that exposes port 80 as a way to access the web interface. Then just publish it on dockerhub and pull it onto the device you are running this on.</p>
