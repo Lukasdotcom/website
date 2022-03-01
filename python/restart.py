@@ -367,7 +367,10 @@ Deny from all""")
                             writeLog(f"Container with id of {id} was stopped", 24)
                     elif x[1] == "starting": # Will start all containers that are neccessary
                         password = x[3]
-                        newID = dockerClient.containers.run(x[2], detach=True, ports={'80/tcp':x[5]}, remove=True, environment=[f"VNC_PASSWD={password}"]).attrs["Id"]
+                        if x[2] == "lscr.io/linuxserver/code-server":
+                            newID = dockerClient.containers.run(x[2], detach=True, ports={'8443/tcp':x[5]}, remove=True, environment=["PUID=1000", "GUID=1000", "TZ=America/Detroit", f"PASSWORD={password}", f"SUDO_PASSWORD={password}", "DEFAULT_WORKSPACE=/config/workspace"]).attrs["Id"]
+                        else:
+                            newID = dockerClient.containers.run(x[2], detach=True, ports={'80/tcp':x[5]}, remove=True, environment=[f"VNC_PASSWD={password}"]).attrs["Id"]
                         database.command(f"UPDATE docker SET action='started', id='{newID}' WHERE ID='{id}'")
                         writeLog(f"Container with id of {id} which changed to {newID} was started", 23)
                     elif x[1] == "stopping": # Stops all containers that need to be stopped.
