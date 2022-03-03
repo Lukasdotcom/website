@@ -34,7 +34,7 @@
             <input type="password" id="password" name="password"/><br>
             <input type="checkbox" id="signup" name="signup" value="True">
             <label for="signup">Check this to signup</label><br>
-            <button onClick="login(document.getElementById(`username`).value, document.getElementById(`password`).value, document.getElementById(`signup`).checked)">Login/Signup</button>
+            <button style="size:50px" id="login">Login/Signup</button>
         <p style="color:red" id="status"></p>';
     ?>
     </div>
