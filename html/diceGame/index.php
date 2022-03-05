@@ -45,7 +45,7 @@
         <h3>Permanent Upgrades</h3>
         <div id='reset'></div>
     </div>
-    <button class='red' onclick="completeReset()">Reset Game Completely</button>
+    <div class='red'><button onclick="completeReset()">Reset Game Completely</button></div>
     </div>
 </body>
 
