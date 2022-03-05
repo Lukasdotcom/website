@@ -72,6 +72,11 @@
                     $zip->close();
                     unlink('../gameData/Space3.zip');
                 }
+                $html = file_get_contents("../gameData/Space3/Space3.html");
+                $html = $html . $MATOMO;
+                $htmlFile = fopen("../gameData/Space3/Space3.html", "w");
+                fwrite($htmlFile, $html);
+                fclose($htmlFile);
             }
         }
     }

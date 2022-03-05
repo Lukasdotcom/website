@@ -65,6 +65,11 @@
                     $zip->close();
                     unlink('../gameData/idleBouncer.zip');
                 }
+                $html = file_get_contents("../gameData/idleBouncer/Idle Bouncer.html");
+                $html = $html . $MATOMO;
+                $htmlFile = fopen("../gameData/idleBouncer/Idle Bouncer.html", "w");
+                fwrite($htmlFile, $html);
+                fclose($htmlFile);
             }
         }
     }

@@ -16,6 +16,20 @@ if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
   $ua = "";
 }
 $MOBILE = is_numeric(strpos($ua, "mobile"));
+$MATOMO = "<!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u=`//analytics.lschaefer.xyz/`;
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->";
 
 require_once("ip.php");
 function delete_folder($path){ #Used to delete a folder
