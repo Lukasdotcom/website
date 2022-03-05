@@ -63,7 +63,7 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
         $id = sanitize(substr(sha1($id), 5));
         $port = intval($_POST["port"]);
         dbCommand("DELETE FROM docker WHERE ID='$id'");
-        dbCommand("INSERT INTO docker VALUES (?, 'stopped', '', 'ubuntu', '$USERNAME', '$port', '$id')", [htmlspecialchars($OGPOST["link"])]);
+        dbCommand("INSERT INTO docker VALUES (?, 'stopped', '', 'ubuntu', '$USERNAME', '$port', '$id')", [htmlspecialchars($OGPOST["link"], $flags=ENT_QUOTES)]);
         writeLog(28, "$USERNAME created container with id $id and with ip $address");
         echo "Created container with id $id";
         

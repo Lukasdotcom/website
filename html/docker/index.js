@@ -69,7 +69,7 @@ function update() { // Used to update the table
             JQerror(this.responseText);
         }
     }
-    ajax.open("GET", `/api/docker.php?containers=get&key='${getCookie('user')}'`);
+    ajax.open("GET", `/api/docker.php?containers=get&all=true&key='${getCookie('user')}'`);
     ajax.send(); 
 }
 
