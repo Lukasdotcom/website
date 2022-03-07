@@ -60,7 +60,6 @@
         <br>
         <button id='createImage'>Create</button>
         <h3>List of official images</h3>
-        <p>Before adding them to the list of correct images you must pull the image.</p>
         <ul>
             <li>Simple Desktop - lukasdotcom/docker-desktop</li>
             <li>Firefox - lukasdotcom/firefox</li>
