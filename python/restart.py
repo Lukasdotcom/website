@@ -394,6 +394,7 @@ Deny from all""")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git reset --hard")
                 os.system(f"git --work-tree={location[:-6]} --git-dir={location[:-5]}.git pull > {location}updateInfo.log")
                 os.system(f"{location[:-5]}python/update.sh")
+                os.system(f"composer --working-dir={location} update")
                 os.system(f"chown www-data:www-data {location}updateInfo.log")
                 writeLog("Server updated successfully.", 19)
             if os.path.isfile(location + "restore.json"): # Used to restore a previous version of the database
