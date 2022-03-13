@@ -1,6 +1,11 @@
 <?php
 require_once "api.php";
 if (array_key_exists("username", $_POST) and array_key_exists("type", $_POST) and array_key_exists("password", $_POST)) { // Used to login or signup and get the cookie
+    // Selects the correct options for the password hashing
+    $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
+    $jsonInfo = json_decode($jsonInfo, true);
+    $OPTIONS = $jsonInfo["passwordOptions"];
+    $USER = $_POST["username"];
     header("Access-Control-Allow-Origin: *"); // Will allow it from any origin to allow for space 3 to work in any domain
     // Will check if the ip address has passed its throttle point
     $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
@@ -17,7 +22,7 @@ if (array_key_exists("username", $_POST) and array_key_exists("type", $_POST) an
     if ($_POST["type"] === "signup") { // Will check if a signup was done
         $RESULT = dbRequest("username", "users", "username", $_POST["username"], 0);
         if ($RESULT == False) {
-            $PASSWORD = password_hash($_POST["password"], PASSWORD_BCRYPT);
+            $PASSWORD = password_hash($_POST["password"], PASSWORD_BCRYPT, $OPTIONS);
             dbAdd([$_POST["username"], $PASSWORD], "users");
         } else {
             http_response_code(409);
@@ -26,10 +31,10 @@ if (array_key_exists("username", $_POST) and array_key_exists("type", $_POST) an
             exit();
         }
     }
-    $RESULT = dbRequest("password", "users", "username", $_POST["username"], 0);
+    $RESULT = dbRequest2("SELECT * FROM users WHERE username='$USER'", "password");
     if ($RESULT) {
         $RESULT = $RESULT[0];
-        if (password_needs_rehash($RESULT, PASSWORD_BCRYPT)) {
+        if (! str_starts_with($RESULT, "$2y$")) { # Checks if it is a plain text password that still needs to get hashed and if it does it gets hashed.
             $RESULT2 = $RESULT;
             $RESULT = password_hash($RESULT, PASSWORD_BCRYPT);
             dbEdit("users", [["password", $RESULT]], ["password", $RESULT2], 0);
@@ -50,6 +55,12 @@ if (array_key_exists("username", $_POST) and array_key_exists("type", $_POST) an
             dbAdd($CookieForDB, "cookies");
             setcookie("user", $Cookie, time() + 600, "/");
             echo json_encode($Cookie);
+            // Checks if the password has to be rehashed
+            if (password_needs_rehash($RESULT, PASSWORD_BCRYPT, $OPTIONS)) {
+                $newPass = password_hash($_POST["password"], PASSWORD_BCRYPT, $OPTIONS);
+                dbCommand("UPDATE users SET password='$newPass' WHERE username='$USERNAME'");
+                writeLog(0, "$USERNAME's password was rehashed");
+            }
         } else {
             http_response_code(401);
             echo "Wrong password";
