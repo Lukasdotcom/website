@@ -37,7 +37,7 @@ if (array_key_exists("containers", $_GET)) { // Will list all avaliable containe
         http_response_code(403);
     } else { // Will stop the container
         dbCommand("UPDATE docker SET action='stopping' WHERE ID='$id'");
-        writeLog(23, "$USERNAME is stopping container with $image image and id $id and an IP of $address");
+        writeLog(23, "$USERNAME is stopping container with id $id and an IP of $address");
         echo "stopping";
     }
 } else if (array_key_exists("images", $_GET)) {
