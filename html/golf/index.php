@@ -37,6 +37,7 @@
             <label for="playersToStart">Players: </label><input type='number' value='4' id="playersToStart"><br>
             <label for="multiplierForFlip">Multiplier for flipping last card: </label><input type='number' value='2' id="multiplierForFlip"><br>
             <label for="pointsToEnd">Points to get out: </label><input type='number' value='100' id="pointsToEnd"><br>
+            <label for="decks">Number of decks to use </label><input type='number' value='1' id="decks"><br>
             <label for="password">Password(leave blank for none): </label><input type='password' value='' id="password"><br>
             <button id='create'>Create</button>
         </div>

@@ -56,8 +56,18 @@ function reshuffleDeck($game) {
  */
 function readyGame($game) {
     $deck = array(); # Used to get the deck ready
-    for ($i=0;$i<52;$i++) {
-        array_push($deck, $i);
+    $decks = dbRequest2("SELECT decks FROM golfGame WHERE ID='$game'");
+    # Makes sure that it is not asking for an unreasonable amount of decks
+    if ($decks > 50) {
+        $decks = 50;
+    } elseif ($decks < 1) {
+        $decks = 1;
+    }
+    # Creates the cards for all the decks.
+    for ($j=0;$j<$decks;$j++) {
+        for ($i=0;$i<52;$i++) {
+            array_push($deck, $i);
+        }
     }
     shuffle($deck);
     $gameData = dbRequest2("SELECT * FROM golfGame WHERE ID='$game'");
@@ -100,9 +110,11 @@ function readyGame($game) {
     }
 }
 if ($USERNAME) {
-    if (array_key_exists("game", $_GET)){ // Gets the log
-        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
-        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID FROM golfGame WHERE players != playersToStart and NOT EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY players DESC");
+    if (array_key_exists("game", $_GET)){ // Gets the game
+        # Finds all games the player is still playing.
+        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
+        # Finds all open games.
+        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks FROM golfGame WHERE players != playersToStart and NOT EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY players DESC");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
                 $data[$id]["password"] = true;
@@ -313,7 +325,7 @@ if ($USERNAME) {
             http_response_code(404);
             echo "Game not found";
         }
-    } elseif (array_key_exists("create", $_POST) and array_key_exists("cardNumber", $_POST) and array_key_exists("flipNumber", $_POST) and array_key_exists("playersToStart", $_POST) and array_key_exists("multiplierForFlip", $_POST)) { # Used to create a new room
+    } elseif (array_key_exists("create", $_POST) and array_key_exists("cardNumber", $_POST) and array_key_exists("flipNumber", $_POST) and array_key_exists("playersToStart", $_POST) and array_key_exists("multiplierForFlip", $_POST) and array_key_exists("decks", $_POST)) { # Used to create a new room
         $password = "";
         $name = $_POST["create"];
         $cardNumber = intval($_POST["cardNumber"]);
@@ -321,6 +333,7 @@ if ($USERNAME) {
         $multiplierForFlip = floatval($_POST["multiplierForFlip"]);
         $playersToStart = $_POST["playersToStart"];
         $pointsToEnd = intval($_POST["pointsToEnd"]);
+        $decks = intval($_POST["decks"]);
         $time = time();
         if (array_key_exists("password", $_POST)) {
             $password = $_POST["password"];
@@ -340,13 +353,16 @@ if ($USERNAME) {
         } elseif ($pointsToEnd <= 0) {
             http_response_code(400);
             echo "The points to end need to be more than 0";
-        } elseif ($playersToStart * $cardNumber >= 52) {
+        } elseif ($playersToStart * $cardNumber >= 52 * $decks) {
             http_response_code(400);
             echo "There are not enough cards in a deck for that amount of players and cards";
+        } elseif ($decks > 50 or $decks < 1) {
+            http_response_code(400);
+            echo "You can only have 50 decks";
         } else {
-            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time)");
+            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime, decks) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time, $decks)");
             echo "Created Game";
-            writeLog(14, "$USERNAME created game for $playersToStart players and $cardNumber cards and name $name with ip of $address");
+            writeLog(14, "$USERNAME created game for $playersToStart players, $cardNumber cards, $decks decks, and name $name with ip of $address");
         }
     } elseif (array_key_exists("forceUpdate", $_GET)) { // Used to force the update the next time an update is called
         $id = $_GET["forceUpdate"];
