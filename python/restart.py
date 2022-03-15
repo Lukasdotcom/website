@@ -367,7 +367,9 @@ Deny from all""")
                             database.command(f"UPDATE docker SET action='stopped' WHERE ID='{id}'")
                             writeLog(f"Container with id of {id} was stopped", 24)
                     elif x[1] == "starting": # Will start all containers that are neccessary
+                        # Will pull the image and delete all untagged images
                         dockerClient.images.pull(x[2])
+                        dockerClient.images.prune(filters={"dangling":1})
                         password = x[3]
                         if x[2] == "lscr.io/linuxserver/code-server": # Special case for code server.
                             newID = dockerClient.containers.run(x[2], detach=True, ports={'8443/tcp':x[5]}, remove=True, environment=["PUID=1000", "PGID=1000", "TZ=America/Detroit", f"PASSWORD={password}", f"SUDO_PASSWORD={password}", "DEFAULT_WORKSPACE=/config/workspace"]).attrs["Id"]
