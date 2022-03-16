@@ -56,7 +56,7 @@ function reshuffleDeck($game) {
  */
 function readyGame($game) {
     $deck = array(); # Used to get the deck ready
-    $decks = dbRequest2("SELECT decks FROM golfGame WHERE ID='$game'");
+    $decks = dbRequest2("SELECT decks FROM golfGame WHERE ID='$game'", "decks")[0];
     # Makes sure that it is not asking for an unreasonable amount of decks
     if ($decks > 50) {
         $decks = 50;
