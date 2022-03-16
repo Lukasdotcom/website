@@ -1,6 +1,57 @@
 <?php
 require_once "api.php";
 /**
+ * Used to move a card
+ * @param string $user The username of the player.
+ * @param string $game The game of the player.
+ * @param string $swap1 Whcih card should be swapped.
+ * @param string $swap2 If deck or discard should be swapped.
+ * @return array Code gives a http response code that would be good to associate with the reponse ex: 200=success and 400=failure and text gives a more precise message.
+ */
+function moveCard($user, $game, $swap1, $swap2) {
+    $self = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$game' and user='$user'");
+    $gameData = dbRequest2("SELECT * FROM golfGame WHERE ID='$game'");
+    if (!$self) {
+        return array("code" => 404, "text" => "Player does not exist");
+    }
+    if (! $gameData) {
+        return array("code" => 404, "text" => "Game does not exist");
+    }
+    $gameData = $gameData[0];
+    $selfID = $self[0]["orderID"];
+    $gameCurrentPlayer = $gameData["currentPlayer"];
+    if ($gameCurrentPlayer != $selfID) { # Makes sure that it is the players turn
+        return array("code" => 403, "text" => "It is not your turn");
+    }
+    $cardSwap = dbRequest2("SELECT * FROM golfGameCards WHERE user='$user' and gameID='$game' and cardPlacement='$swap1'");
+    if (!(($swap2 == "discard" or $swap2 == "deck") and $cardSwap)) { # Makes sure that player gave valid cards to be switched
+        return array("code" => 400, "text" => "Invalid Request");
+    }
+    // Makes sure the discard is reshuffled if neccessary.
+    $gameData = reshuffleDeck($gameData);
+    $deck = json_decode($gameData["deck"]);
+    $discard = json_decode($gameData["discard"]);
+    if ($swap2 == "discard" and $discard) { // Checks if the player wants to switch the discard pile or deck and if that is possible
+        $newCard = array_pop($discard);
+    } else {    
+        $newCard = array_pop($deck);
+    }
+    array_push($discard, $cardSwap[0]["card"]);
+    dbCommand("UPDATE golfGameCards SET card=$newCard, faceUp=1 WHERE user='$user' and gameID='$game' and cardPlacement='$swap1'");
+    $deck = json_encode($deck);
+    $discard = json_encode($discard);
+    do { // Will make sure the next picked player is a valid player that exists and is not eliminated.
+        $gameCurrentPlayer ++;
+        if ($gameData["playersToStart"] <= $gameCurrentPlayer) {
+            $gameCurrentPlayer = 0;
+        }
+    } while (dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='eliminated' and orderID='$gameCurrentPlayer' and gameID='$game'"));
+    $time = time();
+    dbCommand("UPDATE golfGame SET deck='$deck', discard='$discard', currentPlayer='$gameCurrentPlayer', turnStartTime='$time' WHERE id=$game");
+    dbCommand("UPDATE golfGamePlayers SET upToDate=0 WHERE gameID='$game'");
+    return array("code" => 200, "text" => "Switched card #$swap1 with $swap2");
+}
+/**
  * Calculates the points for a certain player
  * @param string $user The username of the player.
  * @param string $game The game of the player.
@@ -33,7 +84,7 @@ function calculatePoints($user, $game) {
  * Is used to check if the deck  needs to be reshuffled and if it does it reshuffles the deck.
  * @param array $game The data for the game.
  */
-function reshuffleDeck($game) { 
+function reshuffleDeck($game) {
     $deck = json_decode($game["deck"]);
     if (!$deck) {
         $ID = $game["ID"];
@@ -237,55 +288,9 @@ if ($USERNAME) {
             echo "You are not in this game";
         }
     } elseif (array_key_exists("swap", $_POST) and array_key_exists("swap2", $_POST) and array_key_exists("game", $_POST)) { // Used to swap 2 cards in the game
-        $id = $_POST["game"];
-        $self = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME'");
-        $game = dbRequest2("SELECT * FROM golfGame WHERE ID='$id'");
-        if ($self and $game) {
-            $game = $game[0];
-            $self = $self[0];
-            $selfID = $self["orderID"];
-            $gameCurrentPlayer = $game["currentPlayer"];
-            if ($gameCurrentPlayer != $selfID) { # Makes sure that it is the players turn
-                http_response_code(403);
-                echo "It is not your turn";
-                exit();
-            }
-            $cardPlacement = $_POST["swap"];
-            $cards = dbRequest2("SELECT * FROM golfGameCards WHERE user='$USERNAME' and gameID='$id'");
-            $cardSwap = dbRequest2("SELECT * FROM golfGameCards WHERE user='$USERNAME' and gameID='$id' and cardPlacement='$cardPlacement'");
-            if (!(($_POST["swap2"] == "discard" or $_POST["swap2"] == "deck") and $cardSwap)) { # Makes sure that player gave a valid request
-                http_response_code(400);
-                echo "Invalid request";
-                exit();
-            }
-            $game = reshuffleDeck($game);
-            $deck = json_decode($game["deck"]);
-            $discard = json_decode($game["discard"]);
-            if ($_POST["swap2"] == "discard" and $discard) { // Checks if the player wants to switch the discard pile or deck.
-                $newCard = array_pop($discard);
-            } else {    
-                $newCard = array_pop($deck);
-            }
-            array_push($discard, $cardSwap[0]["card"]);
-            dbCommand("UPDATE golfGameCards SET card=$newCard, faceUp=1 WHERE user='$USERNAME' and gameID='$id' and cardPlacement='$cardPlacement'");
-            $deck = json_encode($deck);
-            $discard = json_encode($discard);
-            do { // Will make sure the next picked player is a valid player that exists and is not eliminated.
-                $gameCurrentPlayer ++;
-                if ($game["playersToStart"] <= $gameCurrentPlayer) {
-                    $gameCurrentPlayer = 0;
-                }
-            } while (dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='eliminated' and orderID='$gameCurrentPlayer' and gameID='$id'"));
-            $type = $_POST["swap2"];
-            $card = $_POST["swap"];
-            echo "Switched card #$card with $type"; // Responds with what action was just done.
-            $time = time();
-            dbCommand("UPDATE golfGame SET deck='$deck', discard='$discard', currentPlayer='$gameCurrentPlayer', turnStartTime='$time' WHERE id=$id");
-            dbCommand("UPDATE golfGamePlayers SET upToDate=0 WHERE gameID='$id'");
-        } else {
-            http_response_code(404);
-            echo "Game does not exist";
-        }
+        $response = moveCard($USERNAME, $_POST["game"], $_POST["swap"], $_POST["swap2"]);
+        http_response_code($response["code"]);
+        echo $response["text"];
     } elseif (array_key_exists("join", $_POST)) { // Used to join a game.
         $id = intval($_POST["join"]);
         $game = dbRequest2("SELECT * FROM golfGame WHERE ID='$id'");
