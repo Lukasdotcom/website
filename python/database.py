@@ -165,9 +165,9 @@ def repair():  # Repairs all tables or updates them if needed
         "localStorage" : [["username", 0], ["data", 4]],
         "space3" : [["id", 5], ["owner", 0], ["title", 0], ["description", 4], ["preferences", 4], ["likes", 1], ["downloads", 1]],
         "space3likes" : [["id", 1], ["account", 0]],
-        "golfGamePlayers" : [["gameID", 1], ["multiplier", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0], ["upToDate", 6]],
+        "golfGamePlayers" : [["gameID", 1], ["multiplier", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0], ["upToDate", 6], ["turnsSkipped", 1]],
         "golfGameCards" : [["gameID", 1], ["user", 0], ["card", 1], ["cardPlacement", 1], ["faceUp", 6]],
-        "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6], ["decks", 1], ["skipTime", 1], ["timeLeft", 1]],
+        "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6], ["decks", 1], ["skipTime", 1], ["timeLeft", 1], ["skipTurns", 1]],
         "docker" : [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]],
         "dockerImages" : [["realName", 0], ["shortName", 0]]
     }
@@ -256,6 +256,13 @@ def repair():  # Repairs all tables or updates them if needed
                     command("UPDATE golfGame SET timeLeft='0'")
                     version = "v2.2"
                     updatedVersions.append("v2.2")
+                if versionNumber == "v2.2": # Adds support for limited amount of turns to skip
+                    command("ALTER table golfGame ADD skipTurns int")
+                    command("UPDATE golfGame SET skipTurns='0'")
+                    command("ALTER table golfGamePlayers ADD turnsSkipped int")
+                    command("UPDATE golfGamePlayers SET turnsSkipped='0'")
+                    version = "v2.3"
+                    updatedVersions.append("v2.3")
                 # Fixes the version if it is invalid to the latest version
                 if version != "v2.2":
                     version = "v2.2"
