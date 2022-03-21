@@ -15,12 +15,20 @@ import os
 import datetime
 import sys
 import glob
+import string
+whitelist = set(string.ascii_letters + string.digits + "/" + "@" + ".")
 try:
     import docker
     dockerClient = docker.from_env()
     skipDocker = False
 except:
     skipDocker = True
+
+def sanitize(txt): # Is a very simple sanitizer that allows all ascii_letters numbers and the / and @
+    if type(txt) == type(1) or type(txt) == type(True): # Makes sure that if it is an int or a bool it will not be sanitized because that is not neccessary.
+        return txt
+    else:
+        return ''.join([ch for ch in txt if ch in whitelist])
 
 def error(e):
     return "".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))
@@ -52,28 +60,61 @@ try:
         configFilePath = configFilePath + "config.json"
         # Will find the location where the config should be located.
         location = __file__[: __file__.rindex("/python/restart.py") + 1] + "html/"
+        # Creates config with the enviromental variables
+        if os.getenv("WEBSITE_DEVELOPER", "false") == "true":
+            developmentMachine = True
+        else:
+            developmentMachine = False
+        # This stores a list for the default config
+        envConfiguration = [
+            [["passwordOptions", "cost"], int(os.getenv("PASSWORD_ROUNDS", '10'))],
+            [["api"], os.getenv("WEBSITE_API")],
+            [["mail", "server"], os.getenv("MAIL_SMTP_SERVER", "smtp.sendgrid.net")],
+            [["mail", "username"], os.getenv("MAIL_USERNAME", "apikey")],
+            [["mail", "password"], os.getenv("MAIL_PASSWORD", "none")],
+            [["mail", "port"], int(os.getenv("MAIL_SMTP_PORT", "587"))],
+            [["database", "username"], os.getenv("WEBSITE_USER", "admin")],
+            [["database", "name"], os.getenv("WEBSITE_DATABASE_TABLE", "website")],
+            [["database", "password"], os.getenv("WEBSITE_PASSWORD", "password")],
+            [["database", "backupLocation"], os.getenv("WEBSITE_BACKUP_LOCATION", "/backup")],
+            [["database", "backupLength"], int(os.getenv("WEBSITE_BACKUP_LENGTH", "604800"))],
+            [["developer"], developmentMachine],
+            [["throttle"], int(os.getenv("WEBSITE_THROTTLE", "5"))],
+            [["throttleTime"], int(os.getenv("WEBSITE_THROTTLE_TIME", '30'))],
+            [["fanStart"], int(os.getenv("WEBSITE_FAN_START", '43'))],
+            [["fanStop"], int(os.getenv("WEBSITE_FAN_STOP", '35'))]
+        ]
         if os.path.exists(location + "/config.json"):
             configuration = readFile(location + "/config.json")
         else:
-            if os.getenv("WEBSITE_DEVELOPER", "false") == "true":
-                developmentMachine = True
-            else:
-                developmentMachine = False
-            configuration = {
-                "passwordOptions": {"cost": int(os.getenv("PASSWORD_ROUNDS", '10'))},
-                "api": os.getenv("WEBSITE_API"),
-                "mail": { "server": os.getenv("MAIL_SMTP_SERVER", "smtp.sendgrid.net"), "username": os.getenv("MAIL_USERNAME", "apikey"), "passsword": os.getenv("MAIL_PASSWORD", "none"), "port": int(os.getenv("MAIL_SMTP_PORT", "587")) },
-                "database": { "username": os.getenv("WEBSITE_USER", "admin"), "name": os.getenv("WEBSITE_DATABASE_TABLE", "website"), "password": os.getenv("WEBSITE_PASSWORD", "password"), "backupLocation": os.getenv("WEBSITE_BACKUP_LOCATION", "/backup"), "backupLength" : int(os.getenv("WEBSITE_BACKUP_LENGTH", "604800")) },
-                "developer": developmentMachine,
-                "throttle": int(os.getenv("WEBSITE_THROTTLE", "5")),
-                "throttleTime": int(os.getenv("WEBSITE_THROTTLE_TIME", '30')),
-                "fanStart" : int(os.getenv("WEBSITE_FAN_START", '43')),
-                "fanStop": int(os.getenv("WEBSITE_FAN_STOP", '35'))}
-            writeFile(f"{location}/config.json", configuration)
-            print("Created config with enviromental variables")
+            # Sets an empty config if none is found to be filled with the env vars
+            configuration = {}
+            print("Setting config with enviromental variables")
+        # Goes through config to make sure values are sanitized and that they exist
     except:
-        print("Could not find config file")
+        print("Could not create config")
         raise Exception
+    # Sanitizes and makes sure that config is complete.
+    try:
+        for x in envConfiguration:
+            try:
+                if len(x[0]) == 1:
+                    configuration[x[0][0]] = sanitize(configuration[x[0][0]])
+                else:
+                    configuration[x[0][0]][x[0][1]] = sanitize(configuration[x[0][0]][x[0][1]])
+            except:
+                if len(x[0]) == 1:
+                    configuration[x[0][0]] = sanitize(x[1])
+                else:
+                    # Checks how far the dictionary has been made
+                    try:
+                        configuration[x[0][0]][x[0][1]] = sanitize(x[1])
+                    except:
+                        configuration[x[0][0]] = {x[0][1] : sanitize(x[1])}
+    except:
+        print("Failed sanitizing the config")
+        raise Exception
+    writeFile(f"{location}/config.json", configuration)
     developmentMachine = configuration["developer"]
     backupLocation = configuration["database"]["backupLocation"]
     # Makes sure that the permissions are not wrong
@@ -202,6 +243,7 @@ try:
                 writeLog("Skipped backup due to a restore command", 18)
         except:
             writeLog("Database backup failed", 9)
+        # Will find all backup files and check them.
         backupLocation = configuration["database"]["backupLocation"]
         files = glob.glob(f"{backupLocation}/*.sql")
         for x in range(len(files)):
@@ -213,6 +255,7 @@ try:
                     writeLog(f"Removed old backup due to age, named {x}", 20)
             except:
                 os.remove(f"{backupLocation}/{x}")
+        # Gets a list of all backups to store in a file for easier access.
         files = glob.glob(f"{backupLocation}/*.sql")
         for x in range(len(files)):
             files[x] = files[x][len(backupLocation)+1:]
@@ -373,7 +416,7 @@ Deny from all""")
                         password = x[3]
                         if x[2] == "lscr.io/linuxserver/code-server": # Special case for code server.
                             newID = dockerClient.containers.run(x[2], detach=True, ports={'8443/tcp':x[5]}, remove=True, environment=["PUID=1000", "PGID=1000", "TZ=America/Detroit", f"PASSWORD={password}", f"SUDO_PASSWORD={password}", "DEFAULT_WORKSPACE=/config/workspace"]).attrs["Id"]
-                        elif x[2][0:8] == "lscr.io/": # IS the default code for all linuxserver images.
+                        elif x[2][0:8] == "lscr.io/": # Is the default code for all linuxserver images.
                             newID = dockerClient.containers.run(x[2], detach=True, ports={'3000/tcp':x[5]}, remove=True, environment=["PUID=1000", "PGID=1000", "TZ=America/Detroit", "AUTO_LOGIN=false"], shm_size="1gb").attrs["Id"]
                             # Makes sure that the container has the right password
                             execID = dockerClient.api.exec_create(newID, f'bash -c "echo \"abc:{password}\" | chpasswd"', user="root")["Id"]
