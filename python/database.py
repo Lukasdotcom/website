@@ -226,49 +226,54 @@ def repair():  # Repairs all tables or updates them if needed
                 changedTables.append(name)
         elif name == "information": # Used to check the information table to see if the database can be updated in a better way.
             version = trueSearch("SELECT data FROM information WHERE pointer='version'")
-            try: # In here you can update the version to a new version
-                versionNumber = version[0][0]
-                if versionNumber == "v1.0":
-                    try:
-                        command("ALTER TABLE cookies ADD lastIP varchar(255)")
-                    except Exception:
-                        1
-                    version = "v1.1"
-                    updatedVersions.append("v1.1")
-                if versionNumber == "v1.1":
-                    try:
-                        command("ALTER TABLE cookies ADD lastIP varchar(255)")
-                    except Exception:
-                        1
-                    createTable("docker", [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]])
-                    createTable("dockerImage", [["realName", 0], ["shortName", 0]])
-                    version = "v2.0"
-                    updatedVersions.append("v2.0")
-                if versionNumber == "v2.0": # Adds support for multiple decks
-                    command("ALTER table golfGame ADD decks int")
-                    command("UPDATE golfGame SET decks='1'")
-                    version = "v2.1"
-                    updatedVersions.append("v2.1")
-                if versionNumber == "v2.1": # Adds support for skip time
-                    command("ALTER table golfGame ADD skipTime int")
-                    command("ALTER table golfGame ADD timeLeft int")
-                    command("UPDATE golfGame SET skipTime='0'")
-                    command("UPDATE golfGame SET timeLeft='0'")
-                    version = "v2.2"
-                    updatedVersions.append("v2.2")
-                if versionNumber == "v2.2": # Adds support for limited amount of turns to skip
-                    command("ALTER table golfGame ADD skipTurns int")
-                    command("UPDATE golfGame SET skipTurns='0'")
-                    command("ALTER table golfGamePlayers ADD turnsSkipped int")
-                    command("UPDATE golfGamePlayers SET turnsSkipped='0'")
-                    version = "v2.3"
-                    updatedVersions.append("v2.3")
-                # Fixes the version if it is invalid to the latest version
-                if version != "v2.2":
-                    version = "v2.2"
-            except:
-                1
-            command("DELETE FROM information WHERE pointer='version'")
-            command(f"INSERT INTO information VALUES('version', '{version}')")
+            latest_version = "v2.3"
+            if version: # Checks if the version tag still exists.
+                try: # In here you can update the version to a new version
+                    version = version[0][0]
+                    if version == "v1.0":
+                        try:
+                            command("ALTER TABLE cookies ADD lastIP varchar(255)")
+                        except Exception:
+                            1
+                        version = "v1.1"
+                        updatedVersions.append("v1.1")
+                    if version == "v1.1":
+                        try:
+                            command("ALTER TABLE cookies ADD lastIP varchar(255)")
+                        except Exception:
+                            1
+                        createTable("docker", [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]])
+                        createTable("dockerImage", [["realName", 0], ["shortName", 0]])
+                        version = "v2.0"
+                        updatedVersions.append("v2.0")
+                    if version == "v2.0": # Adds support for multiple decks
+                        command("ALTER table golfGame ADD decks int")
+                        command("UPDATE golfGame SET decks='1'")
+                        version = "v2.1"
+                        updatedVersions.append("v2.1")
+                    if version == "v2.1": # Adds support for skip time
+                        command("ALTER table golfGame ADD skipTime int")
+                        command("ALTER table golfGame ADD timeLeft int")
+                        command("UPDATE golfGame SET skipTime='0'")
+                        command("UPDATE golfGame SET timeLeft='0'")
+                        version = "v2.2"
+                        updatedVersions.append("v2.2")
+                    if version == "v2.2": # Adds support for limited amount of turns to skip
+                        command("ALTER table golfGame ADD skipTurns int")
+                        command("UPDATE golfGame SET skipTurns='0'")
+                        command("ALTER table golfGamePlayers ADD turnsSkipped int")
+                        command("UPDATE golfGamePlayers SET turnsSkipped='0'")
+                        version = "v2.3"
+                        updatedVersions.append("v2.3")
+                    # Fixes the version if it is invalid to the latest version
+                    if version != latest_version:
+                        version = latest_version
+                except:
+                    1
+                command("DELETE FROM information WHERE pointer='version'")
+                command(f"INSERT INTO information VALUES('version', '{version}')")
+            else:
+                command(f"INSERT INTO information VALUES('version', '{latest_version}')")
+                changedTables.append("information")
     db2.close()
     return changedTables, updatedVersions
