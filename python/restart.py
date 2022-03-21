@@ -97,20 +97,21 @@ try:
     # Sanitizes and makes sure that config is complete.
     try:
         for x in envConfiguration:
-            try:
-                if len(x[0]) == 1:
+            if len(x[0]) == 1:
+                # Checks if the key value pair exists or if it has to be created and the enviromental variable value has to be used
+                if x[0][0] in configuration:
                     configuration[x[0][0]] = sanitize(configuration[x[0][0]])
                 else:
-                    configuration[x[0][0]][x[0][1]] = sanitize(configuration[x[0][0]][x[0][1]])
-            except:
-                if len(x[0]) == 1:
                     configuration[x[0][0]] = sanitize(x[1])
-                else:
-                    # Checks how far the dictionary has been made
-                    try:
+            else:
+                # Checks if the key value pair exists or if it has to be created and the enviromental variable value has to be used
+                if x[0][0] in configuration:
+                    if x[0][1] in configuration[x[0][0]]:
+                        configuration[x[0][0]][x[0][1]] = sanitize(configuration[x[0][0]][x[0][1]])
+                    else:
                         configuration[x[0][0]][x[0][1]] = sanitize(x[1])
-                    except:
-                        configuration[x[0][0]] = {x[0][1] : sanitize(x[1])}
+                else:
+                    configuration[x[0][0]] = {x[0][1] : sanitize(x[1])}
     except:
         print("Failed sanitizing the config")
         raise Exception
