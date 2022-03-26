@@ -5,6 +5,8 @@ $(document).ready(function() {
         $("#login").button("disable")
         ajax.onload = function() {
             if (ajax.status == 200) {
+                // This is for an event in matomo
+                _paq.push(['trackEvent', 'User', 'Login', username]);
                 // Will redirect to a certain place when neccessary
                 let searchParams = new URLSearchParams(window.location.search);
                 let redirect = searchParams.get('redirect');
@@ -28,6 +30,7 @@ $(document).ready(function() {
         }
         ajax.open("POST", "/api/login.php");
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajax.send(`type='${type}'&password='${$("#password").val()}'&username='${$("#username").val()}'`);
+        var username = $("#username").val()
+        ajax.send(`type='${type}'&password='${$("#password").val()}'&username='${username}'`);
     });
 });
