@@ -27,15 +27,15 @@
     <p>For a mac download <a href="../gameData/Space3macos.zip">click here</a>.</p>
     <?php
     if (file_exists("space3.json")) {
-        $youtubeInfo = file_get_contents("space3.json");
-        $youtubeInfo = json_decode($youtubeInfo, true);
+        $fileInfo = file_get_contents("space3.json");
+        $fileInfo = json_decode($fileInfo, true);
         $newData = false;
-        if ($youtubeInfo[0] + 3600 < time()) {
+        if ($fileInfo[0] + 3600 < time()) {
             $newData = true;
         }
     } else {
         $newData = true;
-        $youtubeInfo = [time(), "null"];
+        $fileInfo = [time(), "null"];
     }
     if ($newData) {
         $url = "https://api.github.com/repos/lukasdotcom/space-3/git/refs/tags";
@@ -57,7 +57,8 @@
             $jsonFile = fopen("space3.json", "w");
             fwrite($jsonFile, $data);
             fclose($jsonFile);
-            if ($name != $youtubeInfo[1] and $name) {
+            // Checks if a new version is out
+            if ($name != $fileInfo[1] and $name) {
                 $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/pwa.zip";
                 file_put_contents("../gameData/Space3.zip", fopen($url, 'r'));
                 $url = "https://github.com/Lukasdotcom/Space-3/releases/download/$name/macos.zip";
@@ -77,6 +78,7 @@
                 $htmlFile = fopen("../gameData/Space3/Space3.html", "w");
                 fwrite($htmlFile, $html);
                 fclose($htmlFile);
+                writeLog(30, "Downloaded $name of Idle Bouncer");
             }
         }
     }

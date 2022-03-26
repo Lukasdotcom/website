@@ -24,17 +24,18 @@
     <p>For a link to the souce code <a href="https://github.com/Lukasdotcom/Idle-Bouncer" target="_blank" rel="noopener noreferrer">click here</a>.</p>
     <?php
     if (file_exists("Idle-Bouncer.json")) {
-        $youtubeInfo = file_get_contents("Idle-Bouncer.json");
-        $youtubeInfo = json_decode($youtubeInfo, true);
+        $fileInfo = file_get_contents("Idle-Bouncer.json");
+        $fileInfo = json_decode($fileInfo, true);
         $newData = false;
-        if ($youtubeInfo[0] + 3600 < time()) {
+        if ($fileInfo[0] + 3600 < time()) {
             $newData = true;
         }
     } else {
         $newData = true;
-        $youtubeInfo = [time(), "null"];
+        $fileInfo = [time(), "null"];
     }
     if ($newData) {
+        // Checks for the newest Data.
         $url = "https://api.github.com/repos/lukasdotcom/Idle-Bouncer/git/refs/tags";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_USERAGENT, "PHP server");
@@ -54,7 +55,8 @@
             $jsonFile = fopen("Idle-Bouncer.json", "w");
             fwrite($jsonFile, $data);
             fclose($jsonFile);
-            if ($name != $youtubeInfo[1] and $name) {
+            // Checks if a new version is out
+            if ($name != $fileInfo[1] and $name) {
                 $url = "https://github.com/Lukasdotcom/Idle-Bouncer/releases/download/$name/PWA.zip";
                 file_put_contents("../gameData/idleBouncer.zip", fopen($url, 'r'));
                 $zip = new ZipArchive;
@@ -70,6 +72,7 @@
                 $htmlFile = fopen("../gameData/idleBouncer/Idle Bouncer.html", "w");
                 fwrite($htmlFile, $html);
                 fclose($htmlFile);
+                writeLog(30, "Downloaded $name of Idle Bouncer");
             }
         }
     }
