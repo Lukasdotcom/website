@@ -80,3 +80,7 @@ function JQerror(text, length=10000) { // Used to display an error to the user
         $(`#${id}`).remove()
     }, length)
 }
+
+function randomElement(array) { // Returns a random element in an array
+    return array[Math.floor(Math.random() * array.length)]
+}
