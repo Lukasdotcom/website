@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Logic Sentence
+        Truth Tree
     </title>
     <?php
     $DESCRIPTION = "This just contains a simple quiz that helps you decompose a truth tree.";
