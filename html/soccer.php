@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family - Soccer Videos
+        Soccer Videos
     </title>
     <?php
     $DESCRIPTION = "Videos of playing soccer.";

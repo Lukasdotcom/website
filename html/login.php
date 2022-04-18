@@ -4,10 +4,10 @@
 
 <head>
     <title>
-        Schaefer Family - Login
+        Login
     </title>
     <?php
-    $DESCRIPTION = "Login page for Schaefer family.";
+    $DESCRIPTION = "Login page for my personal website.";
     include 'include/all.php';
     if ($USERNAME) {
         setcookie("user", "", time() - 300);

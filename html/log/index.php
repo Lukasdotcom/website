@@ -3,7 +3,7 @@
 
 <head>
     <title>
-        Schaefer Family - Log Page
+        Log Page
     </title>
     <?php
     $DESCRIPTION = "Server log.";

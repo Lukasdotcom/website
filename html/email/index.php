@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family
+        Email
     </title>
     <?php
     $DESCRIPTION = "A way to easily send emails through an SMTP server.";

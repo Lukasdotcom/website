@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family - Floppy
+        Floppy
     </title>
     <?php
     $DESCRIPTION = "The great bun bun's videos. Floppy has many great videos.";

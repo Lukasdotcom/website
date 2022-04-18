@@ -3,7 +3,7 @@
 
 <head>
     <title>
-        Schaefer Family - Maintenance
+        Maintenance Page
     </title>
     <?php
     header('Retry-After: 3600', true);

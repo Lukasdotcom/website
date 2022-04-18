@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family
+        Page Not Found
     </title>
     <?php
     $DESCRIPTION = "This page could not be found.";

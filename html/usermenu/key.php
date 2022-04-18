@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family - Manage Sessions
+        Manage Sessions
     </title>
     <?php
     $DESCRIPTION = "A place where you can manage your sessions and api keys";

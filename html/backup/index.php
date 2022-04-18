@@ -3,7 +3,7 @@
 
 <head>
     <title>
-        Schaefer Family - Backups
+        Backups
     </title>
     <?php
     $DESCRIPTION = "A place to manage the backups.";

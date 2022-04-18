@@ -3,7 +3,7 @@
 
 <head>
     <title>
-        Schaefer Family - User Page
+        User Page
     </title>
     <?php
     $DESCRIPTION = "Menu for editing users and deleting them.";

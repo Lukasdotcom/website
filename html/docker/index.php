@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family - Containers
+        Containers
     </title>
     <?php
     $DESCRIPTION = "A way to start a few VM and access them in a web browser";

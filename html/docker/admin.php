@@ -4,7 +4,7 @@
 
 <head>
     <title>
-        Schaefer Family - Manage Containers
+        Manage Containers
     </title>
     <?php
     $DESCRIPTION = "A way to manage the docker containers and which ones can be used.";
