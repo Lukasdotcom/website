@@ -8,7 +8,7 @@ $(document).ready(function() {
 const negationLikelyhood = 0.2
 const upperCaseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 const logicOperations = ["v", "*", "→", "↔"]
-const parenthesis = ["()", "[]", "{}"]
+const parenthesis = [["(", ")"], ["[", "]"], ["{", "}"], ["<b style='font-size:larger'>(</b>", "<b style='font-size:larger'>)</b>"]]
 function generateTruthSentence(complexity) { // Used to generate a logic sentence
     let truthSentence = ""
     // The depth in parenthesis
@@ -56,8 +56,8 @@ function firstOperation() {
     let complexity = parseInt($("#firstOperationComplexity").val())
     if (complexity < 2) {
         complexity = 2
-    } else if (complexity > 20) {
-        complexity = 20
+    } else if (complexity > 100) {
+        complexity = 100
     }
     localStorage.firstOperationComplexity = complexity
     // Generates a sentence
@@ -74,7 +74,7 @@ function firstOperation() {
             }
         })
         if (logicOperations.includes(sentence[index])) {
-            trueSentence += `<a style='color:green' onClick='if(${depth == 1}) {alert("You are correct"); firstOperation()} else {alert("This is the wrong answer")}'>${sentence[index]}</a>`
+            trueSentence += `<a style='color:green' onClick='if(${depth == 1}) {alert("You are correct"); firstOperation()} else {alert("This is the wrong answer")}'> ${sentence[index]} </a>`
         } else {
             trueSentence += sentence[index]
         }
