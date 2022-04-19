@@ -56,6 +56,8 @@ function firstOperation() {
     let complexity = parseInt($("#firstOperationComplexity").val())
     if (complexity < 2) {
         complexity = 2
+    } else if (complexity > 20) {
+        complexity = 20
     }
     localStorage.firstOperationComplexity = complexity
     // Generates a sentence
