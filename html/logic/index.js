@@ -53,7 +53,6 @@ function generateTruthSentence(complexity) { // Used to generate a logic sentenc
 var firstOperationSentence = ""
 var firstOperationAttempts = 0
 function firstOperation() {
-    // Gets the complexity from the input
     let complexity = parseInt($("#firstOperationComplexity").val())
     if (complexity < 2) {
         complexity = 2
@@ -62,11 +61,9 @@ function firstOperation() {
     }
     // Checks if the game has already been played and if this was a completed game sends the event.
     if (firstOperationAttempts != 0) {
-        _paq.push(['trackEvent', 'Truth Tree', 'Solved', firstOperationAttempts])
+        _paq.push(['trackEvent', 'Truth Tree', `Attempts : ${firstOperationAttempts}`, `Complexity : ${localStorage.firstOperationComplexity}`])
         firstOperationAttempts = 0
     }
-    // Makes sure that if the page is basically instantly left this event does not fire off
-    setTimeout(() => {_paq.push(['trackEvent', 'Truth Tree', 'Generate', complexity])}, 300)
     localStorage.firstOperationComplexity = complexity
     // Generates a sentence
     sentence = generateTruthSentence(complexity)
