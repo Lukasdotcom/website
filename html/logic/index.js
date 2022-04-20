@@ -51,6 +51,7 @@ function generateTruthSentence(complexity) { // Used to generate a logic sentenc
     return truthSentence
 }
 var firstOperationSentence = ""
+var firstOperationAttempts = 0
 function firstOperation() {
     // Gets the complexity from the input
     let complexity = parseInt($("#firstOperationComplexity").val())
@@ -59,6 +60,13 @@ function firstOperation() {
     } else if (complexity > 100) {
         complexity = 100
     }
+    // Checks if the game has already been played and if this was a completed game sends the event.
+    if (firstOperationAttempts != 0) {
+        _paq.push(['trackEvent', 'Truth Tree', 'Solved', firstOperationAttempts])
+        firstOperationAttempts = 0
+    }
+    // Makes sure that if the page is basically instantly left this event does not fire off
+    setTimeout(() => {_paq.push(['trackEvent', 'Truth Tree', 'Generate', complexity])}, 300)
     localStorage.firstOperationComplexity = complexity
     // Generates a sentence
     sentence = generateTruthSentence(complexity)
@@ -74,7 +82,7 @@ function firstOperation() {
             }
         })
         if (logicOperations.includes(sentence[index])) {
-            trueSentence += `<a style='color:green' onClick='if(${depth == 1}) {alert("You are correct"); firstOperation()} else {alert("This is the wrong answer")}'> ${sentence[index]} </a>`
+            trueSentence += `<a style='color:green' onClick='firstOperationAttempts ++;if(${depth == 1}) {alert("You are correct"); firstOperation()} else {alert("This is the wrong answer")}'> ${sentence[index]} </a>`
         } else {
             trueSentence += sentence[index]
         }
