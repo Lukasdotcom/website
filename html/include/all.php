@@ -20,6 +20,10 @@ include 'functions.php';
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 <?php
 echo $MATOMO;
+if ($USERNAME) {
+  // Makes sure the Username is added in the analytics platform
+  echo "<script>_paq.push(['setUserId', '$USERNAME']);</script>";
+}
 if ($MOBILE) { // Tells javascript if this is a mobile user
   echo "<script type='text/javascript'>var mobile = true</script>";
 } else {
