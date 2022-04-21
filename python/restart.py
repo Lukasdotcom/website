@@ -82,7 +82,9 @@ try:
             [["throttle"], int(os.getenv("WEBSITE_THROTTLE", "5"))],
             [["throttleTime"], int(os.getenv("WEBSITE_THROTTLE_TIME", '30'))],
             [["fanStart"], int(os.getenv("WEBSITE_FAN_START", '43'))],
-            [["fanStop"], int(os.getenv("WEBSITE_FAN_STOP", '35'))]
+            [["fanStop"], int(os.getenv("WEBSITE_FAN_STOP", '35'))],
+            [["matomoDomain"], os.getenv("MATOMO_DOMAIN", 'example.com')],
+            [["matomoSiteId"], int(os.getenv("MATOMO_SITE_ID", '1'))],
         ]
         if os.path.exists(location + "/config.json"):
             configuration = readFile(location + "/config.json")

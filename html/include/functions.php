@@ -4,6 +4,8 @@ require __DIR__ . '/../vendor/autoload.php'; # Loads all composer files
 $jsonInfo = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/config.json");
 $jsonData = json_decode($jsonInfo, true);
 $developer = $jsonData["developer"];
+$MATOMO_DOMAIN = $jsonData["matomoDomain"];
+$MATOMO_SITE_ID = $jsonData["matomoSiteId"];
 if ($developer) {
   ini_set('display_errors', 1);
   ini_set('display_startup_errors', 1);
@@ -22,9 +24,9 @@ $MATOMO = "<!-- Matomo -->
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u=`//analytics.lschaefer.xyz/`;
+    var u=`//$MATOMO_DOMAIN/`;
     _paq.push(['setTrackerUrl', u+'matomo.php']);
-    _paq.push(['setSiteId', '1']);
+    _paq.push(['setSiteId', '$MATOMO_SITE_ID']);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
   })();
