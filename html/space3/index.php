@@ -78,7 +78,7 @@
                 $htmlFile = fopen("../gameData/Space3/Space3.html", "w");
                 fwrite($htmlFile, $html);
                 fclose($htmlFile);
-                writeLog(30, "Downloaded $name of Idle Bouncer");
+                writeLog(30, "Downloaded $name of Space 3");
             }
         }
     }
