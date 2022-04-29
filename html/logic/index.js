@@ -48,7 +48,7 @@ function firstOperation() {
     }
     // Checks if the game has already been played and if this was a completed game sends the event.
     if (firstOperationAttempts != 0) {
-        _paq.push(['trackEvent', 'Truth Tree', `Attempts : ${firstOperationAttempts}`, `Complexity : ${localStorage.firstOperationComplexity}`])
+        _paq.push(['trackEvent', 'Truth Tree', `Complexity : ${localStorage.firstOperationComplexity}`], `Attempts : ${firstOperationAttempts}`)
         firstOperationAttempts = 0
     }
     localStorage.firstOperationComplexity = complexity
