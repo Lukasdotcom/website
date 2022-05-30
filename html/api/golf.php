@@ -263,7 +263,6 @@ if ($USERNAME) {
                             if (dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='eliminated'")) { // Makes sure that not all the players are eliminated
                                 $length = count($players);
                                 $resetPoints = $game["resetPoints"];
-                                writeLog(0, "RAN THIS CODE with resetPonts=$resetPoints");
                                 for ($i=0;$i<$length; $i++) { // Will calculate points for every player and add them to the total
                                     $name = $players[$i]["user"];
                                     $newPoints = $players[$i]["points"] + calculatePoints($name, $game["ID"]);
