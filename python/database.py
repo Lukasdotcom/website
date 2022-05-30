@@ -268,6 +268,8 @@ def repair():  # Repairs all tables or updates them if needed
                     if version == "v2.3": # Adds support for reset points when hitting a certain multiplier
                         command("ALTER table golfGame ADD resetPoints int")
                         command("UPDATE golfGame SET resetPoints='0'")
+                        version = "v2.4"
+                        updatedVersions.append("v2.4")
                     # Fixes the version if it is invalid to the latest version
                     if version != latest_version:
                         version = latest_version
