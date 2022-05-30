@@ -164,9 +164,9 @@ function readyGame($game) {
 if ($USERNAME) {
     if (array_key_exists("game", $_GET)){ // Gets the game
         # Finds all games the player is still playing.
-        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
+        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns, resetPoints FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
         # Finds all open games.
-        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns FROM golfGame WHERE players != playersToStart and NOT EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY players DESC");
+        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns, resetPoints FROM golfGame WHERE players != playersToStart and NOT EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY players DESC");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
                 $data[$id]["password"] = true;
@@ -260,11 +260,18 @@ if ($USERNAME) {
                         dbCommand("UPDATE golfGamePlayers SET lastMode='$action' WHERE gameID='$id' and user='$USERNAME'");
                         $id = $game["ID"];
                         if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and (lastMode='switch' or lastMode='')")) { // The code for when a new round is started
-                            if (dbRequest2("SELECT * FROM golfGamePlayers WHERe gameID='$id' and not lastMode='eliminated'")) {
+                            if (dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='eliminated'")) { // Makes sure that not all the players are eliminated
                                 $length = count($players);
+                                $resetPoints = $game["resetPoints"];
+                                writeLog(0, "RAN THIS CODE with resetPonts=$resetPoints");
                                 for ($i=0;$i<$length; $i++) { // Will calculate points for every player and add them to the total
                                     $name = $players[$i]["user"];
                                     $newPoints = $players[$i]["points"] + calculatePoints($name, $game["ID"]);
+                                    if ($resetPoints > 0) { // Makes sure that resetPoints is enabled
+                                        if ($newPoints % $resetPoints == 0) { // Checks if the points are at a resetable amount
+                                            $newPoints = 0;
+                                        } 
+                                    }
                                     dbCommand("UPDATE golfGamePlayers SET points=$newPoints WHERE gameID=$id and user='$name'");
                                 }
                                 $game = readyGame($id);
@@ -359,6 +366,7 @@ if ($USERNAME) {
         $decks = intval($_POST["decks"]);
         $skipTime = intval($_POST["skipTime"]);
         $skipTurns = intval($_POST["skipTurns"]);
+        $resetPoints = intval($_POST["resetPoints"]);
         $time = time();
         if (array_key_exists("password", $_POST)) {
             $password = $_POST["password"];
@@ -391,8 +399,11 @@ if ($USERNAME) {
         }  elseif ($skipTurns < 0) {
             http_response_code(400);
             echo "Only positive amount of turns skiped are allowed";
+        } elseif ($resetPoints < 0) {
+            http_response_code(400);
+            echo "Reset points must be a positive number or 0";
         } else {
-            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime, decks, skipTime, timeLeft, skipTurns) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time, $decks, $skipTime, $skipTime, $skipTurns)");
+            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime, decks, skipTime, timeLeft, skipTurns, resetPoints) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time, $decks, $skipTime, $skipTime, $skipTurns, $resetPoints)");
             echo "Created Game";
             writeLog(14, "$USERNAME created game for $playersToStart players, $cardNumber cards, $decks decks, and name $name with ip of $address");
         }
