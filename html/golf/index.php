@@ -40,7 +40,7 @@
             <label for="decks">Number of decks to use: </label><input type='number' value='1' id="decks"><br>
             <label for="skipTime">Amount of time to wait before player is skipped(0 means infinite): </label><input type='number' value='0' id="skipTime"><br>
             <label for="skipTurns">Amount of turns the player can skip(0 means infinite): </label><input type='number' value='0' id="skipTurns"><br>
-            <label for="resetPoints">The number of points that when a multiple of thsi number is reached your points will reset(0 disables this): </label><input type='number' value='0' id="resetPoints"><br>
+            <label for="resetPoints">The number of points that when a multiple of this number is reached your points will reset(0 disables this): </label><input type='number' value='0' id="resetPoints"><br>
             <label for="password">Password(leave blank for none): </label><input type='password' value='' id="password"><br>
             <button id='create'>Create</button>
         </div>
