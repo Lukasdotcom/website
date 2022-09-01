@@ -16,3 +16,4 @@ error.log
 !/html/composer.json
 /html/composer.lock
 /html/vendor/
+.DS_STORE

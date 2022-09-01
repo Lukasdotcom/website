@@ -39,22 +39,6 @@ function lastElement(array) { // returns the last element in an array
     return array[array.length - 1];
 }
 
-function imageLoad(name, quality) { // used for better loading of image
-    if (quality == "first") {
-        $(`#min${name}`).attr("src", `/img/${name}.min.jpg`);
-        $(`#min${name}`).attr("onload", `imageLoad('${name}', 'medium')`);
-    }else if (quality == "medium") {
-        $(`#first${name}`).hide();
-        $(`#min${name}`).show();
-        if (! mobile) {
-            $(`#${name}`).attr("src", `/img/${name}.jpg`);
-            $(`#${name}`).attr("onload", `imageLoad('${name}', false)`);
-        }
-    } else {
-        $(`#min${name}`).hide();
-        $(`#${name}`).show()
-    }
-}
 
 function beautify(val) // Will make a big number easier to read
 {

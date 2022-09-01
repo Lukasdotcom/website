@@ -11,10 +11,10 @@ include 'functions.php';
 <link rel="manifest" href="/favicon/site.webmanifest">
 <link rel="stylesheet" type="text/css" href="/css/website.css" />
 <script type="text/javascript" src="/javascript/jquery.js"></script>
-<script type="text/javascript" src="/javascript/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="/css/jquery-ui.min.css">
-<script type="text/javascript" src="/javascript/functions.js"></script>
-<script type="text/javascript" src="/javascript/cookie.js"></script>
+<script defer="true" type="text/javascript" src="/javascript/jquery-ui.min.js"></script>
+<link defer="true" rel="stylesheet" href="/css/jquery-ui.min.css">
+<script defer="true" type="text/javascript" src="/javascript/functions.js"></script>
+<script defer="true" type="text/javascript" src="/javascript/cookie.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -37,12 +37,13 @@ if (isset($DESCRIPTION)) {
 /**
  * Creates an image that loads a simple image before loading the entire image.
  * @param string $img used as the name of the image
+ * @param string $alt used as the alternate text
  */
 function createImage($img, $alt, $style="width:100%;") {
   global $MOBILE;
-  echo "<img id='first$img' onload='imageLoad(`$img`, `first`)' src='/img/$img.first.jpg' alt='$alt' style='$style'>";
-  echo "<img id='min$img' src='' alt='$alt' style='$style display: none;'>";
-  if (! $MOBILE) {
-    echo "<img id='$img' src='' alt='$alt' style='$style display: none;'>";
+  if ($MOBILE && !in_array($img, ["notFound"])) {
+    echo "<img src='/img/$img.mobile.jpg' alt='$alt' style='$style'>";
+  } else {
+    echo "<img src='/img/$img.jpg' alt='$alt' style='$style'>";
   }
 }
