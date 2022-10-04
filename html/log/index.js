@@ -75,6 +75,7 @@ function update() { // Sends a request to the server for the server to update
         if (ajax.status == 200) {
             alert("Updating Server.");
             updateUpdateInfo();
+            setInterval(updateUpdateInfo, 10000); // Makes sure to update the information about updates every 10 seconds
         } else {
             alert("Error something went wrong.");
         }     
@@ -157,10 +158,7 @@ $(document).ready(function() {
     // Makes sure that the categories are collapsed in the right way
     collapseCategories();
     collapseCategories();
-
-    setInterval(updateUpdateInfo, 10000); // Makes sure to update the information about updates every 10 seconds
     if (localStorage.log != undefined) { // Sets the correct color and visibilty for each log category.
-    
         colors = JSON.parse(localStorage.log);
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.color = colors[i][1];
