@@ -44,13 +44,13 @@ function remove(message, time, id) { // Used to remove a log entry from the log.
 }
 function collapseCategories() { // Collapses or uncollapses the categories to make the webpage cleaner or more detailed.
     if (! localStorage.collapseCategories) {
-        document.getElementById(`collapseCategories`).innerHTML = "Uncollapse Categories";
+        document.getElementById(`collapseCategories`).innerText = "Uncollapse Categories";
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.display = "none";
         }
         localStorage.collapseCategories = true;
     } else {
-        document.getElementById(`collapseCategories`).innerHTML = "Collapse Categories";
+        document.getElementById(`collapseCategories`).innerText = "Collapse Categories";
         for(var i=0;i<typeLength;i++) {
             document.getElementById(`${types[i]["name"]}.text`).style.display = "";
         }
