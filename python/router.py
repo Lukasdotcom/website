@@ -5,6 +5,7 @@ from urllib.request import urlopen
 
 
 def loginInternet():  # Makes sure that the server is logged in
+    return
     urlLogin = "http://192.168.1.254/cgi-bin/login.ha"
     login = {
         "nonce": "76d8f8d800112e9573bacb9c56f0ecf82c9f2ed23fa10a83",
@@ -21,6 +22,7 @@ def loginInternet():  # Makes sure that the server is logged in
 
 
 def turnOnInternet():  # Turns on the internet
+    return
     code = loginInternet()
     postObjectOff = {
         "nonce": code,
