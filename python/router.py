@@ -22,7 +22,7 @@ def loginInternet():  # Makes sure that the server is logged in
 
 
 def turnOnInternet():  # Turns on the internet
-    return
+    return True
     code = loginInternet()
     postObjectOff = {
         "nonce": code,
@@ -65,7 +65,7 @@ def turnOnInternet():  # Turns on the internet
 
 
 def turnOffInternet():  # Turns of the internet
-    return
+    return False
     code = loginInternet()
     postObjectOn = {
         "nonce": code,
