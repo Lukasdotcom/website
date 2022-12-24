@@ -65,6 +65,7 @@ def turnOnInternet():  # Turns on the internet
 
 
 def turnOffInternet():  # Turns of the internet
+    return
     code = loginInternet()
     postObjectOn = {
         "nonce": code,
