@@ -309,21 +309,6 @@ Deny from all""")
                 continue
     # Runs stuff that runs every boot
     dailyMaintenance()
-    # Will make sure that the internal clock is right for 1 minute
-    times = time.time()
-    change = 0
-    startTime = times
-    if len(sys.argv) == 1:
-        while change < 1:
-            totalTime = time.time() - startTime
-            if totalTime > 60:
-                writeLog("Time may be wrong; time check failed", 9)
-                break
-            time.sleep(0.5)
-            change = time.time() - times
-            times = time.time()
-            if (developmentMachine):  # Skips the waiting if development machine (So you don't have to wait 2 minutes for the booting)
-                break
     # Will turn on the internet to make sure that it is on
     if not developmentMachine:
         internetOn = router.turnOnInternet()
