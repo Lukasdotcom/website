@@ -1,3 +1,16 @@
+let turnstile_token = "";
+// Used to rended the turnstile
+turnstileCb = function () {
+    if (sitekey !== "") {
+        turnstile.render('#challenge', {
+            sitekey,
+            theme: 'dark',
+            callback: function(token) {
+                turnstile_token = token;
+            },
+        });
+    }
+};
 $(document).ready(function() {
     $("#login").button();
     $("#login").click(function() { // Used to login/Signup and will redirect to the user menu with a succesful login
@@ -18,6 +31,7 @@ $(document).ready(function() {
                     location.replace("/usermenu/index.php");
                 }
             } else {
+                turnstile.reset();
                 JQerror(ajax.responseText);
             }
             $("#login").button("enable")
@@ -31,6 +45,6 @@ $(document).ready(function() {
         ajax.open("POST", "/api/login.php");
         ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         var username = $("#username").val()
-        ajax.send(`type='${type}'&password='${$("#password").val()}'&username='${username}'`);
+        ajax.send(`type='${type}'&password='${$("#password").val()}'&username='${username}'&token=${turnstile_token}`);
     });
 });

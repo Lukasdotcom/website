@@ -16,7 +16,7 @@ import datetime
 import sys
 import glob
 import string
-whitelist = set(string.ascii_letters + string.digits + "/" + "@" + ".")
+whitelist = set(string.ascii_letters + string.digits + "/" + "@" + "." + "-" + "_")
 try:
     import docker
     dockerClient = docker.from_env()
@@ -85,6 +85,8 @@ try:
             [["fanStop"], int(os.getenv("WEBSITE_FAN_STOP", '35'))],
             [["matomoDomain"], os.getenv("MATOMO_DOMAIN", 'example.com')],
             [["matomoSiteId"], int(os.getenv("MATOMO_SITE_ID", '1'))],
+            [["turnstileSecret"], os.getenv("TURNSTILE_SECRET", '')],
+            [["turnstileSitekey"], os.getenv("TURNSTILE_SITEKEY", '')],
         ]
         if os.path.exists(location + "/config.json"):
             configuration = readFile(location + "/config.json")
