@@ -168,8 +168,6 @@ def repair():  # Repairs all tables or updates them if needed
         "golfGamePlayers" : [["gameID", 1], ["multiplier", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0], ["upToDate", 6], ["turnsSkipped", 1]],
         "golfGameCards" : [["gameID", 1], ["user", 0], ["card", 1], ["cardPlacement", 1], ["faceUp", 6]],
         "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6], ["decks", 1], ["skipTime", 1], ["timeLeft", 1], ["skipTurns", 1], ["resetPoints", 1]],
-        "docker" : [["link", 0], ["action", 0], ["image", 0], ["password", 0], ["owner", 0], ["port", 1], ["ID", 0]],
-        "dockerImages" : [["realName", 0], ["shortName", 0]]
     }
     changedTables = []
     for x in databaseDict:
@@ -270,6 +268,12 @@ def repair():  # Repairs all tables or updates them if needed
                         command("UPDATE golfGame SET resetPoints='0'")
                         version = "v2.4"
                         updatedVersions.append("v2.4")
+                    if version == "v2.4": # Drops support for docker
+                        command("DROP TABLE docker")
+                        command("DROP TABLE dockerImages")
+                        command("DELETE FROM privileges WHERE privilege='docker' OR privilege='dockerAdmin'")
+                        version = "v2.5"
+                        updatedVersions.append("v2.5")
                     # Fixes the version if it is invalid to the latest version
                     if version != latest_version:
                         version = latest_version

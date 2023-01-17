@@ -17,12 +17,6 @@ import sys
 import glob
 import string
 whitelist = set(string.ascii_letters + string.digits + "/" + "@" + "." + "-" + "_")
-try:
-    import docker
-    dockerClient = docker.from_env()
-    skipDocker = False
-except:
-    skipDocker = True
 
 def sanitize(txt): # Is a very simple sanitizer that allows all ascii_letters numbers and the / and @
     if type(txt) == type(1) or type(txt) == type(True): # Makes sure that if it is an int or a bool it will not be sanitized because that is not neccessary.
@@ -292,8 +286,6 @@ Deny from all""")
     # Will add to log if a library could not be connected to
     if skipGPIO:
         writeLog("Could not import GPIO library", 9)
-    if skipDocker:
-        writeLog("Could not connect to docker", 9)
     while True:  # will wait until connected to internet
         try:
             urllib.request.urlopen("https://google.com")
@@ -387,38 +379,6 @@ Deny from all""")
         # Will check every 2 seconds if the button is pressed and when it is show it on the led and then wait another second to verify that it is an actual press
         while True:
             time.sleep(2)
-            # Will check if a docker container should be started or stopped.
-            if not skipDocker:
-                dockerList = database.trueSearch("SELECT * FROM docker")
-                for x in dockerList:
-                    # Will check if the container has already been stopped
-                    id = x[6]
-                    if x[1] == "started":
-                        try:
-                            dockerClient.containers.get(id)
-                        except Exception:
-                            database.command(f"UPDATE docker SET action='stopped' WHERE ID='{id}'")
-                            writeLog(f"Container with id of {id} was stopped", 24)
-                    elif x[1] == "starting": # Will start all containers that are neccessary
-                        # Will pull the image and delete all untagged images
-                        dockerClient.images.pull(x[2])
-                        dockerClient.images.prune(filters={"dangling":1})
-                        password = x[3]
-                        if x[2] == "lscr.io/linuxserver/code-server": # Special case for code server.
-                            newID = dockerClient.containers.run(x[2], detach=True, ports={'8443/tcp':x[5]}, remove=True, environment=["PUID=1000", "PGID=1000", "TZ=America/Detroit", f"PASSWORD={password}", f"SUDO_PASSWORD={password}", "DEFAULT_WORKSPACE=/config/workspace"]).attrs["Id"]
-                        elif x[2][0:8] == "lscr.io/": # Is the default code for all linuxserver images.
-                            newID = dockerClient.containers.run(x[2], detach=True, ports={'3000/tcp':x[5]}, remove=True, environment=["PUID=1000", "PGID=1000", "TZ=America/Detroit", "AUTO_LOGIN=false"], shm_size="1gb").attrs["Id"]
-                            # Makes sure that the container has the right password
-                            execID = dockerClient.api.exec_create(newID, f'bash -c "echo \"abc:{password}\" | chpasswd"', user="root")["Id"]
-                            dockerClient.api.exec_start(execID)
-                        else: # Default case
-                            newID = dockerClient.containers.run(x[2], detach=True, ports={'80/tcp':x[5]}, remove=True, environment=[f"VNC_PASSWD={password}"]).attrs["Id"]
-                        database.command(f"UPDATE docker SET action='started', id='{newID}' WHERE ID='{id}'")
-                        writeLog(f"Container with id of {id} which changed to {newID} was started", 23)
-                    elif x[1] == "stopping": # Stops all containers that need to be stopped.
-                        dockerClient.containers.get(id).stop()
-                        database.command(f"UPDATE docker SET action='stopped' WHERE ID='{id}'")
-                        writeLog(f"Container with id of {id} was stopped", 24)
             if os.path.isfile(location + "restart.json"): # Used to restart the server
                 writeLog("Server is being restarted", 12)
                 os.remove(location + "restart.json")
