@@ -25,7 +25,7 @@
         echo "<h2>You are not logged in. Please log in to Play.</h2>";
     } else {
         ?>
-        <script type='text/javascript' src='index.js'></script>
+        <script type='text/javascript' src='index.js?v=1.0.0'></script>
         <p>Join Game below here:</p>
         <table id='games'>
         </table>

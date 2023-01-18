@@ -14,7 +14,7 @@ include 'functions.php';
 <script defer="true" type="text/javascript" src="/javascript/jquery-ui.min.js"></script>
 <link defer="true" rel="stylesheet" href="/css/jquery-ui.min.css">
 <script defer="true" type="text/javascript" src="/javascript/functions.js"></script>
-<script defer="true" type="text/javascript" src="/javascript/cookie.js"></script>
+<script defer="true" type="text/javascript" src="/javascript/cookie.js?v=1.0.0"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">

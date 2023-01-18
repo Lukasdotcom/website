@@ -12,7 +12,7 @@
     ?>
     <link rel="stylesheet" href="/css/golf.css">
     <script type='text/javascript' src='/javascript/functions.js'></script>
-    <script type='text/javascript' src='game.js'></script>
+    <script type='text/javascript' src='game.js?v=1.0.0'></script>
 </head>
 
 <body>
