@@ -139,6 +139,21 @@ input[type="number"] {
     margin-right: 40px;
 }
 
+.notification {
+    background-color: black;
+    margin: auto;
+    padding: 20px;
+    border: 3px solid green;
+    z-index: 1;
+    left: 0;
+    bottom: 0;
+    width: fit-content;
+    overflow: auto;
+    position: sticky;
+    margin-left: clamp(150px, 25%, 240px);
+    margin-right: 10px;
+}
+
 .right {
     float: right;
 }
