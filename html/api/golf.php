@@ -219,7 +219,11 @@ if ($USERNAME) {
                     $bots = count($bots);
                     $faker = Faker\Factory::create();
                     for ($i = $bots; $i < $game["bots"]; $i++) {
-                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$faker->name', 0, -1, 'waiting', 0, 0, 1)");
+                        $name = $faker->name;
+                        while (dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$name'")) {
+                            $name = $faker->name;
+                        }
+                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$name', 0, -1, 'waiting', 0, 0, 1)");
                     }
                     if ($selfPlayer["lastMode"] == "waiting") { // Makes sure the server knows that the player is now ready.
                         if (!dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='waiting'")) { // Starts the game if neccessary.
@@ -277,7 +281,6 @@ if ($USERNAME) {
                                 }
                                 $deckDuplicate = false; // Stores if the deck card would cancel out one of the bots cards
                                 $user = $playerData[0]["user"];
-                                // Finds all non duplicate cards
                                 $cards = dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=1");
                                 $maxCard = -1;
                                 $maxCardID = -1;
@@ -289,15 +292,14 @@ if ($USERNAME) {
                                     $cardPlacement = $card["cardPlacement"];
                                     if ($deckCard == $cardNumber) {
                                         $deckDuplicate = true;
-                                    } elseif ( $deckCard != 12 and $cardNumber > $maxCard and !dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=1 AND (card='$cardNumber' OR card='$cardNumber2' OR card='$cardNumber3' OR card='$cardNumber4') AND cardPlacement!='$cardPlacement'")) {
+                                    } elseif ( $cardNumber != 12 and $cardNumber > $maxCard and !dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=1 AND (card='$cardNumber' OR card='$cardNumber2' OR card='$cardNumber3' OR card='$cardNumber4') AND cardPlacement!='$cardPlacement'")) {
                                         $maxCard = $cardNumber;
                                         $maxCardID = $cardPlacement;
                                     }
                                 }
-                                $deckCard = json_decode($game["discard"]);
-                                $swap2 = "discard";
+                                $swap2 = "deck";
                                 if ($deckDuplicate or ($deckCard < 3 ) or $deckCard == 12) {
-                                    $swap2 = "deck";
+                                    $swap2 = "discard";
                                 }
                                 if ($maxCardID == -1 or $maxCard < 4) {
                                     $maxCardID = dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=0")[0]["cardPlacement"];
