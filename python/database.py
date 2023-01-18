@@ -165,9 +165,9 @@ def repair():  # Repairs all tables or updates them if needed
         "localStorage" : [["username", 0], ["data", 4]],
         "space3" : [["id", 5], ["owner", 0], ["title", 0], ["description", 4], ["preferences", 4], ["likes", 1], ["downloads", 1]],
         "space3likes" : [["id", 1], ["account", 0]],
-        "golfGamePlayers" : [["gameID", 1], ["multiplier", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0], ["upToDate", 6], ["turnsSkipped", 1]],
+        "golfGamePlayers" : [["gameID", 1], ["multiplier", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0], ["upToDate", 6], ["turnsSkipped", 1], ["bot", 6]],
         "golfGameCards" : [["gameID", 1], ["user", 0], ["card", 1], ["cardPlacement", 1], ["faceUp", 6]],
-        "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6], ["decks", 1], ["skipTime", 1], ["timeLeft", 1], ["skipTurns", 1], ["resetPoints", 1]],
+        "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6], ["decks", 1], ["skipTime", 1], ["timeLeft", 1], ["skipTurns", 1], ["resetPoints", 1], ["bots", 1]],
     }
     changedTables = []
     for x in databaseDict:
@@ -274,6 +274,13 @@ def repair():  # Repairs all tables or updates them if needed
                         command("DELETE FROM privileges WHERE privilege='docker' OR privilege='dockerAdmin'")
                         version = "v2.5"
                         updatedVersions.append("v2.5")
+                    if version == "v2.5": # Drops support for docker
+                        command("ALTER TABLE golfGamePlayers ADD bot boolean")
+                        command("ALTER TABLE golfGame ADD bots int")
+                        command("ALTER TABLE golfGamePlayers SET bot=0")
+                        command("ALTER TABLE golfGame SET bots=0")
+                        version = "v2.6"
+                        updatedVersions.append("v2.6")
                     # Fixes the version if it is invalid to the latest version
                     if version != latest_version:
                         version = latest_version

@@ -1,5 +1,5 @@
 function update(repeat=false) { // Will update the game.
-    var text = "<tr><th>Name</th><th>Players</th><th>Max Players</th><th>Skip Time</th><th>Skip Turns</th><th>Multiplier for Flipping Last Card</th><th>Points to Out</th><th>Password</th><th>Cards</th><th>Cards to flip</th><th>Decks</th><th>Reset Points</th></tr>";
+    var text = "<tr><th>Name</th><th>Players</th><th>Max Players</th><th>Bots</th><th>Skip Time</th><th>Skip Turns</th><th>Multiplier for Flipping Last Card</th><th>Points to Out</th><th>Password</th><th>Cards</th><th>Cards to flip</th><th>Decks</th><th>Reset Points</th></tr>";
     const ajax = new XMLHttpRequest();
     ajax.onload = function() {
         if (ajax.status == 200) {
@@ -8,7 +8,7 @@ function update(repeat=false) { // Will update the game.
                 if (element.players == element.playersToStart) {
                     joinText = "Continue";
                 }
-                text += `<tr><td>${element.name} <button onClick='joinGame(${element.ID})'>${joinText}</button></td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.skipTime}</td><td>${element.skipTurns}</td><td>${element.multiplierForFlip}</td><td>${element.pointsToEnd}</td><td>${element.password ? `true` : "false"}</td><td>${element.cardNumber}</td><td>${element.flipNumber}</td><td>${element.decks}</td><td>${element.resetPoints}</td></tr>`;
+                text += `<tr><td>${element.name} <button onClick='joinGame(${element.ID})'>${joinText}</button></td><td>${element.players}</td><td>${element.playersToStart}</td><td>${element.bots}</td><td>${element.skipTime}</td><td>${element.skipTurns}</td><td>${element.multiplierForFlip}</td><td>${element.pointsToEnd}</td><td>${element.password ? `true` : "false"}</td><td>${element.cardNumber}</td><td>${element.flipNumber}</td><td>${element.decks}</td><td>${element.resetPoints}</td></tr>`;
             });
             $("#games").html(text);
         } else {
@@ -40,7 +40,7 @@ function create() { // Will create a game
     if ($("#password").val()) {
         password = `&password=${$("#password").val()}`;
     }
-    ajax.send(`create=${$("#name").val()}&cardNumber=${$("#cardNumber").val()}&flipNumber=${$("#flipNumber").val()}&playersToStart=${$("#playersToStart").val()}&multiplierForFlip=${$("#multiplierForFlip").val()}&pointsToEnd=${$("#pointsToEnd").val()}&decks=${$("#decks").val()}&skipTime=${$("#skipTime").val()}&skipTurns=${$("#skipTurns").val()}&resetPoints=${$("#resetPoints").val()}&key='${getCookie('user')}'${password}`); 
+    ajax.send(`create=${$("#name").val()}&cardNumber=${$("#cardNumber").val()}&flipNumber=${$("#flipNumber").val()}&playersToStart=${$("#playersToStart").val()}&bots=${$("#bots").val()}&multiplierForFlip=${$("#multiplierForFlip").val()}&pointsToEnd=${$("#pointsToEnd").val()}&decks=${$("#decks").val()}&skipTime=${$("#skipTime").val()}&skipTurns=${$("#skipTurns").val()}&resetPoints=${$("#resetPoints").val()}&key='${getCookie('user')}'${password}`); 
 }
 function joinGame(id) {
     window.location = `game.php?game=${id}`;

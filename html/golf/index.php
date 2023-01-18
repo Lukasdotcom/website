@@ -34,7 +34,8 @@
             <label for="name">Name: </label><input type='text' value='' id="name"><br>
             <label for="cardNumber">Cards: </label><input type='number' value='6' id="cardNumber"><br>
             <label for="flipNumber">Flipped Cards at Start: </label><input type='number' value='2' id="flipNumber"><br>
-            <label for="playersToStart">Players: </label><input type='number' value='4' id="playersToStart"><br>
+            <label for="playersToStart">Human Players: </label><input type='number' value='4' id="playersToStart"><br>
+            <label for="bots">Bots: </label><input type='number' value='0' id="bots"><br>
             <label for="multiplierForFlip">Multiplier for flipping last card: </label><input type='number' value='2' id="multiplierForFlip"><br>
             <label for="pointsToEnd">Points to get out: </label><input type='number' value='100' id="pointsToEnd"><br>
             <label for="decks">Number of decks to use: </label><input type='number' value='1' id="decks"><br>

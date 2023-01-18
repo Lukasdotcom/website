@@ -4,17 +4,18 @@ require_once "api.php";
  * Used to move a card
  * @param string $user The username of the player.
  * @param string $game The game of the player.
- * @param string $swap1 Whcih card should be swapped.
+ * @param string $swap1 Which card should be swapped.
  * @param string $swap2 If deck or discard should be swapped.
  * @return array Code gives a http response code that would be good to associate with the reponse ex: 200=success and 400=failure and text gives a more precise message.
  */
-function moveCard($user, $game, $swap1, $swap2) {
+function moveCard($user, $game, $swap1, $swap2)
+{
     $self = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$game' and user='$user'");
     $gameData = dbRequest2("SELECT * FROM golfGame WHERE ID='$game'");
     if (!$self) {
         return array("code" => 404, "text" => "Player does not exist");
     }
-    if (! $gameData) {
+    if (!$gameData) {
         return array("code" => 404, "text" => "Game does not exist");
     }
     $gameData = $gameData[0];
@@ -33,7 +34,7 @@ function moveCard($user, $game, $swap1, $swap2) {
     $discard = json_decode($gameData["discard"]);
     if ($swap2 == "discard" and $discard) { // Checks if the player wants to switch the discard pile or deck and if that is possible
         $newCard = array_pop($discard);
-    } else {    
+    } else {
         $newCard = array_pop($deck);
     }
     array_push($discard, $cardSwap[0]["card"]);
@@ -41,8 +42,8 @@ function moveCard($user, $game, $swap1, $swap2) {
     $deck = json_encode($deck);
     $discard = json_encode($discard);
     do { // Will make sure the next picked player is a valid player that exists and is not eliminated.
-        $gameCurrentPlayer ++;
-        if ($gameData["playersToStart"] <= $gameCurrentPlayer) {
+        $gameCurrentPlayer++;
+        if ($gameData["playersToStart"] + $gameData["bots"] <= $gameCurrentPlayer) {
             $gameCurrentPlayer = 0;
         }
     } while (dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='eliminated' and orderID='$gameCurrentPlayer' and gameID='$game'"));
@@ -58,16 +59,17 @@ function moveCard($user, $game, $swap1, $swap2) {
  * @param string $game The game of the player.
  * @return int The amount of points the player has currently.
  */
-function calculatePoints($user, $game) {
+function calculatePoints($user, $game)
+{
     $cardValues = [1, -2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 0];
-    $cardAmount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0];
+    $cardAmount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     $points = 0;
     $cards = dbRequest2("SELECT card FROM golfGameCards WHERE gameID='$game' and user='$user' and faceUp");
     if ($cards) {
         foreach ($cards as $card) {
-            $cardAmount[$card["card"]%13] ++;
+            $cardAmount[$card["card"] % 13]++;
         }
-        foreach ($cardAmount as $card=>$amount) {
+        foreach ($cardAmount as $card => $amount) {
             if ($amount == 1) {
                 $points += $cardValues[$card];
             }
@@ -85,7 +87,8 @@ function calculatePoints($user, $game) {
  * Is used to check if the deck  needs to be reshuffled and if it does it reshuffles the deck.
  * @param array $game The data for the game.
  */
-function reshuffleDeck($game) {
+function reshuffleDeck($game)
+{
     $deck = json_decode($game["deck"]);
     if (!$deck) {
         $ID = $game["ID"];
@@ -106,7 +109,8 @@ function reshuffleDeck($game) {
  * Gets a round ready to start.
  * @param string $game The game of the player.
  */
-function readyGame($game) {
+function readyGame($game)
+{
     $deck = array(); # Used to get the deck ready
     $decks = dbRequest2("SELECT decks FROM golfGame WHERE ID='$game'", "decks")[0];
     # Makes sure that it is not asking for an unreasonable amount of decks
@@ -116,8 +120,8 @@ function readyGame($game) {
         $decks = 1;
     }
     # Creates the cards for all the decks.
-    for ($j=0;$j<$decks;$j++) {
-        for ($i=0;$i<52;$i++) {
+    for ($j = 0; $j < $decks; $j++) {
+        for ($i = 0; $i < 52; $i++) {
             array_push($deck, $i);
         }
     }
@@ -132,15 +136,15 @@ function readyGame($game) {
         $flippedCards = $gameData["flipNumber"];
         shuffle($players);
         $playerCount = count($players);
-        for ($i=0;$i<$playerCount;$i++) { # Goes through every player and gives them their cards and puts them in the correct order.
+        for ($i = 0; $i < $playerCount; $i++) { # Goes through every player and gives them their cards and puts them in the correct order.
             $name = $players[$i]["user"];
             if ($players[$i]["points"] < $gameData["pointsToEnd"] and $players[$i]["turnsSkipped"] <= $gameData["skipTurns"]) { // Checks if the player is still in the game.
                 $cardsToFlip = $flippedCards;
-                for ($j=1;$j<=$cards;$j++) {
+                for ($j = 1; $j <= $cards; $j++) {
                     $card = array_pop($deck);
                     if ($cardsToFlip > 0) {
                         dbCommand("INSERT INTO golfGameCards VALUES ('$game', '$name', '$card', '$j', '1')");
-                        $cardsToFlip --;
+                        $cardsToFlip--;
                     } else {
                         dbCommand("INSERT INTO golfGameCards VALUES ('$game', '$name', '$card', '$j', '0')");
                     }
@@ -162,11 +166,11 @@ function readyGame($game) {
     }
 }
 if ($USERNAME) {
-    if (array_key_exists("game", $_GET)){ // Gets the game
+    if (array_key_exists("game", $_GET)) { // Gets the game
         # Finds all games the player is still playing.
-        $playing = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns, resetPoints FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
+        $playing = dbRequest2("SELECT name, password, players, playersToStart, bots, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns, resetPoints FROM golfGame WHERE EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY turnStartTime DESC");
         # Finds all open games.
-        $data = dbRequest2("SELECT name, password, players, playersToStart, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns, resetPoints FROM golfGame WHERE players != playersToStart and NOT EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY players DESC");
+        $data = dbRequest2("SELECT name, password, players, playersToStart, bots, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, ID, decks, skipTime, skipTurns, resetPoints FROM golfGame WHERE players != playersToStart and NOT EXISTS (SELECT * FROM golfGamePlayers WHERE golfGamePlayers.gameID = ID and user='$USERNAME') ORDER BY players DESC");
         foreach ($data as $id => $entry) { // Makes sure to not leak the password
             if ($entry["password"]) {
                 $data[$id]["password"] = true;
@@ -206,11 +210,19 @@ if ($USERNAME) {
                     header('alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400, h3-28=":443"; ma=86400, h3-27=":443"; ma=86400', true);
                     http_response_code(304);
                 } else if ($game["players"] >= $game["playersToStart"]) {
+                    $skipUptoDate = false;
                     $players = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' ORDER BY orderID ASC");
                     $selfPlayer =  dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME'")[0];
                     $selfPlayerID = $selfPlayer["orderID"];
+                    // Checks if bots still have to be added
+                    $bots = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and bot=1");
+                    $bots = count($bots);
+                    $faker = Faker\Factory::create();
+                    for ($i = $bots; $i < $game["bots"]; $i++) {
+                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$faker->name', 0, -1, 'waiting', 0, 0, 1)");
+                    }
                     if ($selfPlayer["lastMode"] == "waiting") { // Makes sure the server knows that the player is now ready.
-                        if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='waiting'")) { // Starts the game if neccessary.
+                        if (!dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='waiting'")) { // Starts the game if neccessary.
                             $game = readyGame($id);
                             $players = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' ORDER BY orderID ASC");
                             $selfPlayer =  dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$USERNAME'")[0];
@@ -218,24 +230,25 @@ if ($USERNAME) {
                         }
                         dbCommand("UPDATE golfGamePlayers SET lastMode='' WHERE gameID='$id' and user='$USERNAME'");
                     }
-                    if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and lastMode='waiting'")) { // Checks if all players are ready
+                    if (!dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and lastMode='waiting'")) { // Checks if all players are ready
                         $id = $game["ID"];
                         $length = count($players);
                         $roundOver = false;
-                        for ($i=0;$i<$length; $i++) { // Will addd some extra data to the game
+                        for ($i = 0; $i < $length; $i++) { // Will addd some extra data to the game
                             $name = $players[$i]["user"];
                             $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID='$id' and user='$name' and faceUp");
                             $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
                             if ($players[$i]["lastMode"] != "eliminated") {
-                                if (! dbRequest2("SELECT * FROM golfGameCards WHERE gameID=$id and user='$name' and not faceUp")) { // Will check if a player has flipped all their cards.
+                                if (!dbRequest2("SELECT * FROM golfGameCards WHERE gameID=$id and user='$name' and not faceUp")) { // Will check if a player has flipped all their cards.
                                     $roundOver = $name;
                                 }
                             }
                         }
                         if ($roundOver) { // Checks if the round is over
-                            dbCommand("UPDATE golfGamePlayers SET upToDate=0 WHERE gameID='$id'");
+                            dbCommand("UPDATE golfGamePlayers SET upToDate=0 WHERE gameID='$id' AND bot=0");
+                            dbCommand("UPDATE golfGamePlayers SET lastMode='roundOver' WHERE gameID='$id' AND bot=1");
                             // Gives the player who flips the last card the multiplierForFlip
-                            if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='roundOver' and gameID='$id'")) { // Checks if this is the first player done
+                            if (!dbRequest2("SELECT * FROM golfGamePlayers WHERE lastMode='roundOver' and gameID='$id'")) { // Checks if this is the first player done
                                 $newMultiplier = $selfPlayer["multiplier"] * $game["multiplierForFlip"];
                                 dbCommand("UPDATE golfGamePlayers SET multiplier='$newMultiplier' WHERE gameID='$id' and user='$roundOver'");
                             }
@@ -243,7 +256,7 @@ if ($USERNAME) {
                             $id = $game["ID"];
                             // Will uncover every card
                             dbCommand("UPDATE golfGameCards SET faceUp=1 WHERE gameID='$id'");
-                            for ($i=0;$i<$length; $i++) {
+                            for ($i = 0; $i < $length; $i++) {
                                 $name = $players[$i]["user"];
                                 $players[$i]["cards"] = dbRequest2("SELECT card, cardPlacement FROM golfGameCards WHERE gameID='$id' and user='$name' and faceUp");
                                 $players[$i]["currentGamePoints"] = calculatePoints($name, $game["ID"]);
@@ -253,23 +266,62 @@ if ($USERNAME) {
                             $action = "switch";
                         } else {
                             $action = "";
+                            // Checks if it is a bots turn
+                            $currentPlayer = $game["currentPlayer"];
+                            $playerData = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and orderID='$currentPlayer' and bot=1");
+                            if ($currentPlayer != -1 and count($playerData) > 0) {
+                                $deckCard2 = json_decode($game["discard"]);
+                                $deckCard = 3453455;
+                                if (count($deckCard2) > 0) {
+                                    $deckCard = $deckCard2[count($deckCard2) - 1] % 13;
+                                }
+                                $deckDuplicate = false; // Stores if the deck card would cancel out one of the bots cards
+                                $user = $playerData[0]["user"];
+                                // Finds all non duplicate cards
+                                $cards = dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=1");
+                                $maxCard = -1;
+                                $maxCardID = -1;
+                                foreach ($cards as $card) {
+                                    $cardNumber = $card["card"] % 13;
+                                    $cardNumber2 = $cardNumber + 13;
+                                    $cardNumber3 = $cardNumber + 26;
+                                    $cardNumber4 = $cardNumber + 39;
+                                    $cardPlacement = $card["cardPlacement"];
+                                    if ($deckCard == $cardNumber) {
+                                        $deckDuplicate = true;
+                                    } elseif ( $deckCard != 12 and $cardNumber > $maxCard and !dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=1 AND (card='$cardNumber' OR card='$cardNumber2' OR card='$cardNumber3' OR card='$cardNumber4') AND cardPlacement!='$cardPlacement'")) {
+                                        $maxCard = $cardNumber;
+                                        $maxCardID = $cardPlacement;
+                                    }
+                                }
+                                $deckCard = json_decode($game["discard"]);
+                                $swap2 = "discard";
+                                if ($deckDuplicate or ($deckCard < 3 ) or $deckCard == 12) {
+                                    $swap2 = "deck";
+                                }
+                                if ($maxCardID == -1 or $maxCard < 4) {
+                                    $maxCardID = dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=0")[0]["cardPlacement"];
+                                }
+                                moveCard($user, $id, $maxCardID, $swap2);
+                                $skipUptoDate = true;
+                            }
                         }
                         if ($selfPlayer["lastMode"] == "eliminated") { // Makes sure that eliminated player does not get uneliminated
                             $action = "eliminated";
                         }
                         dbCommand("UPDATE golfGamePlayers SET lastMode='$action' WHERE gameID='$id' and user='$USERNAME'");
                         $id = $game["ID"];
-                        if (! dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and (lastMode='switch' or lastMode='')")) { // The code for when a new round is started
+                        if (!dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and (lastMode='switch' or lastMode='')")) { // The code for when a new round is started
                             if (dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and not lastMode='eliminated'")) { // Makes sure that not all the players are eliminated
                                 $length = count($players);
                                 $resetPoints = $game["resetPoints"];
-                                for ($i=0;$i<$length; $i++) { // Will calculate points for every player and add them to the total
+                                for ($i = 0; $i < $length; $i++) { // Will calculate points for every player and add them to the total
                                     $name = $players[$i]["user"];
                                     $newPoints = $players[$i]["points"] + calculatePoints($name, $game["ID"]);
                                     if ($resetPoints > 0) { // Makes sure that resetPoints is enabled
                                         if ($newPoints % $resetPoints == 0) { // Checks if the points are at a resetable amount
                                             $newPoints = 0;
-                                        } 
+                                        }
                                     }
                                     dbCommand("UPDATE golfGamePlayers SET points=$newPoints WHERE gameID=$id and user='$name'");
                                 }
@@ -295,9 +347,11 @@ if ($USERNAME) {
                             "action" => $action // Used to say the current action the player should do
                         );
                         echo json_encode($gameData);
-                        dbCommand("UPDATE golfGamePlayers SET upToDate=1 WHERE gameID='$id' and user='$USERNAME'");
+                        if (!$skipUptoDate) {
+                            dbCommand("UPDATE golfGamePlayers SET upToDate=1 WHERE gameID='$id' and user='$USERNAME'");
+                        }
                     } else {
-                        echo "[]"; 
+                        echo "[]";
                     }
                 } else {
                     echo "[]";
@@ -330,7 +384,7 @@ if ($USERNAME) {
             } elseif ($game["password"]) { // Checks if game requires a password
                 if (array_key_exists("password", $_POST)) { // Checks if password is given
                     if ($game["password"] === $_POST["password"]) {
-                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting', 0, 0)");
+                        dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting', 0, 0, 0)");
                         $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                         dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                         echo "Joined game";
@@ -344,7 +398,7 @@ if ($USERNAME) {
                     echo "Password required";
                 }
             } else {
-                dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting', 0, 0)");
+                dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$USERNAME', 0, -1, 'waiting', 0, 0, 0)");
                 $newPlayers = count(dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id'"));
                 dbCommand("UPDATE golfGame SET players=$newPlayers WHERE id=$id");
                 echo "Joined game";
@@ -360,7 +414,8 @@ if ($USERNAME) {
         $cardNumber = intval($_POST["cardNumber"]);
         $flipNumber = intval($_POST["flipNumber"]);
         $multiplierForFlip = floatval($_POST["multiplierForFlip"]);
-        $playersToStart = $_POST["playersToStart"];
+        $playersToStart = intval($_POST["playersToStart"]);
+        $bots = intval($_POST["bots"]);
         $pointsToEnd = intval($_POST["pointsToEnd"]);
         $decks = intval($_POST["decks"]);
         $skipTime = intval($_POST["skipTime"]);
@@ -383,10 +438,13 @@ if ($USERNAME) {
         } elseif ($playersToStart <= 0) {
             http_response_code(400);
             echo "You need to have more than 0 players";
+        } elseif ($bots < 0) {
+            http_response_code(400);
+            echo "You can't have less than 0 bots";
         } elseif ($pointsToEnd <= 0) {
             http_response_code(400);
             echo "The points to end need to be more than 0";
-        } elseif ($playersToStart * $cardNumber >= 52 * $decks) {
+        } elseif (($playersToStart + $bots) * $cardNumber >= 52 * $decks) {
             http_response_code(400);
             echo "There are not enough cards in a deck for that amount of players and cards";
         } elseif ($decks > 50 or $decks < 1) {
@@ -395,16 +453,16 @@ if ($USERNAME) {
         } elseif ($skipTime < 0) {
             http_response_code(400);
             echo "Only positive times until skip are allowed";
-        }  elseif ($skipTurns < 0) {
+        } elseif ($skipTurns < 0) {
             http_response_code(400);
             echo "Only positive amount of turns skiped are allowed";
         } elseif ($resetPoints < 0) {
             http_response_code(400);
             echo "Reset points must be a positive number or 0";
         } else {
-            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime, decks, skipTime, timeLeft, skipTurns, resetPoints) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time, $decks, $skipTime, $skipTime, $skipTurns, $resetPoints)");
+            dbCommand("INSERT INTO golfGame (deck, discard, cardNumber, flipNumber, multiplierForFlip, pointsToEnd, name, password, players, playersToStart, currentPlayer, turnStartTime, decks, skipTime, timeLeft, skipTurns, resetPoints, bots) VALUES ('[]', '[]', $cardNumber, $flipNumber, $multiplierForFlip, $pointsToEnd, '$name', '$password', 0, $playersToStart, -1, $time, $decks, $skipTime, $skipTime, $skipTurns, $resetPoints, $bots)");
             echo "Created Game";
-            writeLog(14, "$USERNAME created game for $playersToStart players, $cardNumber cards, $decks decks, and name $name with ip of $address");
+            writeLog(14, "$USERNAME created game for $playersToStart players, $bots bots, $cardNumber cards, $decks decks, and name $name with ip of $address");
         }
     } elseif (array_key_exists("forceUpdate", $_GET)) { // Used to force the update the next time an update is called
         $id = $_GET["forceUpdate"];
