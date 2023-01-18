@@ -64,6 +64,7 @@
                 <h2 style="color: green; display: none;" class="center" id="playerTurn"><c class='name'></c>'s Turn</h2>
                 <h2 id='eliminated' class='center' style="display: none;">Eliminated</h2>
                 <h3 class="center"><c class='name'></c>'s Points: <c id='points'></c></h3>
+                <h3 class="center" id='botLabel'>This is a Bot</h3>
                 <h3 class="center">Points this turn: +<c id='newPoints'></c></h3>
                 <div id='cards' class='card-container'>
                 <?php 

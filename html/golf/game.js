@@ -147,6 +147,12 @@ function updateUI(focus="") { // Used to update the UI's info
         // Makes sure the info about the player is right
         $("#points").text(data.players[playerNumber].points);
         $(".name").text(data.players[playerNumber].user);
+        // Shows the bot label if the player is a bot
+        if (data.players[playerNumber].bot == 1) {
+            $("#botLabel").show();
+        } else {
+            $("#botLabel").hide();
+        }
         if (player == data.players[playerNumber].user) {
             $("#discard").attr("onclick", onclick="highlight('discard')");
             $("#deck").attr("onclick", onclick="highlight('deck')");
