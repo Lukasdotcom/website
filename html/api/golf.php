@@ -301,7 +301,8 @@ if ($USERNAME) {
                                 if ($deckDuplicate or ($deckCard < 3 ) or $deckCard == 12) {
                                     $swap2 = "discard";
                                 }
-                                if ($maxCardID == -1 or $maxCard < 4) {
+                                // Only swaps the last unflipped card if the hand is almost perfect or if there are still more than 2 unflipped cards
+                                if ($maxCardID == -1 or $maxCard < 2 or count(dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=0")) > 1) {
                                     $maxCardID = dbRequest2("SELECT * FROM golfGameCards WHERE gameID='$id' and user='$user' AND faceUp=0")[0]["cardPlacement"];
                                 }
                                 moveCard($user, $id, $maxCardID, $swap2);
