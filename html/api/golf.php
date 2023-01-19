@@ -221,7 +221,8 @@ if ($USERNAME) {
                     for ($i = $bots; $i < $game["bots"]; $i++) {
                         $name = $faker->name;
                         while (dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$name'")) {
-                            $name = $faker->name;
+                            // Adds a random number to the name
+                            $name = $name . rand(0, 9);
                         }
                         dbCommand("INSERT INTO golfGamePlayers VALUES ('$id', 1, '$name', 0, -1, 'waiting', 0, 0, 1)");
                     }
@@ -444,6 +445,9 @@ if ($USERNAME) {
         } elseif ($bots < 0) {
             http_response_code(400);
             echo "You can't have less than 0 bots";
+        } elseif ($bots + $playersToStart > 40) {
+            http_response_code(400);
+            echo "The max number of players and bots is 40";
         } elseif ($pointsToEnd <= 0) {
             http_response_code(400);
             echo "The points to end need to be more than 0";
