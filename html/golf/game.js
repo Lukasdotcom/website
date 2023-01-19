@@ -34,7 +34,7 @@ function submitMove() { // Used to submit a move
     ajax.send(`swap=${highlightCard}&swap2=${highlightDeck}&game=${game}&key=${getCookie("user")}`);
 }
 
-function update(start=false, repeat=false, newFocus="") { // Used to request the latest information
+function update(start=false, newFocus="") { // Used to request the latest information
     if (! paused) { // Checks if there is currently a pause on the update loop
         const ajax = new XMLHttpRequest();
         if (start) { // Checks if it should clear the cache or not.
@@ -43,7 +43,7 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
                     if (this.status != 200) {
                         JQerror(this.responseText, 5000);
                     }
-                    update(start=false, repeat=repeat, newFocus=newFocus)
+                    update(start=false, newFocus=newFocus)
                 }
             }
             ajax.open("GET", `/api/golf.php?forceUpdate=${game}&key=${getCookie("user")}`);
@@ -59,19 +59,10 @@ function update(start=false, repeat=false, newFocus="") { // Used to request the
                     } else {
                         JQerror(this.responseText, 5000);
                     }
-                    if (repeat) {
-                        setTimeout(function() {
-                            update(start=false, repeat=true)
-                        }, 500);
-                    }
                 }
             }
         }
         ajax.send();
-    } else if (repeat) {
-        setTimeout(function() {
-            update(start=false, repeat=true)
-        }, 500);
     }
 }
 
@@ -203,7 +194,8 @@ var data = {}; // Stores the entirety of the data
 var paused = false; // Checks if the game should not check for newer information.
 $(document).ready(function() {
     if (joined) {
-        update(start=true, repeat=true, newFocus=player);
+        setInterval(() => update(start=false), 500)
+        update(start=true, newFocus=player);
         $("#left-arrow").button({
             icon: "ui-icon-caret-1-w"
         })
