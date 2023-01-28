@@ -316,7 +316,7 @@ if (array_key_exists("user", $_COOKIE)) {
   if ($USERNAME) {
     // Makes sure that the database knows who last accessed that session
     dbCommand("UPDATE cookies SET lastIP='$address' WHERE cookie='$COOKIEID'");
-    setcookie("user", $COOKIEID, time() + 600, "/");
+    setcookie("user", $COOKIEID);
     $USERNAME = $USERNAME[0];
     $PRIVILEGES = dbRequest("privilege", "privileges", "username", $USERNAME, 0);
     if (!$PRIVILEGES) {

@@ -87,13 +87,13 @@ if (array_key_exists("username", $_POST) and array_key_exists("type", $_POST) an
                 writeLog(2, "$USERNAME created by $address");
             }
             writeLog(0, "$USERNAME was logged in by $address");
-            $Time = time() + 3600 * 12;
+            $Time = time() + 3600 * 24;
             $Cookie = $USERNAME;
             $Cookie .= rand();
             $Cookie = sanitize(substr(sha1($Cookie), 5));
             $CookieForDB = [$Cookie, $USERNAME, $Time, $address];
             dbAdd($CookieForDB, "cookies");
-            setcookie("user", $Cookie, time() + 600, "/");
+            setcookie("user", $Cookie);
             echo json_encode($Cookie);
             // Checks if the password has to be rehashed
             if (password_needs_rehash($RESULT, PASSWORD_BCRYPT, $OPTIONS)) {
