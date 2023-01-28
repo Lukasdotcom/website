@@ -93,7 +93,7 @@ if (array_key_exists("username", $_POST) and array_key_exists("type", $_POST) an
             $Cookie = sanitize(substr(sha1($Cookie), 5));
             $CookieForDB = [$Cookie, $USERNAME, $Time, $address];
             dbAdd($CookieForDB, "cookies");
-            setcookie("user", $Cookie);
+            setcookie("user", $Cookie, $path="/");
             echo json_encode($Cookie);
             // Checks if the password has to be rehashed
             if (password_needs_rehash($RESULT, PASSWORD_BCRYPT, $OPTIONS)) {
