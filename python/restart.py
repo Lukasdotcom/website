@@ -81,6 +81,7 @@ try:
             [["matomoSiteId"], int(os.getenv("MATOMO_SITE_ID", '1'))],
             [["turnstileSecret"], os.getenv("TURNSTILE_SECRET", '')],
             [["turnstileSitekey"], os.getenv("TURNSTILE_SITEKEY", '')],
+            [["TMDBApiKey"], os.getenv("TMDB_API_KEY", '')],
         ]
         if os.path.exists(location + "/config.json"):
             configuration = readFile(location + "/config.json")

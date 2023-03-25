@@ -107,6 +107,12 @@ function dbCommand($command, $prepare=[]) {
     $stmt = mysqli_prepare($connection, $command);
     mysqli_stmt_bind_param($stmt, "s", $parameter1);
     mysqli_stmt_execute($stmt);
+  } elseif ($length == 2) {
+    $parameter1 = $prepare[0];
+    $parameter2 = $prepare[1];
+    $stmt = mysqli_prepare($connection, $command);
+    mysqli_stmt_bind_param($stmt, "ss", $parameter1, $parameter2);
+    mysqli_stmt_execute($stmt);
   } elseif ($length == 3) {
     $parameter1 = $prepare[0];
     $parameter2 = $prepare[1];

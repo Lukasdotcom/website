@@ -168,6 +168,7 @@ def repair():  # Repairs all tables or updates them if needed
         "golfGamePlayers" : [["gameID", 1], ["multiplier", 1], ["user", 0], ["points", 1], ["orderID", 1], ["lastMode", 0], ["upToDate", 6], ["turnsSkipped", 1], ["bot", 6]],
         "golfGameCards" : [["gameID", 1], ["user", 0], ["card", 1], ["cardPlacement", 1], ["faceUp", 6]],
         "golfGame" : [["ID", 5], ["deck", 4], ["discard", 4], ["cardNumber", 1], ["flipNumber", 1], ["multiplierForFlip", 1], ["pointsToEnd", 1], ["name", 0], ["password", 0], ["players", 1], ["playersToStart", 1], ["currentPlayer", 1], ["turnStartTime", 1], ["locked", 6], ["decks", 1], ["skipTime", 1], ["timeLeft", 1], ["skipTurns", 1], ["resetPoints", 1], ["bots", 1]],
+        "random_stuff" : [["type", 0], ["word", 0], ["definition", 4]]
     }
     changedTables = []
     for x in databaseDict:
