@@ -65,7 +65,7 @@
           $random_movie = $random_movie_array["title"];
           $random_movie_description = $random_movie_array["overview"];
           // Adds data to cache if it doesn't exist
-          if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='movie' AND word=?", "*", [$random_movie])) == 0) {
+          if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='movie' AND word=? AND definition=?", "*", [$random_movie, $random_movie_description])) == 0) {
             dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('movie', ?, ?)", [$random_movie, $random_movie_description]);
           }
       }
@@ -106,7 +106,7 @@
             $random_word_definition = str_replace("<a>", "", $random_word_definition);
             $random_word_definition = str_replace("</a>", "", $random_word_definition);
             // Adds data to cache if it doesn't exist
-            if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='word' AND word=?", "*", [$random_word])) == 0) {
+            if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='word' AND word=? AND definition=?", "*", [$random_word,  $random_word_definition])) == 0) {
               dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('word', ?, ?)", [$random_word, $random_word_definition]);
             }
           }
@@ -143,7 +143,7 @@
       }
       if (!$failure) {
         // Adds data to cache if it doesn't exist
-        if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='acronym' AND word=?", "*", [$random_acronym])) == 0) {
+        if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='acronym' AND word=? AND definition=?", "*", [$random_acronym, $random_acronym_meaning])) == 0) {
           dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('acronym', ?, ?)", [$random_acronym, $random_acronym_meaning]);
         }
       }
