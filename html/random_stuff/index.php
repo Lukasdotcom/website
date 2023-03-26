@@ -75,7 +75,7 @@
     $skip = false;
     if (count($random_words) > 0) {
       $random_word = $random_words[0]["word"];
-      $random_movie_description = $random_words[0]["definition"];
+      $random_word_definition = $random_words[0]["definition"];
       // Only sometimes gets a new word
       $count = round(log(dbRequest2("SELECT COUNT(*) FROM random_stuff WHERE type = 'word'")[0]["COUNT(*)"]+1, 10))-1;
       if ($count > 0 && rand(0, $count) > 0) {
