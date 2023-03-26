@@ -32,4 +32,15 @@ $(document).ready(function() {
       $("#acronym-def").hide();
     }
   });
+
+  $( "#date" ).button();
+  $( "#date" ).click(() => {
+    if ($("#date-icon")[0].className === "ui-icon ui-icon-caret-1-e") {
+      $("#date-icon")[0].className = "ui-icon ui-icon-caret-1-s";
+      $("#date-def").show();
+    } else {
+      $("#date-icon")[0].className = "ui-icon ui-icon-caret-1-e";
+      $("#date-def").hide();
+    }
+  });
 });
