@@ -152,22 +152,25 @@
     $year = rand(1800, 2022);
     $month = rand(1, 12);
     $month = date("F", mktime(0, 0, 0, $month, 10));
-    $random_date_url = "https://www.onthisday.com/events/date/" . $year . "/" . $month;
-    $random_date_html = file_get_contents($random_date_url, false, $context);
-    preg_match("/<article class=\"section no-padding-top\">(?s:.*)<\/article>/", $random_date_html, $random_date_array);
-    preg_match_all("/<li class=\"event\">(.*)<\/li>/", $random_date_array[0], $event_list);
-    // Matches all the simple events
-    for ($i = 0; $i < count($event_list[1]); $i++) {
-      preg_match("/((<a href=\"(.*)\">(.*)<\/a>)|(<b>(.*)<\/b>)) (.*)/", $event_list[1][$i], $event_data);
-      $random_date = $event_data[4];
-      if ($random_date == "") {
-        $random_date = $event_data[6];
-      }
-      $random_date = $random_date . " " . $year;
-      $random_date_description = $event_data[7];
-      // Adds data to cache if it doesn't exist
-      if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='date' AND word=? AND definition=?", "*", [$random_date, $random_date_description])) == 0) {
-        dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('date', ?, ?)", [$random_date, $random_date_description]);
+    // Checks if this month has been downloaded
+    if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='date' AND word like '$month %% $year'")) == 0) {
+      $random_date_url = "https://www.onthisday.com/events/date/" . $year . "/" . $month;
+      $random_date_html = file_get_contents($random_date_url, false, $context);
+      preg_match("/<article class=\"section no-padding-top\">(?s:.*)<\/article>/", $random_date_html, $random_date_array);
+      preg_match_all("/<li class=\"event\">(.*)<\/li>/", $random_date_array[0], $event_list);
+      // Matches all the simple events
+      for ($i = 0; $i < count($event_list[1]); $i++) {
+        preg_match("/((<a href=\"(.*)\">(.*)<\/a>)|(<b>(.*)<\/b>)) (.*)/", $event_list[1][$i], $event_data);
+        $random_date = $event_data[4];
+        if ($random_date == "") {
+          $random_date = $event_data[6];
+        }
+        $random_date = $random_date . " " . $year;
+        $random_date_description = $event_data[7];
+        // Adds data to cache if it doesn't exist
+        if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='date' AND word=? AND definition=?", "*", [$random_date, $random_date_description])) == 0) {
+          dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('date', ?, ?)", [$random_date, $random_date_description]);
+        }
       }
     }
     // Picks a random event
