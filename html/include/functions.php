@@ -174,7 +174,6 @@ function dbRequest2($command, $result="*", $prepare=[])
   } else if ($length == 1) {
     $stmt = mysqli_prepare($connection, $command);
     $parameter1 = $prepare[0];
-    echo $parameter1;
     mysqli_stmt_bind_param($stmt, "s", $parameter1);
     mysqli_stmt_execute($stmt);
     $response = mysqli_stmt_get_result($stmt);
