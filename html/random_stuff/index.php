@@ -10,6 +10,7 @@
     $DESCRIPTION = "A place that generates a random move with its plot, a random word with its definition, and a random acronym with its meaning.";
     require_once '../include/all.php';
     ?>
+    <script type='text/javascript' src='index.js'></script>
 </head>
 
 <body>
@@ -149,21 +150,26 @@
     }
     ?>
       <h1>Random Stuff</h1>
-      <h2 style="color:white;">Random Movie<h2>
-      <h3>Title</h3>
-      <p><?php echo htmlspecialchars($random_movie); ?></p>
-      <h3>Description</h3>
-      <p><?php echo htmlspecialchars($random_movie_description); ?></p>
-      <h2 style="color:white;">Random Word<h2>
-      <h3>Word</h3>
-      <p><?php echo htmlspecialchars($random_word); ?></p>
-      <h3>Definition</h3>
-      <p><?php echo htmlspecialchars($random_word_definition); ?></p>
-      <h2 style="color:white;">Random Acronym<h2>
-      <h3>Acronym</h3>
-      <p><?php echo htmlspecialchars($random_acronym); ?></p>
-      <h3>Meaning</h3>
-      <p><?php echo htmlspecialchars($random_acronym_meaning); ?></p>
+      <h2 style="color:white;">Random Movie</h2>
+      <p id="movie">
+        <span id="movie-icon" class="ui-icon ui-icon-caret-1-e"></span>
+        <?php echo htmlspecialchars($random_movie); ?>
+      </p>
+      <p id="movie-def" style="display:none;"><?php echo htmlspecialchars($random_movie_description); ?></p>
+
+      <h2 style="color:white;">Random Word</h2>
+      <p id="word">
+        <span id="word-icon" class="ui-icon ui-icon-caret-1-e"></span>
+        <?php echo htmlspecialchars($random_word); ?>
+      </p>
+      <p id="word-def" style="display:none;"><?php echo htmlspecialchars($random_word_definition); ?></p>
+
+      <h2 style="color:white;">Random Acronym</h2>
+      <p id="acronym">
+        <span id="acronym-icon" class="ui-icon ui-icon-caret-1-e"></span>
+        <?php echo htmlspecialchars($random_acronym); ?>
+      </p>
+      <p id="acronym-def" style="display:none;"><?php echo htmlspecialchars($random_acronym_meaning); ?></p>
     </div>
 </body>
 
