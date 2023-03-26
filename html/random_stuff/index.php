@@ -148,6 +148,37 @@
         }
       }
     }
+    // GETS THE RANDOM DATE
+    $year = rand(1800, 2022);
+    $month = rand(1, 12);
+    $month = date("F", mktime(0, 0, 0, $month, 10));
+    $random_date_url = "https://www.onthisday.com/events/date/" . $year . "/" . $month;
+    $random_date_html = file_get_contents($random_date_url, false, $context);
+    preg_match("/<article class=\"section no-padding-top\">(?s:.*)<\/article>/", $random_date_html, $random_date_array);
+    preg_match_all("/<li class=\"event\">(.*)<\/li>/", $random_date_array[0], $event_list);
+    // Matches all the simple events
+    for ($i = 0; $i < count($event_list[1]); $i++) {
+      preg_match("/((<a href=\"(.*)\">(.*)<\/a>)|(<b>(.*)<\/b>)) (.*)/", $event_list[1][$i], $event_data);
+      $random_date = $event_data[4];
+      if ($random_date == "") {
+        $random_date = $event_data[6];
+      }
+      $random_date = $random_date . " " . $year;
+      $random_date_description = $event_data[7];
+      // Adds data to cache if it doesn't exist
+      if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='date' AND word=? AND definition=?", "*", [$random_date, $random_date_description])) == 0) {
+        dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('date', ?, ?)", [$random_date, $random_date_description]);
+      }
+    }
+    // Picks a random event
+    $random_dates = dbRequest2("SELECT * FROM random_stuff WHERE type = 'date' ORDER BY RAND() LIMIT 1");
+    if (count($random_dates) > 0) {
+      $random_date = $random_dates[0]["word"];
+      $random_date_description = $random_dates[0]["definition"];
+    } else {
+      $random_date = "Date not found";
+      $random_date_description = "Description not found";
+    }
     ?>
       <h1>Random Stuff</h1>
       <h2 style="color:white;">Random Movie</h2>
@@ -170,6 +201,13 @@
         <?php echo htmlspecialchars($random_acronym); ?>
       </p>
       <p id="acronym-def" style="display:none;"><?php echo htmlspecialchars($random_acronym_meaning); ?></p>
+
+      <h2 style="color:white;">Random Date</h2>
+      <p id="date">
+        <span id="date-icon" class="ui-icon ui-icon-caret-1-e"></span>
+        <?php echo htmlspecialchars($random_date); ?>
+      </p>
+      <p id="date-def" style="display:none;"><?php echo $random_date_description; ?></p>
     </div>
 </body>
 
