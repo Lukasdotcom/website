@@ -193,8 +193,8 @@
     preg_match_all("/<div class=\"quoteText\">\n      &ldquo;(.*)&rdquo;\n  <br>  &#8213;\n  <span class=\"authorOrTitle\">\n    (.*)/", $random_quote_html, $random_quote_array);
     for ($i = 0; $i < count($random_quote_array[1]); $i++) {
       // Adds data to cache if it doesn't exist
-      $author = $random_quote_array[1][$i];
-      $quote = $random_quote_array[2][$i];
+      $quote = $random_quote_array[1][$i];
+      $author = $random_quote_array[2][$i];
       if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='quote' AND word=? AND definition=?", "*", [$author, $quote])) == 0) {
         dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('quote', ?, ?)", [$author, $quote]);
       }
@@ -202,8 +202,8 @@
     // Picks a random quote
     $random_quotes = dbRequest2("SELECT * FROM random_stuff WHERE type = 'quote' ORDER BY RAND() LIMIT 1");
     if (count($random_quotes) > 0) {
-      $random_quote_author = $random_quotes[0]["word"];
-      $random_quote = $random_quotes[0]["definition"];
+      $random_quote_author = $random_quotes[0]["definition"];
+      $random_quote = $random_quotes[0]["word"];
     } else {
       $random_quote = "Quote not found";
       $random_quote_author = "Author not found";
