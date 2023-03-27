@@ -43,4 +43,15 @@ $(document).ready(function() {
       $("#date-def").hide();
     }
   });
+
+  $( "#quote" ).button();
+  $( "#quote" ).click(() => {
+    if ($("#quote-icon")[0].className === "ui-icon ui-icon-caret-1-e") {
+      $("#quote-icon")[0].className = "ui-icon ui-icon-caret-1-s";
+      $("#quote-def").show();
+    } else {
+      $("#quote-icon")[0].className = "ui-icon ui-icon-caret-1-e";
+      $("#quote-def").hide();
+    }
+  });
 });

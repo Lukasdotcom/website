@@ -61,7 +61,7 @@
         $random_movie_array = array();
       }
       // Gets the data for a movie
-      if (array_key_exists("title", $random_movie_array) && array_key_exists("overview", $random_movie_array) && $random_movie_array["overview"] != "") {
+      if (array_key_exists("title", $random_movie_array) && array_key_exists("overview", $random_movie_array) && $random_movie_array["overview"] != "" && array_key_exists("adult", $random_movie_array) && $random_movie_array["adult"] == false) {
           $random_movie = $random_movie_array["title"];
           $random_movie_description = $random_movie_array["overview"];
           // Adds data to cache if it doesn't exist
@@ -182,6 +182,32 @@
       $random_date = "Date not found";
       $random_date_description = "Description not found";
     }
+    // GETS A RANDOM PERSON WITH A QUOTE
+    $page = rand(1, 100);
+    $count = round(log(dbRequest2("SELECT COUNT(*) FROM random_stuff WHERE type = 'quote'")[0]["COUNT(*)"]+1, 10));
+    if (rand(0, $count) == 0) {
+      $page = 1;
+    }
+    $random_quote_url = "https://www.goodreads.com/quotes?page=" . $page;
+    $random_quote_html = file_get_contents($random_quote_url, false, $context);
+    preg_match_all("/<div class=\"quoteText\">\n      &ldquo;(.*)&rdquo;\n  <br>  &#8213;\n  <span class=\"authorOrTitle\">\n    (.*)/", $random_quote_html, $random_quote_array);
+    for ($i = 0; $i < count($random_quote_array[1]); $i++) {
+      // Adds data to cache if it doesn't exist
+      $author = $random_quote_array[1][$i];
+      $quote = $random_quote_array[2][$i];
+      if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='quote' AND word=? AND definition=?", "*", [$author, $quote])) == 0) {
+        dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('quote', ?, ?)", [$author, $quote]);
+      }
+    }
+    // Picks a random quote
+    $random_quotes = dbRequest2("SELECT * FROM random_stuff WHERE type = 'quote' ORDER BY RAND() LIMIT 1");
+    if (count($random_quotes) > 0) {
+      $random_quote_author = $random_quotes[0]["word"];
+      $random_quote = $random_quotes[0]["definition"];
+    } else {
+      $random_quote = "Quote not found";
+      $random_quote_author = "Author not found";
+    }
     ?>
       <h1>Random Stuff</h1>
       <h2 style="color:white;">Random Movie</h2>
@@ -211,6 +237,13 @@
         <?php echo htmlspecialchars($random_date); ?>
       </p>
       <p id="date-def" style="display:none;"><?php echo $random_date_description; ?></p>
+
+      <h2 style="color:white;">Random Quote</h2>
+      <p id="quote">
+        <span id="quote-icon" class="ui-icon ui-icon-caret-1-e"></span>
+        <?php echo htmlspecialchars($random_quote); ?>
+      </p>
+      <p id="quote-def" style="display:none;"><?php echo htmlspecialchars($random_quote_author); ?></p>
     </div>
 </body>
 
