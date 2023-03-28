@@ -30,6 +30,16 @@
     // Gets the config
     $config = file_get_contents("../config.json");
     $config = json_decode($config, true);
+    // Checks if the server is being hit a lot and if it should not use the external resources
+    $expireRequests = time() - $config["throttleTime"];
+    dbCommand("DELETE FROM requests WHERE time<'$expireRequests'");
+    $requests = dbRequest2("SELECT * FROM requests WHERE ip='random_stuff'");
+    if (sizeof($requests) > $jsonData["throttle"]) {
+      $throttled = true;
+    } else {
+      $throttled = false;
+      dbAdd(["random_stuff", time()], "requests");
+    }
     // GETS THE RANDOM MOVIE
     $random_movies = dbRequest2("SELECT * FROM random_stuff WHERE type = 'movie' ORDER BY RAND() LIMIT 1");
     $skip = false;
@@ -45,7 +55,7 @@
       $random_movie = "Movie not found";
       $random_movie_description = "Plot not found";
     }
-    if (!$skip) {
+    if (!$skip && !$throttled) {
       // Picks a random ID from 2 to 55555
       $random_id = rand(2, 55555);
       // Gets the random movie
@@ -85,7 +95,7 @@
       $random_word = "Word not found";
       $random_word_definition = "Definition not found";
     }
-    if (!$skip) {
+    if (!$skip && !$throttled) {
       $random_word_url = "https://ydr-api.yourdictionary.com/words/random?limit=1";
       try {
         $random_word_json = file_get_contents($random_word_url, false, $context);
@@ -128,7 +138,7 @@
       $random_acronym = "Acronym not found";
       $random_acronym_meaning = "Meaning not found";
     }
-    if (!$skip) {
+    if (!$skip && !$throttled) {
       $random_acronym_url = "https://www.acronymfinder.com/random.aspx";
       $random_acronym_html = file_get_contents($random_acronym_url, false, $context);
       preg_match("/<h1 class=\"acronym__search acronym__search--big\">What does <strong>(.*)<\/strong> stand for\?<\/h1>/", $random_acronym_html, $random_acronym);
@@ -153,7 +163,7 @@
     $month = rand(1, 12);
     $month = date("F", mktime(0, 0, 0, $month, 10));
     // Checks if this month has been downloaded
-    if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='date' AND word like '$month %% $year'")) == 0) {
+    if (!$throttled && count(dbRequest2("SELECT * FROM random_stuff WHERE type='date' AND word like '$month %% $year'")) == 0) {
       $random_date_url = "https://www.onthisday.com/events/date/" . $year . "/" . $month;
       $random_date_html = file_get_contents($random_date_url, false, $context);
       preg_match("/<article class=\"section no-padding-top\">(?s:.*)<\/article>/", $random_date_html, $random_date_array);
@@ -183,27 +193,29 @@
       $random_date_description = "Description not found";
     }
     // GETS A RANDOM PERSON WITH A QUOTE
-    $page = rand(1, 100);
-    $count = round(log(dbRequest2("SELECT COUNT(*) FROM random_stuff WHERE type = 'quote'")[0]["COUNT(*)"]+1, 10));
-    if (rand(0, $count) == 0) {
-      $page = 1;
-    }
-    $random_quote_url = "https://www.goodreads.com/quotes?page=" . $page;
-    $random_quote_html = file_get_contents($random_quote_url, false, $context);
-    preg_match_all("/<div class=\"quoteText\">\n      &ldquo;(.*)&rdquo;\n  <br>  &#8213;\n  <span class=\"authorOrTitle\">\n    (.*)/", $random_quote_html, $random_quote_array);
-    for ($i = 0; $i < count($random_quote_array[1]); $i++) {
-      // Adds data to cache if it doesn't exist
-      $quote = $random_quote_array[1][$i];
-      $author = $random_quote_array[2][$i];
-      if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='quote' AND word=? AND definition=?", "*", [$author, $quote])) == 0) {
-        dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('quote', ?, ?)", [$author, $quote]);
+    if (!$throttled) {
+      $page = rand(1, 100);
+      $count = round(log(dbRequest2("SELECT COUNT(*) FROM random_stuff WHERE type = 'quote'")[0]["COUNT(*)"]+1, 10));
+      if (rand(0, $count) == 0) {
+        $page = 1;
+      }
+      $random_quote_url = "https://www.goodreads.com/quotes?page=" . $page;
+      $random_quote_html = file_get_contents($random_quote_url, false, $context);
+      preg_match_all("/<div class=\"quoteText\">\n      &ldquo;(.*)&rdquo;\n  <br>  &#8213;\n  <span class=\"authorOrTitle\">\n    (.*)/", $random_quote_html, $random_quote_array);
+      for ($i = 0; $i < count($random_quote_array[1]); $i++) {
+        // Adds data to cache if it doesn't exist
+        $quote = $random_quote_array[1][$i];
+        $author = $random_quote_array[2][$i];
+        if (count(dbRequest2("SELECT * FROM random_stuff WHERE type='quote' AND word=? AND definition=?", "*", [$author, $quote])) == 0) {
+          dbCommand("INSERT INTO random_stuff (type, word, definition) VALUES ('quote', ?, ?)", [$author, $quote]);
+        }
       }
     }
     // Picks a random quote
     $random_quotes = dbRequest2("SELECT * FROM random_stuff WHERE type = 'quote' ORDER BY RAND() LIMIT 1");
     if (count($random_quotes) > 0) {
-      $random_quote_author = $random_quotes[0]["definition"];
-      $random_quote = $random_quotes[0]["word"];
+      $random_quote_author = $random_quotes[0]["word"];
+      $random_quote = $random_quotes[0]["definition"];
     } else {
       $random_quote = "Quote not found";
       $random_quote_author = "Author not found";
@@ -241,9 +253,9 @@
       <h2 style="color:white;">Random Quote</h2>
       <p id="quote">
         <span id="quote-icon" class="ui-icon ui-icon-caret-1-e"></span>
-        <?php echo htmlspecialchars($random_quote); ?>
+        <?php echo htmlspecialchars($random_quote_author); ?>
       </p>
-      <p id="quote-def" style="display:none;"><?php echo htmlspecialchars($random_quote_author); ?></p>
+      <p id="quote-def" style="display:none;"><?php echo htmlspecialchars($random_quote); ?></p>
     </div>
 </body>
 
