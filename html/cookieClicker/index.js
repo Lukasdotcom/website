@@ -13,6 +13,7 @@ var multiplayer = {
     startMenu: function() { // Will generate the startup menu
         this.clear()
         $("#multiplayer").append(`<h1 class='title' style='font-size:150%'>Welcome to the Online Cookie Clicker Addon</h1><br>
+        <p>You will see everyone's number of cookies and cookies per second that are in the same room.</p>
         <label for="room">Room ID:</label>
         <input type="text" id="room" name="room"/>
         <a id='joinButton' class='option'>Join room</a>`);
