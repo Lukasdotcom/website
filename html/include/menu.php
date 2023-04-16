@@ -18,6 +18,8 @@ $MENUITEMS = [["Main Page", "/index.php"],
             ["user", "/usermenu/key.php", "Session Manager"],
             ["notUser", "/login.php", "Login/Signup"],
             ["user", "/login.php", "Logout"],
+            ["Infinite Website", "https://infinity.lschaefer.xyz"],
+            ["Fantasy Manager", "https://fantasy.lschaefer.xyz"],
             ["My Github", "https://github.com/Lukasdotcom/"],
             ["Uptime", "https://uptime.lschaefer.xyz/status"]];
 echo "<div class='vertical-menu'>";
