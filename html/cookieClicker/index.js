@@ -33,7 +33,7 @@ var multiplayer = {
         <p>If table stops updating leave and join the room.</p>
         <table id='leaderboard' style='width:100%;'></table>
         <a id='leave' class='option'>Leave room</a>`)
-        this.intervalFetch = setInterval(this.fetchData, 500);
+        this.intervalFetch = setInterval(this.fetchData, 2000);
         this.intervalFakeLive = setInterval(this.fakeLive, 30);
         $("#leave").click(function() {
             clearInterval(multiplayer.intervalFetch);
