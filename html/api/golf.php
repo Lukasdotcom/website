@@ -217,9 +217,8 @@ if ($USERNAME) {
                     // Checks if bots still have to be added
                     $bots = dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and bot=1");
                     $bots = count($bots);
-                    $faker = Faker\Factory::create();
                     for ($i = $bots; $i < $game["bots"]; $i++) {
-                        $name = $faker->name;
+                        $name = "Bot " . rand(0, 9);
                         while (dbRequest2("SELECT * FROM golfGamePlayers WHERE gameID='$id' and user='$name'")) {
                             // Adds a random number to the name
                             $name = $name . rand(0, 9);
