@@ -69,7 +69,7 @@ var multiplayer = {
                 let cookiesPs = Beautify(parseInt(parseFloat(data["cookiesPs"]) * 10) / 10) // Stores the amount of cookies per second
                 let style = "";
                 let button = "";
-                if (age > 3) {
+                if (age > 30) {
                     style = "color:grey";
                 } else {
                     if (username == Game.bakeryName) {
