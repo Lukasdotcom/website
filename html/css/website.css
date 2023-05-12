@@ -83,6 +83,7 @@ h2 {
     .menu-nav a {
         text-align: center;
         font-size: 22px;
+        padding: 6px;
     }
     .menu-nav ul {
         display: none;
