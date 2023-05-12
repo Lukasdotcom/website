@@ -1,3 +1,8 @@
+<div class="menu">
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<div class="menu-nav">
+<ul>
 <?php
 $MENUITEMS = [["Main Page", "/index.php"],
             ["Internet", "/internet/index.php"],
@@ -23,14 +28,13 @@ $MENUITEMS = [["Main Page", "/index.php"],
             ["Infinite Website", "https://infinity.lschaefer.xyz"],
             ["My Github", "https://github.com/Lukasdotcom/"],
             ["Uptime", "https://uptime.lschaefer.xyz/status"]];
-echo "<div class='vertical-menu'>";
 function menuItem($link, $name)
 {
     $location = $_SERVER["PHP_SELF"];
     if ($location == $link) {
-        echo "<a href='$link' class='active'>$name</a>";
+        echo "<li><a href='$link' class='active'>$name</a></li>";
     } else {
-        echo "<a href='$link'>$name</a>";
+        echo "<li><a href='$link'>$name</a></li>";
     }
 }
 foreach ($MENUITEMS as $menu) {
@@ -58,4 +62,4 @@ foreach ($MENUITEMS as $menu) {
     }
 }
 echo '<div style="height: 50px;display: inline-block;"></div>'; // Used to make sure the scrollbar scrolls correctly
-echo "</div>";
+echo "</ul></div></div>";

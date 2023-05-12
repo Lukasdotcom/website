@@ -6,7 +6,7 @@ body {
 }
 
 .main {
-    margin-left: clamp(150px, 25%, 250px);
+    margin-left: 250px;
     margin-right: 10px;
 }
 
@@ -21,11 +21,10 @@ h1 {
 h2 {
     color: red;
 }
-
-.vertical-menu {
+.menu-nav {
     background-color: green;
-    padding-top: 50px;
-    width: clamp(150px, 25%, 240px);
+    padding-top: 30px;
+    width: 240px;
     height: 100%;
     font-size: 20px;
     z-index: 1;
@@ -35,22 +34,125 @@ h2 {
     overflow-y: scroll;
 }
 
-.vertical-menu a {
+.menu-nav ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.menu-nav li {
+    list-style: none;
+    margin: 0px;
+    overflow: hidden;
+}
+
+.menu-nav a {
     padding: 6px 6px 6px 30px;
     background-color: green;
     color: white;
     display: block;
-    padding: 12 px;
     text-decoration: none;
 }
 
-.vertical-menu a:hover {
+.menu-nav a:hover {
     background-color: darkgreen;
     font-size: 22px;
 }
 
-.vertical-menu a.active {
+.menu-nav a.active {
     background-color: black;
+}
+.menu .menu-btn {
+    display: none;
+}
+
+/* Used for the mobile menu */
+@media (max-width: 800px) {
+    .menu-nav {
+        height: 63px;
+        padding: 0px;
+        position: fixed;
+        overflow-y: none;
+        width: 100%;
+        margin: 0px;
+        transition: all 0.2s ease-in-out;
+    }
+    .main {
+        margin-left: 10px;
+        margin-top: 80px;
+    }
+    .menu-nav a {
+        text-align: center;
+        font-size: 22px;
+    }
+    .menu-nav ul {
+        display: none;
+    }
+    .menu .menu-btn:checked ~ .menu-nav {
+        height: 100%;
+        transition: all 0.2s ease-in-out;
+    }
+    .menu .menu-btn:checked ~ .menu-nav ul {
+        margin-top: 80px;
+        display: block;
+    }
+    /* Used for the icon */
+    .menu .menu-btn:checked ~ .menu-icon .navicon {
+        background: transparent;
+    }
+      
+    .menu .menu-btn:checked ~ .menu-icon .navicon:before {
+        transform: rotate(-45deg);
+    }
+      
+    .menu .menu-btn:checked ~ .menu-icon .navicon:after {
+        transform: rotate(45deg);
+    }
+      
+    .menu .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
+    .menu .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
+        top: 0;
+    }
+    .menu .menu-icon {
+        cursor: pointer;
+        display: inline-block;
+        padding: 30px 30px;
+        position: fixed;
+        top : 0;
+        user-select: none;
+        z-index: 5;
+    }
+      
+    .menu .menu-icon .navicon {
+        background: #fff;
+        display: block;
+        height: 3px;
+        position: relative;
+        transition: #fff .2s ease-out;
+        width: 30px;
+    }
+      
+    .menu .menu-icon .navicon:before,
+    .menu .menu-icon .navicon:after {
+        background: #fff;
+        content: '';
+        display: block;
+        height: 100%;
+        position: absolute;
+        transition: all .2s ease-out;
+        width: 100%;
+    }
+      
+    .menu .menu-icon .navicon:before {
+        top: 8px;
+    }
+      
+    .menu .menu-icon .navicon:after {
+        top: -8px;
+    }
+}
+/* Removes the hamburger menu */
+@media (min-width: 800px) {
+    
 }
 
 input {
