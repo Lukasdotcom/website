@@ -20,7 +20,7 @@
         echo "<h2>You are not logged in redirecting...</h2>";
         header("Refresh:3; url=/login.php", true);
         http_response_code(401);
-    } else if (! $PRIVILEGE["docker"]) {
+    } else if (! $PRIVILEGE["mail"]) {
         http_response_code(403);
         header("Refresh:3; url=/index.php", true);
         echo "<h2>Forbidden redirecting...</h2>";
