@@ -43,7 +43,7 @@
     foreach ($youtubeInfo["items"] as $link) {
         if ($link["id"]["kind"] == "youtube#video") {
             $ID = $link["id"]["videoId"];
-            echo "<iframe width='560' height='315' src='https://www.youtube-nocookie.com/embed/$ID' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+            echo "<iframe width='560' height='315' style='max-width:99%' src='https://www.youtube-nocookie.com/embed/$ID' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
         }
     }
     ?>

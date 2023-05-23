@@ -18,7 +18,7 @@
     echo "<div class='main'>";
     ?>
     <h1>Soccer Videos!</h1>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/kPdi0NANkwg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" style="max-width:99%" height="315" src="https://www.youtube-nocookie.com/embed/kPdi0NANkwg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     <?php
     if (file_exists("soccer.json")) {
         $youtubeInfo = file_get_contents("soccer.json");
@@ -44,7 +44,7 @@
     foreach ($youtubeInfo["items"] as $link) {
         if ($link["id"]["kind"] == "youtube#video") {
             $ID = $link["id"]["videoId"];
-            echo "<iframe width='560' height='315' src='https://www.youtube-nocookie.com/embed/$ID' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+            echo "<iframe width='560' style='max-width:99%' height='315' src='https://www.youtube-nocookie.com/embed/$ID' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
         }
     }
     ?>

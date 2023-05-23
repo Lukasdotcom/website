@@ -3,7 +3,7 @@
 <html dir="ltr" lang="en">
 <?php 
 if (! file_exists("config.json")) {
-    echo '<link rel="stylesheet" type="text/css" href="/css/website.css?v=1.0.1" />';
+    echo '<link rel="stylesheet" type="text/css" href="/css/website.css?v=1.0.2" />';
     echo "<h2>Missing configuration please input configuration</h2>";
 }
 ?>

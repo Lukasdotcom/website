@@ -66,7 +66,7 @@ h2 {
 }
 
 /* Used for the mobile menu */
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .menu-nav {
         height: 63px;
         padding: 0px;

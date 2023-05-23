@@ -16,7 +16,7 @@
     include '../include/menu.php';
     echo "<div class='main'>";?>
     <h1>Idle Bouncer</h1>
-    <iframe src='../gameData/idleBouncer/Idle Bouncer.html' height='600', width='1024'></iframe>
+    <iframe src='../gameData/idleBouncer/Idle Bouncer.html' style="width:100%; aspect-ratio: 16/9;"></iframe>
     <h3>How To Play</h3>
     <p>A very simple idle game where a ball bounces around and you try to hit the sqaures on the edges to get money and the circle in the middle gives you another ball for 15 seconds. Also there are golden circles that appear randomly every few minutes that when clicked give you a bonus.</p>
     <h3>What is this Game?</h3>
