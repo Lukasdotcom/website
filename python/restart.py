@@ -274,6 +274,7 @@ try:
         database.command(f"DELETE FROM golfGame WHERE turnStartTime<{time.time()-86400}") # Removes games that have not been touched for more than 24 hours
         database.command("DELETE FROM golfGamePlayers WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGamePlayers.gameID = golfGame.ID)") # Removes players from games that do not exist
         database.command("DELETE FROM golfGameCards WHERE NOT EXISTS (SELECT * FROM golfGame WHERE golfGameCards.gameID = golfGame.ID)") # Removes players from games that do not exist
+        database.command(f"DELETE FROM cookieClicker WHERE lastUpdate<{(time.time()-86400*30)*1000}") # Removes cookie clicker data that has not been touched for a month
         writeLog("Server maintenance ran succesfully.", 12)
         # Makes sure that the vendor folder is blocked
         try:
