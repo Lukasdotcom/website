@@ -6,6 +6,7 @@
 <?php
 $MENUITEMS = [["Main Page", "/index.php"],
             ["Internet", "/internet/index.php"],
+            ["Klumpy", "/klumpy/index.php"],
             ["Dice Game", "/diceGame/index.php"],
             ["Space 3", "/space3/index.php"],
             ["Idle Bouncer", "/idleBouncer/index.php"],

@@ -1,0 +1,48 @@
+/* body {
+  background-color: white;
+  color: black;
+} */
+table,
+th,
+td {
+  background-color: white;
+  color: black;
+  border: 10px solid black;
+}
+
+td {
+  height: 150px;
+  width: 150px;
+  padding: 0px;
+  vertical-align: center;
+  text-align: center;
+  font-size: 100px;
+}
+
+.red-td {
+  background-color: rgb(255, 54, 54);
+}
+
+.green-td {
+  background-color: rgb(21, 164, 21);
+}
+
+.blue-td {
+  background-color: rgb(36, 142, 255);
+}
+
+.yellow-td {
+  background-color: rgb(255, 255, 0);
+}
+
+.brown-td {
+  background-color: rgb(165, 118, 42);
+}
+.highlight-td {
+  outline-style: solid;
+  outline-width: 9px;
+  outline-color: rgb(0, 242, 255);
+}
+#game .highlight-td {
+  opacity: 0.8;
+}
