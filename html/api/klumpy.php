@@ -23,6 +23,7 @@ if (array_key_exists("board", $_POST) && array_key_exists("history", $_POST) && 
         "message" => "You are not logged in",
       ]);
     } else {
+      writeLog("klumpy", "$USERNAME scored $points on leaderboard for position $position");
       echo json_encode([
         "position" => $position,
         "points" => $points,

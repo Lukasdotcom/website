@@ -71,8 +71,8 @@
   <div id='winGame' class='popup'>
     <div class='popup-content'>
       <h1>You have finished!</h1>
-      <p>You are in <span id='winGamePlace'></span> place.</p>
-      <p>You have <span id='winGamePoints'></span> points.</p>
+      <p>You are number <span id='winGamePlace'></span> on the leaderboard.</p>
+      <p>Score: <span id='winGamePoints'></span></p>
       <a href='/klumpy'><button>Restart</button></a>
       <a href="/klumpy/leaderboard"><button>View leaderboard</button></a>
       <a id="share" href="" style="display: none"><button>View Game and Share</button></a>

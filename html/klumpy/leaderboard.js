@@ -71,7 +71,7 @@ async function loadMore() {
   leaderboard.data = data;
   for (const e of data) {
     if (
-      leaderboard.unique.filter((e) => e.username === e.username).length === 0
+      leaderboard.unique.filter((b) => b.username === e.username).length === 0
     ) {
       leaderboard.unique.push(e);
     }

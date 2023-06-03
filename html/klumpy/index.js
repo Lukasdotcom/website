@@ -13,7 +13,6 @@ function render_game(state) {
     $("#play").button("disable");
   }
   const new_score = render(state);
-  console.log(new_score);
   $("#winGamePoints").text(new_score[new_score.length - 1]);
   const game_finished =
     state.board.filter((e) => e.filter((e) => !e).length !== 0).length === 0;
