@@ -9,7 +9,7 @@ $MATOMO_SITE_ID = $jsonData["matomoSiteId"];
 if ($developer) {
   ini_set('display_errors', 1);
   ini_set('display_startup_errors', 1);
-  error_reporting(E_ALL); 
+  error_reporting(E_ALL);
 }
 // Checks if the user is a mobile user
 if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
@@ -34,18 +34,18 @@ $MATOMO = "<!-- Matomo -->
 <!-- End Matomo Code -->";
 
 require_once("ip.php");
-function delete_folder($path){ #Used to delete a folder
-    if (is_dir($path) === true){
-        $files = array_diff(scandir($path), array('.', '..'));
-        foreach ($files as $file){
-          delete_folder(realpath($path) . '/' . $file);
-        }
-        return rmdir($path);
-      }
-    else if (is_file($path) === true){
-        return unlink($path);
+function delete_folder($path)
+{ #Used to delete a folder
+  if (is_dir($path) === true) {
+    $files = array_diff(scandir($path), array('.', '..'));
+    foreach ($files as $file) {
+      delete_folder(realpath($path) . '/' . $file);
     }
-    return false;
+    return rmdir($path);
+  } else if (is_file($path) === true) {
+    return unlink($path);
+  }
+  return false;
 }
 /** 
  * Is like the array_key_exists function but returns if the key in the array is equal to the compare value.
@@ -55,7 +55,8 @@ function delete_folder($path){ #Used to delete a folder
  * @param string $compare The string it should be compared with
  * @return bool False if the key does not exist in array or does not equal compare. True otherwise
  */
-function array_key_value(string $key, array $array, string $compare) {
+function array_key_value(string $key, array $array, string $compare)
+{
   if (array_key_exists($key, $array)) {
     if ($array[$key] == $compare) {
       return true;
@@ -97,7 +98,8 @@ function dbConnect()
  * Can send any command to the database that is put into this function
  * prepare is used for prepared statementes
  */
-function dbCommand($command, $prepare=[]) {
+function dbCommand($command, $prepare = [])
+{
   $connection = dbConnect();
   $length = count($prepare);
   if ($length == 0) {
@@ -119,6 +121,24 @@ function dbCommand($command, $prepare=[]) {
     $parameter3 = $prepare[2];
     $stmt = mysqli_prepare($connection, $command);
     mysqli_stmt_bind_param($stmt, "sss", $parameter1, $parameter2, $parameter3);
+    mysqli_stmt_execute($stmt);
+  } elseif ($length == 4) {
+    $parameter1 = $prepare[0];
+    $parameter2 = $prepare[1];
+    $parameter3 = $prepare[2];
+    $parameter4 = $prepare[3];
+    $stmt = mysqli_prepare($connection, $command);
+    mysqli_stmt_bind_param($stmt, "ssss", $parameter1, $parameter2, $parameter3, $parameter4);
+    mysqli_stmt_execute($stmt);
+  } elseif ($length == 6) {
+    $parameter1 = $prepare[0];
+    $parameter2 = $prepare[1];
+    $parameter3 = $prepare[2];
+    $parameter4 = $prepare[3];
+    $parameter5 = $prepare[4];
+    $parameter6 = $prepare[5];
+    $stmt = mysqli_prepare($connection, $command);
+    mysqli_stmt_bind_param($stmt, "ssssss", $parameter1, $parameter2, $parameter3, $parameter4, $parameter5, $parameter6);
     mysqli_stmt_execute($stmt);
   }
   mysqli_close($connection);
@@ -165,7 +185,7 @@ function dbRequest($result, $table, $searchCat, $searchCriteria, $Type)
  * @param string $result the column to search will return all if left empty
  * @param array $prepare is a list of all the prepared statemends
  */
-function dbRequest2($command, $result="*", $prepare=[])
+function dbRequest2($command, $result = "*", $prepare = [])
 {
   $connection = dbConnect();
   $length = count($prepare);
@@ -177,7 +197,7 @@ function dbRequest2($command, $result="*", $prepare=[])
     mysqli_stmt_bind_param($stmt, "s", $parameter1);
     mysqli_stmt_execute($stmt);
     $response = mysqli_stmt_get_result($stmt);
-  }  else if ($length == 2) {
+  } else if ($length == 2) {
     $stmt = mysqli_prepare($connection, $command);
     $parameter1 = $prepare[0];
     $parameter2 = $prepare[1];
@@ -314,7 +334,8 @@ foreach ($_COOKIE as $pointer => $value) {
 $Time = time();
 dbCommand("DELETE FROM cookies WHERE expire < $Time and expire != 0");
 $PRIVILEGELIST = ["root", "internet", "editUser", "deleteUser", "deleteElectricity", "deleteLog", "viewLog", "changeCredintials", "deleteElectricity", "deleteError", "restartServer", "updateServer", "serverStatus", "viewBackup", "restore", "mail"]; // A List of all possible privileges
-function noUser() { # Used to set everything up as if no yser is logged in
+function noUser()
+{ # Used to set everything up as if no yser is logged in
   global $USERNAME, $PRIVILEGE, $PRIVILEGELIST;
   $USERNAME = "";
   foreach ($PRIVILEGELIST as $option) {

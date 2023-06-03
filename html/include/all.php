@@ -9,7 +9,7 @@ include 'functions.php';
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="manifest" href="/favicon/site.webmanifest">
-<link rel="stylesheet" type="text/css" href="/css/website.css?v=1.0.2" />
+<link rel="stylesheet" type="text/css" href="/css/website.css?v=1.0.3" />
 <script type="text/javascript" src="/javascript/jquery.js"></script>
 <script defer="true" type="text/javascript" src="/javascript/jquery-ui.min.js"></script>
 <link defer="true" rel="stylesheet" href="/css/jquery-ui.min.css">
@@ -18,7 +18,7 @@ include 'functions.php';
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
 echo $MATOMO;
 if ($USERNAME) {
@@ -40,7 +40,8 @@ if (isset($DESCRIPTION)) {
  * @param string $img used as the name of the image
  * @param string $alt used as the alternate text
  */
-function createImage($img, $alt, $style="width:100%;") {
+function createImage($img, $alt, $style = "width:100%;")
+{
   global $MOBILE;
   if ($MOBILE && !in_array($img, ["notFound"])) {
     echo "<img src='/img/$img.mobile.jpg' alt='$alt' style='$style'>";

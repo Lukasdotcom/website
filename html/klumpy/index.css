@@ -19,6 +19,15 @@ td {
   font-size: 100px;
 }
 
+.leaderboard th,
+.leaderboard td {
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  height: auto;
+  width: auto;
+}
+
 .red-td {
   background-color: rgb(255, 54, 54);
 }

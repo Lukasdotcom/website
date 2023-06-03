@@ -1,273 +1,280 @@
 body {
-    background-color: black;
-    color: white;
-    font-size: 18px;
-    font-family:'Roboto', sans-serif;
+  background-color: black;
+  color: white;
+  font-size: 18px;
+  font-family: "Roboto", sans-serif;
 }
 
 .main {
-    margin-left: 250px;
-    margin-right: 10px;
+  margin-left: 250px;
+  margin-right: 10px;
 }
 
 a {
-    color: rgb(42, 42, 255);
+  color: rgb(42, 42, 255);
 }
 
 h1 {
-    font-size: 50px;
+  font-size: 50px;
 }
 
 h2 {
-    color: red;
+  color: red;
 }
 .menu-nav {
-    background-color: green;
-    padding-top: 30px;
-    width: 240px;
-    height: 100%;
-    font-size: 20px;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    position: fixed;
-    overflow-y: scroll;
+  background-color: green;
+  padding-top: 30px;
+  width: 240px;
+  height: 100%;
+  font-size: 20px;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  position: fixed;
+  overflow-y: scroll;
 }
 
 .menu-nav ul {
-    padding: 0px;
-    margin: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .menu-nav li {
-    list-style: none;
-    margin: 0px;
-    overflow: hidden;
+  list-style: none;
+  margin: 0px;
+  overflow: hidden;
 }
 
 .menu-nav a {
-    padding: 6px 6px 6px 30px;
-    background-color: green;
-    color: white;
-    display: block;
-    text-decoration: none;
+  padding: 6px 6px 6px 30px;
+  background-color: green;
+  color: white;
+  display: block;
+  text-decoration: none;
 }
 
 .menu-nav a:hover {
-    background-color: darkgreen;
-    font-size: 22px;
+  background-color: darkgreen;
+  font-size: 22px;
 }
 
 .menu-nav a.active {
-    background-color: black;
+  background-color: black;
 }
 .menu .menu-btn {
-    display: none;
+  display: none;
 }
 
 /* Used for the mobile menu */
 @media (max-width: 900px) {
-    .menu-nav {
-        height: 63px;
-        padding: 0px;
-        position: fixed;
-        overflow-y: none;
-        width: 100%;
-        margin: 0px;
-        transition: all 0.2s ease-in-out;
-    }
-    .main {
-        margin-left: 10px;
-        margin-top: 80px;
-    }
-    .menu-nav a {
-        text-align: center;
-        font-size: 22px;
-        padding: 6px;
-    }
-    .menu-nav ul {
-        display: none;
-    }
-    .menu .menu-btn:checked ~ .menu-nav {
-        height: 100%;
-        transition: all 0.2s ease-in-out;
-    }
-    .menu .menu-btn:checked ~ .menu-nav ul {
-        margin-top: 80px;
-        display: block;
-    }
-    /* Used for the icon */
-    .menu .menu-btn:checked ~ .menu-icon .navicon {
-        background: transparent;
-    }
-      
-    .menu .menu-btn:checked ~ .menu-icon .navicon:before {
-        transform: rotate(-45deg);
-    }
-      
-    .menu .menu-btn:checked ~ .menu-icon .navicon:after {
-        transform: rotate(45deg);
-    }
-      
-    .menu .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
-    .menu .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
-        top: 0;
-    }
-    .menu .menu-icon {
-        cursor: pointer;
-        display: inline-block;
-        padding: 30px 30px;
-        position: fixed;
-        top : 0;
-        user-select: none;
-        z-index: 5;
-    }
-      
-    .menu .menu-icon .navicon {
-        background: #fff;
-        display: block;
-        height: 3px;
-        position: relative;
-        transition: #fff .2s ease-out;
-        width: 30px;
-    }
-      
-    .menu .menu-icon .navicon:before,
-    .menu .menu-icon .navicon:after {
-        background: #fff;
-        content: '';
-        display: block;
-        height: 100%;
-        position: absolute;
-        transition: all .2s ease-out;
-        width: 100%;
-    }
-      
-    .menu .menu-icon .navicon:before {
-        top: 8px;
-    }
-      
-    .menu .menu-icon .navicon:after {
-        top: -8px;
-    }
-}
-/* Removes the hamburger menu */
-@media (min-width: 800px) {
-    
+  .menu-nav {
+    height: 63px;
+    padding: 0px;
+    position: fixed;
+    overflow-y: none;
+    width: 100%;
+    margin: 0px;
+    transition: all 0.2s ease-in-out;
+  }
+  .main {
+    margin-left: 10px;
+    margin-top: 80px;
+  }
+  .menu-nav a {
+    text-align: center;
+    font-size: 22px;
+    padding: 6px;
+  }
+  .menu-nav ul {
+    display: none;
+  }
+  .menu .menu-btn:checked ~ .menu-nav {
+    height: 100%;
+    transition: all 0.2s ease-in-out;
+  }
+  .menu .menu-btn:checked ~ .menu-nav ul {
+    margin-top: 80px;
+    display: block;
+  }
+  /* Used for the icon */
+  .menu .menu-btn:checked ~ .menu-icon .navicon {
+    background: transparent;
+  }
+
+  .menu .menu-btn:checked ~ .menu-icon .navicon:before {
+    transform: rotate(-45deg);
+  }
+
+  .menu .menu-btn:checked ~ .menu-icon .navicon:after {
+    transform: rotate(45deg);
+  }
+
+  .menu .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
+  .menu .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
+    top: 0;
+  }
+  .menu .menu-icon {
+    cursor: pointer;
+    display: inline-block;
+    padding: 30px 30px;
+    position: fixed;
+    top: 0;
+    user-select: none;
+    z-index: 5;
+  }
+
+  .menu .menu-icon .navicon {
+    background: #fff;
+    display: block;
+    height: 3px;
+    position: relative;
+    transition: #fff 0.2s ease-out;
+    width: 30px;
+  }
+
+  .menu .menu-icon .navicon:before,
+  .menu .menu-icon .navicon:after {
+    background: #fff;
+    content: "";
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    width: 100%;
+  }
+
+  .menu .menu-icon .navicon:before {
+    top: 8px;
+  }
+
+  .menu .menu-icon .navicon:after {
+    top: -8px;
+  }
 }
 
 input {
-    background-color: black;
-    color: white;
-    border: 1px solid white;
-    border-radius: 4px;
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  border-radius: 4px;
 }
 
-button, input[type='submit'], select {
-    color: rgb(0, 255, 0);
-    background-color: black;
-    border: 2px solid green;
-    border-radius: 6px;
+button,
+input[type="submit"],
+select {
+  color: rgb(0, 255, 0);
+  background-color: black;
+  border: 2px solid green;
+  border-radius: 6px;
 }
 
-button:hover, input[type='submit']:hover {
-    background-color: green;
-    color: black;
+button:hover,
+input[type="submit"]:hover {
+  background-color: green;
+  color: black;
 }
 
 table {
-    border: 0px;
-    border-collapse: collapse;
-    text-align: left;
+  border: 0px;
+  border-collapse: collapse;
+  text-align: left;
 }
 
-td, th {
-    height: 10px;
-    padding-right: 15px;
+td,
+th {
+  height: 10px;
+  padding-right: 15px;
 }
 
 th {
-    text-decoration-thickness: 10px;
+  text-decoration-thickness: 10px;
 }
 
 input[type="number"] {
-    width: 45px;
+  width: 45px;
 }
 
 .grayed:hover {
-    color: gray;
-    background-color: black;
+  color: gray;
+  background-color: black;
 }
 
 .grayed {
-    color: gray;
-    border-color: grey;
+  color: gray;
+  border-color: grey;
 }
 
 .column2 {
-    float: left;
-    width: 50%;
+  float: left;
+  width: 50%;
 }
 
 .red button:hover {
-    background-color: red;
-    border-color: red;
-    color: black;
+  background-color: red;
+  border-color: red;
+  color: black;
 }
 
 .red button {
-    color: red;
-    border-color: red;
+  color: red;
+  border-color: red;
 }
 
 .popup {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .popup-content {
-    background-color: black;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid green;
-    margin-left: 220px;
-    margin-right: 40px;
+  background-color: black;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid green;
+  margin-left: 260px;
+  margin-right: 40px;
 }
 
 .notification {
-    background-color: black;
-    margin: auto;
-    padding: 20px;
-    border: 3px solid green;
-    z-index: 1;
-    left: 0;
-    bottom: 0;
-    width: fit-content;
-    overflow: auto;
-    position: sticky;
-    margin-left: clamp(150px, 25%, 240px);
-    margin-right: 10px;
+  background-color: black;
+  margin: auto;
+  padding: 20px;
+  border: 3px solid green;
+  z-index: 1;
+  left: 0;
+  bottom: 0;
+  width: fit-content;
+  overflow: auto;
+  position: sticky;
+  margin-left: clamp(150px, 25%, 240px);
+  margin-right: 10px;
 }
 
 .right {
-    float: right;
+  float: right;
 }
 
 .center {
-    display:flex;
-    justify-content:center;
+  display: flex;
+  justify-content: center;
 }
 
 textarea {
-    background-color: black;
-    color: white;
-    border-radius: 4px;
+  background-color: black;
+  color: white;
+  border-radius: 4px;
+}
+
+/* Style changes for the mobile view */
+@media (max-width: 900px) {
+  .popup-content {
+    margin-left: 40px;
+  }
 }
