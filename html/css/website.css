@@ -253,7 +253,7 @@ input[type="number"] {
   width: fit-content;
   overflow: auto;
   position: sticky;
-  margin-left: clamp(150px, 25%, 240px);
+  margin-left: 250px;
   margin-right: 10px;
 }
 
@@ -276,5 +276,8 @@ textarea {
 @media (max-width: 900px) {
   .popup-content {
     margin-left: 40px;
+  }
+  .notification {
+    margin-left: 10px;
   }
 }

@@ -35,6 +35,7 @@ function render_game(state) {
         $("#winGamePoints").text(json_data.points);
         if (json_data.error) {
           JQerror(json_data.message);
+          $("#error").text(json_data.message);
         } else {
           $("#share").attr(
             "href",

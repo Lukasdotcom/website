@@ -10,7 +10,7 @@
   $DESCRIPTION = "A Leaderboard for Klumpy where you can see all the games and view them.";
   require_once '../include/all.php';
   ?>
-  <link rel="stylesheet" type="text/css" href="index.css?v=1.1.0" />
+  <link rel="stylesheet" type="text/css" href="index.css?v=2.0.0" />
 </head>
 
 <body>
