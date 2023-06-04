@@ -10,7 +10,7 @@ function render(state) {
           row === state.picked_board_card[0] &&
           col === state.picked_board_card[1]
         ) {
-          return state.hand[state.picked_hand_card];
+          return state.hand[state.picked_hand_card] ?? null;
         } else {
           return a;
         }
