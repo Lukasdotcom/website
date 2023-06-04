@@ -130,6 +130,15 @@ function dbCommand($command, $prepare = [])
     $stmt = mysqli_prepare($connection, $command);
     mysqli_stmt_bind_param($stmt, "ssss", $parameter1, $parameter2, $parameter3, $parameter4);
     mysqli_stmt_execute($stmt);
+  } elseif ($length == 5) {
+    $parameter1 = $prepare[0];
+    $parameter2 = $prepare[1];
+    $parameter3 = $prepare[2];
+    $parameter4 = $prepare[3];
+    $parameter5 = $prepare[4];
+    $stmt = mysqli_prepare($connection, $command);
+    mysqli_stmt_bind_param($stmt, "sssss", $parameter1, $parameter2, $parameter3, $parameter4, $parameter5);
+    mysqli_stmt_execute($stmt);
   } elseif ($length == 6) {
     $parameter1 = $prepare[0];
     $parameter2 = $prepare[1];

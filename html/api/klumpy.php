@@ -39,7 +39,7 @@ if (array_key_exists("board", $_POST) && array_key_exists("history", $_POST) && 
   $points = array_sum(json_decode(join("", $points)));
   if ($points > 0 && $points == intval($_POST["points"]) && $_POST["type"] == "main" && valid_moves(json_decode($OGPOST["board"], true), json_decode($OGPOST["history"], true))) {
     if ($USERNAME) {
-      dbCommand("INSERT INTO klumpy `type`, username, score, board, history) VALUES (?, ?, ?, ?, ?, ?)", [$_POST["type"], $USERNAME, $points, $OGPOST["board"], $OGPOST["history"]]);
+      dbCommand("INSERT INTO klumpy (`type`, username, score, board, history) VALUES (?, ?, ?, ?, ?)", [$_POST["type"], $USERNAME, $points, $OGPOST["board"], $OGPOST["history"]]);
     }
     http_response_code(200);
     // Gets the leaderboard position
