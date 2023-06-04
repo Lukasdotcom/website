@@ -9,7 +9,7 @@ include 'functions.php';
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="manifest" href="/favicon/site.webmanifest">
-<link rel="stylesheet" type="text/css" href="/css/website.css?v=1.0.5" />
+<link rel="stylesheet" type="text/css" href="/css/website.css?v=1.0.6" />
 <script type="text/javascript" src="/javascript/jquery.js"></script>
 <script defer="true" type="text/javascript" src="/javascript/jquery-ui.min.js"></script>
 <link defer="true" rel="stylesheet" href="/css/jquery-ui.min.css">

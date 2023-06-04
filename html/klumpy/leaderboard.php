@@ -35,7 +35,7 @@
       <p>Slide this to go through the game</p>
       <div id="slider"></div>
       <h3>Game Field</h3>
-      <table id="game">
+      <table class="game" id="game">
         <tr>
           <td></td>
           <td></td>
@@ -68,7 +68,7 @@
       <p>Unique Number Bonus<span title="A bonus of 50 points if you have all the numbers on the board" style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="all_number_scores"></span></p>
       <p>Score: <span id="score"></span></p>
       <h3>Hand</h3>
-      <table id="hand">
+      <table class="game" id="hand">
         <tr>
           <td></td>
           <td></td>
@@ -80,7 +80,7 @@
   </div>
   <script src="render.js?v=1.0.1"></script>
   <script src="score.js?v=1.0.0"></script>
-  <script src="leaderboard.js?v=1.0.1"></script>
+  <script src="leaderboard.js?v=1.0.2"></script>
 </body>
 
 </html>

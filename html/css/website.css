@@ -231,6 +231,7 @@ input[type="number"] {
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
+  max-height: 90%;
 }
 
 .popup-content {
@@ -240,6 +241,8 @@ input[type="number"] {
   border: 1px solid green;
   margin-left: 260px;
   margin-right: 40px;
+  overflow: scroll;
+  max-height: inherit;
 }
 
 .notification {

@@ -7,11 +7,13 @@ const leaderboard = {
   data: [],
   unique: [],
 };
+// Will show the historical game UI when needed and hide it when needed. This also downloads the historical game data.
 async function render_historical() {
   await new Promise((res) => setTimeout(res, 2));
   const hash = window.location.hash.replace("#", "");
   if (hash === "") {
     $("#historicalGame").hide();
+    $("title").text("Klumpy Leaderboard");
     return;
   }
   $("#historicalGame").show();
@@ -30,7 +32,7 @@ async function render_historical() {
   historicalState.history = JSON.parse(game_data.history);
   historicalState.hash = hash;
   $("#username").text(game_data.username);
-
+  $("title").text("Game from " + game_data.username);
   $("#slider").slider({
     max: historicalState.history.length,
     change: update_view,
@@ -38,6 +40,7 @@ async function render_historical() {
   });
   update_view();
 }
+// This is used to upadte the historical game UI
 function update_view() {
   if (window.location.hash.replace("#", "") !== historicalState.hash) {
     render_historical();
