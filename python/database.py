@@ -237,7 +237,14 @@ def repair():  # Repairs all tables or updates them if needed
             ["bots", 1],
         ],
         "random_stuff": [["type", 0], ["word", 0], ["definition", 4]],
-        "klumpy": [["gameID", 1], ["type", 0], ["username", 0], ["score", 1], ["board", 4], ["history", 4]],
+        "klumpy": [
+            ["gameID", 5],
+            ["type", 0],
+            ["username", 0],
+            ["score", 1],
+            ["board", 4],
+            ["history", 4],
+        ],
     }
     changedTables = []
     for x in databaseDict:
@@ -302,7 +309,7 @@ def repair():  # Repairs all tables or updates them if needed
             name == "information"
         ):  # Used to check the information table to see if the database can be updated in a better way.
             version = trueSearch("SELECT data FROM information WHERE pointer='version'")
-            latest_version = "v2.7"
+            latest_version = "v2.8"
             if version:  # Checks if the version tag still exists.
                 try:  # In here you can update the version to a new version
                     version = version[0][0]
@@ -377,14 +384,43 @@ def repair():  # Repairs all tables or updates them if needed
                         version = "v2.6"
                         updatedVersions.append("v2.6")
                     if version == "v2.6":
-                        createTable("klumpy", [["gameID", 1], ["type", 6], ["username", 0], ["score", 1], ["board", 4], ["history", 4]])
+                        createTable(
+                            "klumpy",
+                            [
+                                ["gameID", 1],
+                                ["type", 6],
+                                ["username", 0],
+                                ["score", 1],
+                                ["board", 4],
+                                ["history", 4],
+                            ],
+                        )
                         version = "v2.7"
                         updatedVersions.append("v2.7")
-                    # Fixes the version if it is invalid to the latest version
-                    if version != latest_version:
-                        version = latest_version
+                    if version == "v2.7":
+                        command("RENAME TABLE klumpy TO klumpy2")
+                        createTable(
+                            "klumpy",
+                            [
+                                ["gameID", 5],
+                                ["type", 6],
+                                ["username", 0],
+                                ["score", 1],
+                                ["board", 4],
+                                ["history", 4],
+                            ],
+                        )
+                        command(
+                            "INSERT INTO klumpy (type, username, score, board, history) SELECT type, username, score, board, history FROM klumpy2"
+                        )
+                        command("DROP TABLE klumpy2")
+                        version = "v2.8"
+                        updatedVersions.append("v2.8")
                 except:
                     1
+                # Fixes the version if it is invalid to the latest version
+                if version != latest_version:
+                    version = latest_version
                 command("DELETE FROM information WHERE pointer='version'")
                 command(f"INSERT INTO information VALUES('version', '{version}')")
             else:
