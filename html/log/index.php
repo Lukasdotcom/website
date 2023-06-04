@@ -15,7 +15,7 @@
     <?php
     require_once '../include/menu.php';
     echo "<div class='main'>";
-    if (! $USERNAME) {
+    if (!$USERNAME) {
         echo "<h2>You are not logged in redirecting...</h2>";
         header("Refresh:3; url=/login.php", true);
         http_response_code(401);
@@ -24,7 +24,7 @@
         header("Refresh:3; url=/index.php", true);
         echo "<h2>Forbidden redirecting...</h2>";
     } else {
-        echo "<script type='text/javascript' src='index.js'></script>
+        echo "<script type='text/javascript' src='index.js?v=1.0.0'></script>
             <script type='text/javascript' src='/javascript/functions.js'></script>";
         echo "<h1>Server Log</h1>";
         echo "<label for='searchText'>Search:</label>
@@ -80,12 +80,16 @@
                         <button name="delete" value="error" type="submit">Delete Error Log.</button>
                         </form><br>';
                 }
-                
             }
         }
-        ?>
+    ?>
         <table id='log'>
-            <tr id='tableHeader'><th>Category</th><th>Message</th><th>Time Stamp</th><th>Time</th></tr>
+            <tr id='tableHeader'>
+                <th>Category</th>
+                <th>Message</th>
+                <th>Time Stamp</th>
+                <th>Time</th>
+            </tr>
         </table>
         <div id="load">
             <button id='loadMore'>Load More</button>
@@ -93,7 +97,7 @@
             <br>
             <button id='loadAll'>Load All</button>
         </div>
-        <?php
+    <?php
     }
     ?>
     </div>
