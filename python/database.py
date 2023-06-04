@@ -388,7 +388,7 @@ def repair():  # Repairs all tables or updates them if needed
                             "klumpy",
                             [
                                 ["gameID", 1],
-                                ["type", 6],
+                                ["type", 0],
                                 ["username", 0],
                                 ["score", 1],
                                 ["board", 4],
@@ -403,7 +403,7 @@ def repair():  # Repairs all tables or updates them if needed
                             "klumpy",
                             [
                                 ["gameID", 5],
-                                ["type", 6],
+                                ["type", 0],
                                 ["username", 0],
                                 ["score", 1],
                                 ["board", 4],
@@ -411,7 +411,7 @@ def repair():  # Repairs all tables or updates them if needed
                             ],
                         )
                         command(
-                            "INSERT INTO klumpy (type, username, score, board, history) SELECT type, username, score, board, history FROM klumpy2"
+                            "INSERT INTO klumpy (`type`, username, score, board, history) SELECT `type`, username, score, board, history FROM klumpy2"
                         )
                         command("DROP TABLE klumpy2")
                         version = "v2.8"
