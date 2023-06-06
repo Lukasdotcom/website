@@ -21,8 +21,27 @@
   <h1>Klumpy</h1>
   <h3>Rules</h3>
   <?php
-  echo "<p>$DESCRIPTION <a href='/klumpy/leaderboard.php'>There is also a leaderboard you can look at here.</a></p>";
+  echo "<p>$DESCRIPTION</p>";
   ?>
+  <h3>Calculating Points</h3>
+  <ol>
+    <li>
+      Having “clumps” of cards of the same color. Each clump is worth its area squared in points (i.e one large clump is more valuable than two smaller ones)
+    </li>
+    <li>
+      Having a large chain of consecutive numbers. The numbers must be connected orthogonally (i.e diagonals don't count). Points will be awarded based on the length of this chain and the lowest number within in. (Note: While a chain that goes 1-2 may be worth more points than one that goes 4-5-6, your longest chain will be the only one scored. In case of a tie of length, the more valuable chain is score).
+    </li>
+    <li>
+      Having strict-increasing rows of numbers. At the end of the game, the number of strictly-increasing rows will be counted and scored according to the following: 1 row-10 points, 2-rows-25 points, 3 rows-45 points, 4-rows 70 points.
+    </li>
+    <li>
+      Having large numbers. The sum of every card will be totaled and divided by two (rounded up). This will then be added to your total score.
+    </li>
+    <li>
+      Having a variety of numbers. Players get the number of unique cards squared in points.
+    </li>
+  </ol>
+  <p><a href='/klumpy/leaderboard.php'>Click here for the leaderboard.</a></p>
   <?php
   if (!$USERNAME) {
     echo "<h2>You must be logged in to submit your score to the leaderboard and share your games. <a href='/login.php'>Login here</a></h2>";
@@ -64,11 +83,11 @@
     </tr>
   </table>
   <p>Total Score: <span id="score"></span></p>
-  <p>Color Clump Score<span title="All clumps of colors are added together by squaring the number of neighboring colors." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="clump_score"></span></p>
-  <p>Single Run Score<span title="The number of points based on the longest run of consecutive numbers in any orthogonal direction. Uses the following formula (9 - lowest_value) * (highest_value - lowest_value + 1)." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="single_run_score"></span></p>
-  <p>Increasing Row Score<span title="You get 10 points for every row where the numbers are strictly increasing." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="increasing_row_across_score"></span></p>
-  <p>Total Sum Score<span title="This is just a sum of all the numbers divided by 2." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="tot_sum_scores"></span></p>
-  <p>Unique Number Bonus<span title="A bonus of 50 points if you have all the numbers on the board" style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="all_number_scores"></span></p>
+  <p>Color Clump Score: <span id="clump_score"></span></p>
+  <p>Single Run Score: <span id="single_run_score"></span></p>
+  <p>Increasing Row Score: <span id="increasing_row_across_score"></span></p>
+  <p>Total Sum Score: <span id="tot_sum_scores"></span></p>
+  <p>Unique Number Bonus: <span id="all_number_scores"></span></p>
   <br>
   <div id='winGame' class='popup'>
     <div class='popup-content'>
@@ -84,7 +103,7 @@
   </div>
   <script src="render.js?v=1.0.1"></script>
   <script src="score.js?v=1.0.0"></script>
-  <script src="index.js?v=1.2.0"></script>
+  <script src="index.js?v=1.3.0"></script>
 </body>
 
 </html>

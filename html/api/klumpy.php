@@ -9,6 +9,17 @@ function valid_moves($board, $history)
     if (count($row) != 4) {
       return false;
     }
+    foreach ($row as $card) {
+      if (!isset($card["number"]) || !isset($card["color"])) {
+        return false;
+      }
+      if ($card["number"] > 6 || $card["number"] < 1) {
+        return false;
+      }
+      if (!in_array($card["color"], ["red", "green", "blue", "yellow", "brown"])) {
+        return false;
+      }
+    }
   }
   $rounds = pow(2, 16) - 1;
   foreach ($history as $round) {

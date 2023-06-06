@@ -155,14 +155,14 @@ function single_run_score(object) {
 }
 function increasing_row_across(object) {
   let ret = 0;
-  let add = 0;
+  let add = 5;
   for (let i = 0; i < rows; i++) {
     let curr_num = object[i][0] ? object[i][0].number : 0;
     for (let j = 1; j < cols; j++) {
       if (object[i][j] === null) {
         if (j == cols - 1) {
-          ret += add;
           add += 5;
+          ret += add;
         }
         continue;
       }
@@ -170,8 +170,8 @@ function increasing_row_across(object) {
         break;
       }
       if (j == cols - 1 && curr_num < object[i][j].number) {
-        ret += add;
         add += 5;
+        ret += add;
       }
       curr_num = object[i][j].number;
     }

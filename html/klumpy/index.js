@@ -6,6 +6,69 @@ const state = {
 };
 const history = [];
 const arr = [];
+function numsToCard(arr) {
+  let [a, b, c] = arr;
+  if (a <= b) {
+    b++;
+  }
+  if (a <= c) {
+    c++;
+  }
+  if (b <= c) {
+    c++;
+  }
+  return [
+    { color: colors[Math.floor(a / 6)], number: (a % 6) + 1 },
+    { color: colors[Math.floor(b / 6)], number: (b % 6) + 1 },
+    { color: colors[Math.floor(c / 6)], number: (c % 6) + 1 },
+  ];
+}
+let curr_seed = Math.floor(Date.now() / 1000 / 3600 / 24);
+function prand(str) {
+  let h1 = 1779033703,
+    h2 = 3144134277,
+    h3 = 1013904242,
+    h4 = 2773480762;
+  for (let i = 0, k; i < str.length; i++) {
+    k = str.charCodeAt(i);
+    h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
+    h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+    h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
+    h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+  }
+  h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067);
+  h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
+  h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
+  h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
+  return [
+    (h1 ^ h2 ^ h3 ^ h4) >>> 0,
+    (h2 ^ h1) >>> 0,
+    (h3 ^ h1) >>> 0,
+    (h4 ^ h1) >>> 0,
+  ];
+}
+function numToString(num) {
+  let ret = "";
+  while (num >= 0) {
+    if (num % 100 <= 61) {
+      ret = String.fromCharCode((num % 100) + 65) + ret;
+    }
+    num = Math.floor(num / 100) - 1;
+  }
+  return ret;
+}
+const upper_bound = prand(numToString(curr_seed))[1];
+function adjust_seed(inxOfSquare, inxOfCardPlayed) {
+  sqArray = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53];
+  cArray = [59, 61, 67];
+  curr_seed *= sqArray[inxOfSquare] * cArray[inxOfCardPlayed];
+  curr_seed %= upper_bound;
+  curr_board = prand(numToString(curr_seed))[0];
+  let c1 = curr_board % 30;
+  let c2 = Math.floor(curr_board / 30) % 29;
+  let c3 = Math.floor(curr_board / 870) % 28;
+  return [c1, c2, c3];
+}
 function render_game(state) {
   if (state.picked_board_card !== null && state.picked_hand_card !== null) {
     $("#play").button("enable");
@@ -62,13 +125,16 @@ function cellClicked(i, j) {
   }
   render_game(state);
 }
-function giveHand() {
-  state.hand = [0, 0, 0].map(() => {
-    return {
-      number: Math.floor(Math.random() * 8) + 1,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    };
-  });
+function giveHand(indexOfSquare = -1, inxOfCardPlayed = -1) {
+  if (indexOfSquare != -1 && inxOfCardPlayed != -1) {
+    state.hand = numsToCard(adjust_seed(inxOfCardPlayed, inxOfCardPlayed));
+  } else {
+    let curr_board = prand(numToString(curr_seed))[0];
+    let c1 = curr_board % 30;
+    let c2 = Math.floor(curr_board / 30) % 29;
+    let c3 = Math.floor(curr_board / 870) % 28;
+    state.hand = numsToCard([c1, c2, c3]);
+  }
 }
 // Generate hand and empty board
 for (let i = 0; i < rows; i++) {
@@ -76,7 +142,7 @@ for (let i = 0; i < rows; i++) {
   for (let j = 0; j < cols; j++) {
     add.push(null);
     // add.push({
-    //   number: Math.floor(Math.random() * 8) + 1,
+    //   number: Math.floor(Math.random() * 6) + 1,
     //   color: colors[Math.floor(Math.random() * colors.length)],
     // });
   }
@@ -95,9 +161,12 @@ $("document").ready(() => {
     });
     state.board[state.picked_board_card[0]][state.picked_board_card[1]] =
       state.hand[state.picked_hand_card];
+    giveHand(
+      state.picked_board_card[0] * 4 + state.picked_board_card[1],
+      state.picked_hand_card
+    );
     state.picked_hand_card = null;
     state.picked_board_card = null;
-    giveHand();
     render_game(state);
   });
   render_game(state);
