@@ -127,7 +127,7 @@ function cellClicked(i, j) {
 }
 function giveHand(indexOfSquare = -1, inxOfCardPlayed = -1) {
   if (indexOfSquare != -1 && inxOfCardPlayed != -1) {
-    state.hand = numsToCard(adjust_seed(inxOfCardPlayed, inxOfCardPlayed));
+    state.hand = numsToCard(adjust_seed(indexOfSquare, inxOfCardPlayed));
   } else {
     let curr_board = prand(numToString(curr_seed))[0];
     let c1 = curr_board % 30;
