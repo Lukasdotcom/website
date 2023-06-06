@@ -102,7 +102,7 @@
   </div>
   </div>
   <script src="render.js?v=1.0.1"></script>
-  <script src="score.js?v=1.0.0"></script>
+  <script src="score.js?v=1.0.1"></script>
   <script src="index.js?v=1.3.0"></script>
 </body>
 
