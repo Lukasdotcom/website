@@ -44,7 +44,7 @@
   <p><a href='/klumpy/leaderboard.php'>Click here for the leaderboard.</a></p>
   <?php
   if (!$USERNAME) {
-    echo "<h2>You must be logged in to submit your score to the leaderboard and share your games. <a href='/login.php'>Login here</a></h2>";
+    echo "<h2>You must be logged in to submit your score to the leaderboard and share your games. <a href='/login.php?redirect=klumpy'>Login here</a></h2>";
   }
   ?>
   <h3>Game Field</h3>
@@ -92,8 +92,9 @@
   <div id='winGame' class='popup'>
     <div class='popup-content'>
       <h1>You have finished!</h1>
+      <p>Your score: <span id='winGamePoints'></span></p>
+      <p>Best score: <span id='winGameBestPoints'></span></p>
       <p>You are number <span id='winGamePlace'></span> on the leaderboard.</p>
-      <p>Score: <span id='winGamePoints'></span></p>
       <a href='/klumpy'><button>Restart</button></a>
       <a href="/klumpy/leaderboard.php"><button>View leaderboard</button></a>
       <a id="share" href="" style="display: none"><button>View Game and Share</button></a>
