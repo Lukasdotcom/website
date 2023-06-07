@@ -25,7 +25,7 @@ function render(state) {
     "#single_run_score",
     "#increasing_row_across_score",
     "#tot_sum_scores",
-    "#all_number_scores",
+    "#all_color_scores",
     "#score",
   ];
   score_parts.forEach((part, i) => {

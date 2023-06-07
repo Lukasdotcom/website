@@ -38,7 +38,7 @@
       Having large numbers. The sum of every card will be totaled and divided by two (rounded up). This will then be added to your total score.
     </li>
     <li>
-      Having a variety of numbers. Players get the number of unique cards squared in points.
+      Having a variety of colors. Players get the number of unique colors squared in points.
     </li>
   </ol>
   <p><a href='/klumpy/leaderboard.php'>Click here for the leaderboard.</a></p>
@@ -87,7 +87,7 @@
   <p>Single Run Score: <span id="single_run_score"></span></p>
   <p>Increasing Row Score: <span id="increasing_row_across_score"></span></p>
   <p>Total Sum Score: <span id="tot_sum_scores"></span></p>
-  <p>Unique Number Bonus: <span id="all_number_scores"></span></p>
+  <p>Unique Color Bonus: <span id="all_color_scores"></span></p>
   <br>
   <div id='winGame' class='popup'>
     <div class='popup-content'>
@@ -101,9 +101,9 @@
     </div>
   </div>
   </div>
-  <script src="render.js?v=1.0.1"></script>
-  <script src="score.js?v=1.0.1"></script>
-  <script src="index.js?v=1.3.1"></script>
+  <script src="render.js?v=1.1.0"></script>
+  <script src="score.js?v=1.1.0"></script>
+  <script src="index.js?v=1.3.2"></script>
 </body>
 
 </html>

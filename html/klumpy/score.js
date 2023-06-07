@@ -188,19 +188,19 @@ function tot_sum(object) {
   }
   return Math.floor(ret / 2);
 }
-function all_numbers(object) {
-  const nums = [];
+function all_colors(object) {
+  const colors = [];
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       if (object[i][j]) {
-        let curr_num = object[i][j].number;
-        if (nums.indexOf(curr_num) == -1) {
-          nums.push(curr_num);
+        let curr_color = object[i][j].color;
+        if (colors.indexOf(curr_color) == -1) {
+          colors.push(curr_color);
         }
       }
     }
   }
-  return nums.length * nums.length;
+  return colors.length * colors.length;
 }
 function calculate_score(object) {
   //object is an array of four arrays each of which is an array of four objects
@@ -212,14 +212,14 @@ function calculate_score(object) {
   // console.log("increasing_row_across_result: ", increasing_row_across_result);
   const tot_sum_result = tot_sum(object);
   // console.log("tot_sum_result: ", tot_sum_result);
-  const all_numbers_result = all_numbers(object);
+  const all_colors_result = all_colors(object);
   // console.log("all_numbers_result: ", all_numbers_result);
   return [
     clump_result,
     single_run_result,
     increasing_row_across_result,
     tot_sum_result,
-    all_numbers_result,
+    all_colors_result,
   ];
 }
 // End of code made with help from Raj Tiller
