@@ -61,11 +61,11 @@
           <td></td>
         </tr>
       </table>
-      <p>Color Clump Score<span title="All clumps of colors are added together by squaring the number of neighboring colors." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="clump_score"></span></p>
-      <p>Single Run Score<span title="The number of points based on the longest run of consecutive numbers in any orthogonal direction. Uses the following formula (9 - lowest_value) * (highest_value - lowest_value + 1)." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="single_run_score"></span></p>
-      <p>Increasing Row Score<span title="You get 10 points for every row where the numbers are strictly increasing." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="increasing_row_across_score"></span></p>
-      <p>Total Sum Score<span title="This is just a sum of all the numbers divided by 2." style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="tot_sum_scores"></span></p>
-      <p>Unique Color Bonus<span title="A bonus of 50 points if you have all the numbers on the board" style="cursor: help" class="help ui-icon ui-icon-info"></span>: <span id="all_number_scores"></span></p>
+      <p>Color Clump Score: <span id="clump_score"></span></p>
+      <p>Single Run Score: <span id="single_run_score"></span></p>
+      <p>Increasing Row Score: <span id="increasing_row_across_score"></span></p>
+      <p>Total Sum Score: <span id="tot_sum_scores"></span></p>
+      <p>Unique Color Bonus: <span id="all_number_scores"></span></p>
       <p>Score: <span id="score"></span></p>
       <h3>Hand</h3>
       <table class="game" id="hand">
