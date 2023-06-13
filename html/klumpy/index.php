@@ -43,6 +43,13 @@
   </ol>
   <p><a href='/klumpy/leaderboard.php'>Click here for the leaderboard.</a></p>
   <?php
+  if (array_key_exists("random", $_GET)) {
+    echo "<h1>Playing Random Game</h1>";
+    echo "<button id='daily'>Switch to Daily Game</button>";
+  } else {
+    echo "<h1>Playing Daily Game</h1>";
+    echo "<button id='random'>Switch to Random Game</button>";
+  }
   if (!$USERNAME) {
     echo "<h2>You must be logged in to submit your score to the leaderboard and share your games. <a href='/login.php?redirect=klumpy'>Login here</a></h2>";
   }
@@ -104,7 +111,7 @@
   </div>
   <script src="render.js?v=1.1.0"></script>
   <script src="score.js?v=1.1.0"></script>
-  <script src="index.js?v=1.3.2"></script>
+  <script src="index.js?v=1.4.0"></script>
 </body>
 
 </html>

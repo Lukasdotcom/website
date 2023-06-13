@@ -23,7 +23,10 @@ function numsToCard(arr) {
     { color: colors[Math.floor(c / 6)], number: (c % 6) + 1 },
   ];
 }
-let curr_seed = Math.floor(Date.now() / 1000 / 3600 / 24);
+const daily = !new URLSearchParams(window.location.search).get("random");
+let curr_seed = daily
+  ? Math.floor(Date.now() / 1000 / 3600 / 24)
+  : Math.floor(Math.random() * 1000000);
 function prand(str) {
   let h1 = 1779033703,
     h2 = 3144134277,
@@ -168,6 +171,14 @@ $("document").ready(() => {
     state.picked_hand_card = null;
     state.picked_board_card = null;
     render_game(state);
+  });
+  $("#random").button();
+  $("#random").click(() => {
+    window.location = "/klumpy?random=true";
+  });
+  $("#daily").button();
+  $("#daily").click(() => {
+    window.location = "/klumpy";
   });
   render_game(state);
 });
