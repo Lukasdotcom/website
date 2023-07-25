@@ -26,7 +26,6 @@ $MENUITEMS = [["Main Page", "/index.php"],
             ["user", "/login.php", "Logout"],
             ["Loveletter", "https://loveletter.lschaefer.xyz"],
             ["Fantasy Manager", "https://fantasy.lschaefer.xyz"],
-            ["Infinite Website", "https://infinity.lschaefer.xyz"],
             ["My Github", "https://github.com/Lukasdotcom/"],
             ["Uptime", "https://uptime.lschaefer.xyz/status"]];
 function menuItem($link, $name)
