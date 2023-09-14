@@ -181,8 +181,10 @@ def repair():  # Repairs all tables or updates them if needed
         "cookieClicker": [
             ["username", 0],
             ["room", 0],
-            ["cookies", 2],
-            ["cookiesPs", 2],
+            ["cookies", 3],
+            ["powerOfCookies", 3],
+            ["cookiesPs", 3],
+            ["powerOfCookiesPs", 3],
             ["lastUpdate", 3],
         ],
         "localStorage": [["username", 0], ["data", 4]],
