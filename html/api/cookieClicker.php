@@ -17,7 +17,7 @@ if ($_POST["type"] === "view" and array_key_exists("username", $_POST) and array
     } else {
         dbCommand("INSERT INTO cookieClicker (username, room, cookies, powerOfCookies, cookiesPs, powerOfCookiesPs, lastUpdate) VALUES ('$username', '$room', $cookies, $powerOfCookies, $cookiesPs, $powerOfCookiesPs, '$time')");
     }
-    echo json_encode(["leaderboard" => dbRequest2("SELECT * FROM cookieClicker WHERE room='$room' ORDER BY cookiesPs DESC, cookies DESC")]);
+    echo json_encode(["leaderboard" => dbRequest2("SELECT * FROM cookieClicker WHERE room='$room' ORDER BY powerOfCookies DESC, cookies DESC, powerOfCookiesPs DESC, cookiesPs DESC")]);
 } else {
     http_response_code(400);
     echo "Invalid command";

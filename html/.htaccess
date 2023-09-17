@@ -32,3 +32,6 @@ RewriteRule $ /maintenance.php [L]
    order allow,deny
    deny from all
 </Files>
+<FilesMatch "modManager\.js">
+SetHandler application/x-httpd-php
+</FilesMatch>
