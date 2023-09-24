@@ -4,7 +4,8 @@ require_once "api.php";
  * @param array the user you want to search for if this is empty the logged in user is used. It will check the user in that array.
  * @return string of the user or will quit if the user does not exist
  */
-function checkUser($array) {
+function checkUser($array)
+{
     global $USERNAME;
     if (array_key_exists("user", $array)) {
         $user = $array["user"];
@@ -23,7 +24,7 @@ if (array_key_value("type", $_GET, "view")) { // Will return all privileges the 
     $user = checkUser($_GET);
     if ($PRIVILEGE["editUser"] or ($USERNAME === $user and $USERNAME)) {
         // Will request all privileges
-        $request = dbRequest2("SELECT privilege FROM privileges WHERE username='$user'", $result="privilege");
+        $request = dbRequest2("SELECT privilege FROM privileges WHERE username='$user'", $result = "privilege");
         // Will make sure that it returns valid json
         if ($request) {
             echo json_encode($request);
@@ -42,8 +43,8 @@ if (array_key_value("type", $_GET, "view")) { // Will return all privileges the 
             $oldPriv = [];
         }
         // Goes through every privilege the user has and sees what the user wants on the new user they are editing
-        foreach($PRIVILEGE as $PRIV => $bool) {
-            if ($bool){
+        foreach ($PRIVILEGE as $PRIV => $bool) {
+            if ($bool) {
                 if ($_POST[$PRIV] and $_POST[$PRIV] !== "false" and $_POST[$PRIV] !== "False") {
                     if (array_search($PRIV, $oldPriv) === false) { // Checks if a change is required
                         dbCommand("INSERT INTO privileges VALUES ('$user', '$PRIV')");
@@ -79,8 +80,6 @@ if (array_key_value("type", $_GET, "view")) { // Will return all privileges the 
         dbCommand("DELETE FROM users WHERE username = '$user';");
         dbCommand("DELETE FROM localStorage WHERE username = '$user';");
         dbCommand("DELETE FROM cookies WHERE username = '$user';");
-        dbCommand("DELETE FROM space3likes WHERE account = '$user';");
-        dbCommand("DELETE FROM space3 WHERE owner = '$user';");
         dbCommand("DELETE FROM privileges WHERE username = '$user';");
         echo "Deleted user $user.";
         if ($USERNAME == $user) {

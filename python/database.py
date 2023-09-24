@@ -188,16 +188,6 @@ def repair():  # Repairs all tables or updates them if needed
             ["lastUpdate", 3],
         ],
         "localStorage": [["username", 0], ["data", 4]],
-        "space3": [
-            ["id", 5],
-            ["owner", 0],
-            ["title", 0],
-            ["description", 4],
-            ["preferences", 4],
-            ["likes", 1],
-            ["downloads", 1],
-        ],
-        "space3likes": [["id", 1], ["account", 0]],
         "golfGamePlayers": [
             ["gameID", 1],
             ["multiplier", 1],
@@ -311,7 +301,7 @@ def repair():  # Repairs all tables or updates them if needed
             name == "information"
         ):  # Used to check the information table to see if the database can be updated in a better way.
             version = trueSearch("SELECT data FROM information WHERE pointer='version'")
-            latest_version = "v2.8"
+            latest_version = "v2.9"
             if version:  # Checks if the version tag still exists.
                 try:  # In here you can update the version to a new version
                     version = version[0][0]
@@ -416,6 +406,11 @@ def repair():  # Repairs all tables or updates them if needed
                             "INSERT INTO klumpy (`type`, username, score, board, history) SELECT `type`, username, score, board, history FROM klumpy2"
                         )
                         command("DROP TABLE klumpy2")
+                        version = "v2.8"
+                        updatedVersions.append("v2.8")
+                    if version == "v2.8":
+                        command("DROP TABLE space3")
+                        command("DROP TABLE space3likes")
                         version = "v2.8"
                         updatedVersions.append("v2.8")
                 except:
