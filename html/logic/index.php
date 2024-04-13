@@ -17,7 +17,7 @@
     include '../include/menu.php';
     echo "<div class='main'>";
     ?>
-    <script type='text/javascript' src='index.js?v=1.0.1'></script>
+    <script type='text/javascript' src='index.js?v=1.0.2'></script>
     <h1>Truth Tree Quiz</h1>
     <p>Notes for all the logic symbols:</p>
     <ul>
