@@ -52,7 +52,6 @@ function parenthesis(size) {
 }
 function generateTruthSentence(complexity) {
   // Used to generate a logic sentence
-  localStorage.firstOperationComplexity = complexity;
   // The depth in parenthesis
   if (complexity == 1) {
     // If the size should be one it generates one random letter
@@ -93,6 +92,7 @@ function firstOperation() {
   } else if (complexity > 1000) {
     complexity = 1000;
   }
+  localStorage.firstOperationComplexity = complexity;
   // Checks if the game has already been played and if this was a completed game sends the event.
   if (firstOperationAttempts != 0) {
     _paq.push(
@@ -105,7 +105,6 @@ function firstOperation() {
     );
     firstOperationAttempts = 0;
   }
-  localStorage.firstOperationComplexity = complexity;
   // Will generate the text for the truth sentence
   function generateSentenceText(sentence, first) {
     if (sentence.length == 2) {
