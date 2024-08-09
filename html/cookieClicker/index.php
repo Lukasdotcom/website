@@ -31,8 +31,15 @@
     <p>If you would like to use this as a user script use the red box below</p>
     <div style="border-width:3px;border-style:solid;padding:2px;border-color:red;">
         // ==UserScript==<br>
-        // @name Cookie Clicker Online<br>
-        // @include /https?://orteil.dashnet.org/cookieclicker/<br>
+        // @name Cookie Clicker<br>
+        // @namespace <?php
+                        // Will echo out the hostname
+                        echo "https" . '://' . $_SERVER["HTTP_HOST"]; ?>/cookieClicker<br>
+        // @version 2024-08-09<br>
+        // @description Multiplayer Cookie Clicker<br>
+        // @author lukasdotcom<br>
+        // @match /https?://orteil.dashnet.org/cookieclicker/<br>
+        // @grant none<br>
         // ==/UserScript==<br>
         var script = document.createElement('script');<br>
         script.src = "<?php
