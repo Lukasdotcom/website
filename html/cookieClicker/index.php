@@ -38,7 +38,7 @@
         // @version 2024-08-09<br>
         // @description Multiplayer Cookie Clicker<br>
         // @author lukasdotcom<br>
-        // @match /https?://orteil.dashnet.org/cookieclicker/<br>
+        // @match https://orteil.dashnet.org/cookieclicker/<br>
         // @grant none<br>
         // ==/UserScript==<br>
         var script = document.createElement('script');<br>
