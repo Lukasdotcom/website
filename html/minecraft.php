@@ -20,10 +20,10 @@
     <h1>Minecraft Server</h1>
     <p>Server IP: minecraft.lschaefer.xyz</p>
     <p>Minecaft Version: 1.21.1</p>
-    <h2>Client Side Mods to Install</h2>
+    <h3>Client Side Mods to Install</h3>
     <li><a href="https://modrinth.com/plugin/simple-voice-chat">Simple Voice Chat</a> - Allows you to have a voice chat with anyone on the server that also has that mod installed.</li>
     <li><a href="https://modrinth.com/mod/better-stats">Better Stats</a> - Allows you to see detailed stats for all players.</li>
-    <h2>Mod List</h2>
+    <h4>Mod List</h4>
     <li><a href="https://modrinth.com/mod/lithium">lithium</a></li>
     <li><a href="https://modrinth.com/mod/simple-voice-chat">simple-voice-chat</a></li>
     <li><a href="https://modrinth.com/mod/dungeons-and-taverns">dungeons-and-taverns</a></li>
@@ -51,7 +51,7 @@
     <li><a href="https://modrinth.com/mod/lithostitched">lithostitched</a></li>
     <li><a href="https://modrinth.com/mod/collective">collective</a></li>
     <li><a href="https://modrinth.com/mod/tcdcommons">tcdcommons</a></li>
-    <h2>Vanilla Tweaks</h2>
+    <h3>Vanilla Tweaks</h3>
     <li><a href="https://vanillatweaks.net/share#84cmdb">Share code: 84cmdb</a></li>
     <li><a href="https://vanillatweaks.net/share#U6lNn9">Share code: U6lNn9</a></li>
   </div>
