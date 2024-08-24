@@ -20,7 +20,7 @@
     <h1>Minecraft Server</h1>
     <p>Server IP: minecraft.lschaefer.xyz</p>
     <p>Minecaft Version: 1.21.1</p>
-    <h3>Client Side Mods to Install</h3>
+    <h3>Client Side Mods to Install For Better Experience</h3>
     <li><a href="https://modrinth.com/plugin/simple-voice-chat">Simple Voice Chat</a> - Allows you to have a voice chat with anyone on the server that also has that mod installed.</li>
     <li><a href="https://modrinth.com/mod/better-stats">Better Stats</a> - Allows you to see detailed stats for all players.</li>
     <h4>Mod List</h4>
