@@ -45,7 +45,6 @@
     <li><a href="https://modrinth.com/mod/explorify">explorify</a></li>
     <li><a href="https://modrinth.com/mod/tabtps">tabtps</a></li>
     <li><a href="https://modrinth.com/mod/better-stats">better-stats</a></li>
-    <li><a href="https://modrinth.com/mod/welcome-message">welcome-message</a></li>
     <p>The following are only dependencies of the previous mods.</p>
     <li><a href="https://modrinth.com/mod/fabric-api">fabric-api</a></li>
     <li><a href="https://modrinth.com/mod/lithostitched">lithostitched</a></li>
